@@ -62,11 +62,13 @@ $(function() {
             搜索按钮点击事件，将关键词发送到服务端进行检索商品
             */
             btnSearchHandler: function () {
-                //console.log("has btnSearchHandler");
+                console.log("has btnSearchHandler");
             }
 
         };
 
         //regist to global
         ShoppingPeeker.HomePage = homePage;
+        //init page object
+        homePage.init();
 });

@@ -65,20 +65,7 @@ namespace ShoppingPeeker.Utilities.Caching
 
         #region Ctor
 
-        //public RedisCacheManager()
-        //{
-        //    //var connStr = RedisConnectionWrapper.GetConnectionString();
-
-        //    //if (String.IsNullOrEmpty(connStr))
-        //    //    throw new Exception("Redis connection string is empty");
-
-        //    // ConnectionMultiplexer.Connect should only be called once and shared between callers
-        //    this._connectionWrapper = RedisConnectionWrapper.Current;
-
-        //    var redisDb = ConfigHelper.GetConfigInt("redisDb");
-
-        //    _Database= _connectionWrapper.GetDatabase(redisDb);
-        //}
+      
 
         /// <summary>
         /// 使用自定义的配置  获取redis 连接的实例

@@ -6,8 +6,10 @@ using System.Text;
 using System.Net;
 
 using StackExchange.Redis;
-using RedLock;
+
 using ShoppingPeeker.Utilities.Ioc;
+using RedLockNet.SERedis;
+using RedLockNet.SERedis.Configuration;
 
 namespace ShoppingPeeker.Utilities.Caching
 {
@@ -44,8 +46,8 @@ namespace ShoppingPeeker.Utilities.Caching
 
         private readonly Lazy<string> _connectionString;
 
-        private volatile ConnectionMultiplexer _connection;
-        private volatile RedisLockFactory _redisLockFactory;
+        private volatile ConnectionMultiplexer _connection=null;
+        private volatile RedLockFactory _redisLockFactory=null;
         private readonly object _lock = new object();
 
         #endregion
@@ -67,7 +69,6 @@ namespace ShoppingPeeker.Utilities.Caching
                 }
                 );
 
-            this._redisLockFactory = CreateRedisLockFactory();
         }
         #endregion
 
@@ -129,7 +130,7 @@ namespace ShoppingPeeker.Utilities.Caching
         /// Create instance of RedisLockFactory
         /// </summary>
         /// <returns>RedisLockFactory</returns>
-        protected RedisLockFactory CreateRedisLockFactory()
+        protected RedLockFactory CreateRedisLockFactory()
         {
             //get password and value whether to use ssl from connection string
             var password = string.Empty;
@@ -148,12 +149,14 @@ namespace ShoppingPeeker.Utilities.Caching
             }
 
             //create RedisLockFactory for using Redlock distributed lock algorithm
-            return new RedisLockFactory(GetEndPoints().Select(endPoint => new RedisLockEndPoint
+            var endPoints = GetEndPoints().Select(endPoint => new RedLockEndPoint
             {
                 EndPoint = endPoint,
                 Password = password,
                 Ssl = useSsl
-            }));
+            }).ToList();
+
+            return new RedLockFactory( new RedLockConfiguration(endPoints));
         }
 
         #endregion
@@ -213,7 +216,7 @@ namespace ShoppingPeeker.Utilities.Caching
         public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
         {
             //use RedLock library
-            using (var redisLock = _redisLockFactory.Create(resource, expirationTime))
+            using (var redisLock = _redisLockFactory.CreateLock(resource, expirationTime))
             {
                 //ensure that lock is acquired
                 if (!redisLock.IsAcquired)

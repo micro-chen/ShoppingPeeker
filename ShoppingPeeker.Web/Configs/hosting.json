@@ -3,5 +3,5 @@
     "server.urls": "http://localhost:8001",
     "siteName": "惠当搜",
     "signTimeOut": 20,
-    "IsOutPutLog": true
+ 
 }

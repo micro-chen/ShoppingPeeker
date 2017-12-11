@@ -26,6 +26,7 @@ namespace ShoppingPeeker.Utilities.Logging
         }
         public IDisposable BeginScope<TState>(TState state)
         {
+            
             return null;
         }
 

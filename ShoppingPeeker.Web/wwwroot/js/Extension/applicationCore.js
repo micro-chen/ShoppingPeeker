@@ -7,17 +7,16 @@
 abc.html?id=123&url=http://www.maidq.com
 方法去调用：alert(GetQueryString("url"));
 */
-function getQueryString(name)
-{
-     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-     var r = window.location.search.substr(1).match(reg);
-     if(r!=null)return  unescape(r[2]); return null;
+function getQueryString(name) {
+         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+         var r = window.location.search.substr(1).match(reg);
+         if (r != null) return unescape(r[2]); return null;
 }
 
 /*格式化指定的url 。json参数对象，格式化为拼接好的参数
 示范：baidu.com?bd=99&a=3fr&b=45
 */
-var formatUrl=function (url, paras) {
+var formatUrl = function (url, paras) {
     if (isNullOrEmpty(url)) {
         return null;
     }
@@ -32,14 +31,14 @@ var formatUrl=function (url, paras) {
 
 
     for (var key in paras) {
-        var value=paras[key];
+        var value = paras[key];
         if (isNumber(value) || isString(value)) {
-            paramStr += '&'+key+'=' + encodeURIComponent(value);
+            paramStr += '&' + key + '=' + encodeURIComponent(value);
         }
-           
+
     }
 
-    return url+startChar+ paramStr.substr(1);
+    return url + startChar + paramStr.substr(1);
 
 }
 
@@ -165,37 +164,37 @@ function obj2string(o) {
   * @param  ii  ；1 压缩 2 转义 3 压缩并转义 4 去除转义
  * @returns {} 
 */
-    var compressJsonStr = function (inputString, ii) {
-        var text = inputString;
-        if ((ii == 1 || ii == 3)) {
-            text = text.split("\n").join(" ");
-            var t = [];
-            var inString = false;
-            for (var i = 0, len = text.length; i < len; i++) {
-                var c = text.charAt(i);
-                if (inString && c === inString) {
-                    if (text.charAt(i - 1) !== '\\') {
-                        inString = false;
-                    }
+var compressJsonStr = function (inputString, ii) {
+    var text = inputString;
+    if ((ii == 1 || ii == 3)) {
+        text = text.split("\n").join(" ");
+        var t = [];
+        var inString = false;
+        for (var i = 0, len = text.length; i < len; i++) {
+            var c = text.charAt(i);
+            if (inString && c === inString) {
+                if (text.charAt(i - 1) !== '\\') {
+                    inString = false;
                 }
-                else if (!inString && (c === '"' || c === "'")) {
-                    inString = c;
-                }
-                else if (!inString && (c === ' ' || c === "\t")) {
-                    c = '';
-                }
-                t.push(c);
             }
-            text = t.join('');
+            else if (!inString && (c === '"' || c === "'")) {
+                inString = c;
+            }
+            else if (!inString && (c === ' ' || c === "\t")) {
+                c = '';
+            }
+            t.push(c);
         }
-        if ((ii == 2 || ii == 3)) {
-            text = text.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"");
-        }
-        if (ii == 4) {
-            text = text.replace(/\\\\/g, "\\").replace(/\\\"/g, '\"');
-        }
-        return text;
-    };
+        text = t.join('');
+    }
+    if ((ii == 2 || ii == 3)) {
+        text = text.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"");
+    }
+    if (ii == 4) {
+        text = text.replace(/\\\\/g, "\\").replace(/\\\"/g, '\"');
+    }
+    return text;
+};
 
 
 /**
@@ -495,14 +494,14 @@ var Map = (function () {
         this._Keys = [];
         this._Values = [];
     }
-   
+
     /**
 *获取数目
 */
     Map.prototype.getCount = function () {
         return this._Count;
     };
-   
+
     /**
 *获取所有的键
 */
@@ -997,7 +996,7 @@ function equalsIgnoreCase(str1, str2) {
 function isChinese(str) {
     var str = str.replace(/(^\s*)|(\s*$)/g, '');
     if (!(/^[\u4E00-\uFA29]*$/.test(str)
-            && (!/^[\uE7C7-\uE7F3]*$/.test(str)))) {
+        && (!/^[\uE7C7-\uE7F3]*$/.test(str)))) {
         return false;
     }
     return true;
@@ -1160,10 +1159,10 @@ function generateUUID() {
 获取时间戳
 getTime()返回数值的单位是毫秒
 */
-function getTimeToken(){
- var timestamp=new Date().getTime();
- return timestamp;
- 
+function getTimeToken() {
+    var timestamp = new Date().getTime();
+    return timestamp;
+
 }
 
 function isIE() { //ie 6+
@@ -1208,3 +1207,183 @@ function isIE() { //ie 6+
 
     g.console = console;
 }(window));
+
+
+// 定义 全局MessageBox 对象
+if (!window.MessageBox) {
+    MessageBox = {
+
+        /*显示右边箭头的消息提示*/
+        "tips": function (whereSelector, msg) {
+            layer.tips(msg, whereSelector, {
+                tips: [2, '#3595CC'],
+                time: 4000
+            });
+        },
+        "toast": function (msg, onCloseHandler) {
+            //信息框-例2
+            var showTime = 2000;
+            var timer = new Timer(showTime);
+            var msgIndex = layer.msg(msg);
+            timer.Elapsed = function () {
+                layer.close(msgIndex);
+                (function () {
+                    if (!isNullOrUndefined(onCloseHandler)) {
+                        onCloseHandler();//关闭窗口的时候，触发的事件回调
+                    }
+                })();
+            };
+            timer.Start();
+
+        },
+        /*显示加载圈圈*/
+        "loading": function (config) {
+            var options = { shade: 0.3 }
+            if (config.icon == undefined) {
+                config.icon = 2;
+            }
+            if (config.time != undefined) {
+                options.time = config.time;
+            }
+            var index = layer.load(config.icon, options);
+            return index;
+        },
+        /*显示html 内容*/
+        "html": function (config) {
+            if (config.area == undefined) {
+                config.area = ['500px', '300px'];
+            }
+            var index;
+            index = layer.open({
+                title: config.title,
+                type: 1,
+                area: config.area,
+                closeBtn: 1,
+                end: config.end,//弹窗销毁触发的事件函数
+                shadeClose: false, //点击遮罩关闭
+                content: config.content,
+                success: function () {
+                    if (config.success != undefined) {
+                        config.success();
+                    }
+                }
+            });
+            return index;
+        },
+
+        close: function (index) {
+            layer.close(index);
+        },
+
+        /*仅仅显示提示信息*/
+        "show": function (title, content) {
+            layer.open({ title: msg, content: content })
+        },
+        /*弹出确认框*/
+        "confirm": function (msg, confirmHandler, cancelHandler) {
+            //询问框
+            layer.confirm(msg, { icon: 3, title: '提示信息',btn: ['取消', '确定']  },
+                function () {
+                if(isFunction(cancelHandler)) {
+                    cancelHandler();
+                }
+                }, function () {
+                    if ( isFunction(confirmHandler)) {
+                        confirmHandler();
+                    }
+            });
+ 
+        },
+        /*弹出成功提示框*/
+        "success": function (msg, okHandler) {
+
+            this.toast(msg, okHandler);
+
+        },
+        /*弹出错误提示*/
+        "error": function (msg, okHandler) {
+            if (isNullOrEmpty(msg)) {
+                msg = "";
+            }
+            layer.open({
+                type: 1 //Page层类型
+                , area: ['400px', '280px']
+                , title: '错误提示！'
+                , icon: 1
+                , shade: 0.6 //遮罩透明度
+                , maxmin: true //允许全屏最小化
+                , anim: 6 //0-6的动画形式，-1不开启
+                , content: '<div style="padding:50px;">' + msg + '</div>'
+                , yes: function (index, layero) {
+                    if (!isNullOrUndefined(okHandler)) {
+                        okHandler();
+                    }
+
+                }
+            });
+
+
+        }
+    };
+    window.MessageBox = MessageBox;//加载到全局定义
+}
+/*-------------------------------扩展对象C#的对象到Js实现----------------------------*/
+/* 定时器 实现
+//var t = new Timer(500);
+//t.Elapsed = function () {
+//    document.write(99);
+//};
+//t.Start();
+*/
+var Timer = /** @class */ (function () {
+    /*  构造函数
+    *@interval 设置定时器的毫秒数
+    */
+    function Timer(interval) {
+        this._enable = false;
+        this.Interval = interval;
+        var that = this;
+        this._handlerInvoker = function () {
+            if (that.Elapsed && that._enable == true) {
+                that.Elapsed();
+            }
+        };
+    }
+    Object.defineProperty(Timer.prototype, "Interval", {
+        get: function () {
+            return this._interval;
+        },
+        set: function (value) {
+            this._interval = value;
+            //重新设定新的定时器
+            if (this._jsInnerTimerObj) {
+                window.clearInterval(this._jsInnerTimerObj);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Timer.prototype, "Elapsed", {
+        get: function () {
+            return this._elapsed;
+        },
+        set: function (value) {
+            /*if (!isFunction(value)) {
+                throw new Error("the Elapsed value must be function!");
+            }*/
+            this._elapsed = value;
+            //只有设置了触发事件才定时，没有回调的定时器是无意义的定时执行其中的匿名方法
+            this._jsInnerTimerObj = window.setInterval(this._handlerInvoker, this.Interval);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Timer.prototype.Start = function () {
+        this._enable = true;
+    };
+    Timer.prototype.Stop = function () {
+        this._enable = false;
+    };
+    return Timer;
+}());
+
