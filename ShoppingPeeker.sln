@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26606.0
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingPeeker.Utilities", "ShoppingPeeker.Utilities\ShoppingPeeker.Utilities.csproj", "{38DA9C4A-2F9F-4D9C-A69E-26234B34A51C}"
 EndProject
@@ -10,10 +10,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit.Test", "Unit.Test", "{F877357D-C063-4B9E-8A46-EAE186520909}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{770C2EB9-AAA0-456F-901D-04826637C088}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingPeeker.DbManage.Tests", "ShoppingPeeker.DbManage.Tests\ShoppingPeeker.DbManage.Tests.csproj", "{B2842BCB-3EF2-46F5-AF19-412D066F8409}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingPeeker.BusinessServices.Tests", "ShoppingPeeker.BusinessServices.Tests\ShoppingPeeker.BusinessServices.Tests.csproj", "{2F3D2DEC-2C36-4018-B5CD-9A59DC5AF4D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,24 +30,11 @@ Global
 		{03F6E346-6C10-4AB2-A3E5-C5B034DC4F00}.Release|Any CPU.Build.0 = Release|Any CPU
 		{03F6E346-6C10-4AB2-A3E5-C5B034DC4F00}.ReleaseNET40_Only|Any CPU.ActiveCfg = Release|Any CPU
 		{03F6E346-6C10-4AB2-A3E5-C5B034DC4F00}.ReleaseNET40_Only|Any CPU.Build.0 = Release|Any CPU
-		{B2842BCB-3EF2-46F5-AF19-412D066F8409}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2842BCB-3EF2-46F5-AF19-412D066F8409}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2842BCB-3EF2-46F5-AF19-412D066F8409}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2842BCB-3EF2-46F5-AF19-412D066F8409}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2842BCB-3EF2-46F5-AF19-412D066F8409}.ReleaseNET40_Only|Any CPU.ActiveCfg = Release|Any CPU
-		{B2842BCB-3EF2-46F5-AF19-412D066F8409}.ReleaseNET40_Only|Any CPU.Build.0 = Release|Any CPU
-		{2F3D2DEC-2C36-4018-B5CD-9A59DC5AF4D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F3D2DEC-2C36-4018-B5CD-9A59DC5AF4D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F3D2DEC-2C36-4018-B5CD-9A59DC5AF4D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F3D2DEC-2C36-4018-B5CD-9A59DC5AF4D7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2F3D2DEC-2C36-4018-B5CD-9A59DC5AF4D7}.ReleaseNET40_Only|Any CPU.ActiveCfg = Release|Any CPU
-		{2F3D2DEC-2C36-4018-B5CD-9A59DC5AF4D7}.ReleaseNET40_Only|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{B2842BCB-3EF2-46F5-AF19-412D066F8409} = {F877357D-C063-4B9E-8A46-EAE186520909}
-		{2F3D2DEC-2C36-4018-B5CD-9A59DC5AF4D7} = {F877357D-C063-4B9E-8A46-EAE186520909}
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DE4D2FBD-D13D-4D4A-B3E0-4A383D799357}
 	EndGlobalSection
 EndGlobal
