@@ -6,7 +6,9 @@ namespace ShoppingPeeker.Web.ViewModels
     public class HomePageViewModel
     {
         #region 属性
-
+        /// <summary>
+        /// 服务器时间
+        /// </summary>
         public DateTime ServerTime { get;  private set; }
 
         #endregion

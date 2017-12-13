@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="logs\**" />
+    <Content Remove="logs\**" />
+    <EmbeddedResource Remove="logs\**" />
+    <None Remove="logs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
   </ItemGroup>
 
@@ -19,10 +26,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ShoppingPeeker.Utilities\ShoppingPeeker.Utilities.csproj" />
+    <ProjectReference Include="..\SocketLibrary\NTCPMSG.Portable\NTCPMessage.Portable.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Framework\Config\" />
     <Folder Include="ViewModels\Platform\" />
   </ItemGroup>
 

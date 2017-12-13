@@ -25,7 +25,7 @@ namespace ShoppingPeeker.Utilities.Logging
         {
             get
             {
-                string configDir = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
+                string configDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configs");
                 var log4ConfigFile = Path.Combine(configDir, "log4net.config");
                 if (!File.Exists(log4ConfigFile))
                 {

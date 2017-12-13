@@ -1,0 +1,65 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\BaseFetchWebPageArgument.cs" Link="EntityPackage\Arguments\BaseFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\DangdangFetchWebPageArgument.cs" Link="EntityPackage\Arguments\DangdangFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\ETaoFetchWebPageArgument.cs" Link="EntityPackage\Arguments\ETaoFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\GuomeiFetchWebPageArgument.cs" Link="EntityPackage\Arguments\GuomeiFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\JingdongFetchWebPageArgument.cs" Link="EntityPackage\Arguments\JingdongFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\MeilishuoFetchWebPageArgument.cs" Link="EntityPackage\Arguments\MeilishuoFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\MogujieFetchWebPageArgument.cs" Link="EntityPackage\Arguments\MogujieFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\PddFetchWebPageArgument.cs" Link="EntityPackage\Arguments\PddFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\RegisterPortArgument.cs" Link="EntityPackage\Arguments\RegisterPortArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\SuningFetchWebPageArgument.cs" Link="EntityPackage\Arguments\SuningFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\TaobaoFetchWebPageArgument.cs" Link="EntityPackage\Arguments\TaobaoFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\TmallFetchWebPageArgument.cs" Link="EntityPackage\Arguments\TmallFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\YhdFetchWebPageArgument.cs" Link="EntityPackage\Arguments\YhdFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\YouhuiquanFetchWebPageArgument.cs" Link="EntityPackage\Arguments\YouhuiquanFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\Zhe800FetchWebPageArgument.cs" Link="EntityPackage\Arguments\Zhe800FetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\DataResultContainer.cs" Link="EntityPackage\DataResultContainer.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\FilterFiled.cs" Link="EntityPackage\FilterFiled.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\IDataContainer.cs" Link="EntityPackage\IDataContainer.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\IFetchWebPageArgument.cs" Link="EntityPackage\IFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\MamaQuanAuctioin.cs" Link="EntityPackage\MamaQuanAuctioin.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\MamaQuanOrProductTuiGuangResult.cs" Link="EntityPackage\MamaQuanOrProductTuiGuangResult.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\OrderField.cs" Link="EntityPackage\OrderField.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\OrderRule.cs" Link="EntityPackage\OrderRule.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\PriceVolumesResult.cs" Link="EntityPackage\PriceVolumesResult.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\ProductBase.cs" Link="EntityPackage\ProductBase.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\DangdangProduct.cs" Link="EntityPackage\Products\DangdangProduct.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\ETaoProduct.cs" Link="EntityPackage\Products\ETaoProduct.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\GuomeiProduct.cs" Link="EntityPackage\Products\GuomeiProduct.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\JingdongProduct.cs" Link="EntityPackage\Products\JingdongProduct.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\MeilishuoProduct.cs" Link="EntityPackage\Products\MeilishuoProduct.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\MogujieProduct.cs" Link="EntityPackage\Products\MogujieProduct.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\PddProduct.cs" Link="EntityPackage\Products\PddProduct.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\SuningProduct.cs" Link="EntityPackage\Products\SuningProduct.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\TaobaoProduct.cs" Link="EntityPackage\Products\TaobaoProduct.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\TmallProduct.cs" Link="EntityPackage\Products\TmallProduct.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\YhdProduct.cs" Link="EntityPackage\Products\YhdProduct.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\Zhe800Product.cs" Link="EntityPackage\Products\Zhe800Product.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\QingTaoKeHideQuanResult.cs" Link="EntityPackage\QingTaoKeHideQuanResult.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\SkuItem.cs" Link="EntityPackage\SkuItem.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\SoapMessage.cs" Link="EntityPackage\SoapMessage.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\SupportPlatform.cs" Link="EntityPackage\SupportPlatform.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\SupportPlatformEnum.cs" Link="EntityPackage\SupportPlatformEnum.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\TaobaoQuanDetailJsonResult.cs" Link="EntityPackage\TaobaoQuanDetailJsonResult.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Youhuiquan.cs" Link="EntityPackage\Youhuiquan.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\YouhuiquanExistsModel.cs" Link="EntityPackage\YouhuiquanExistsModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="EntityPackage\Arguments\" />
+    <Folder Include="EntityPackage\Products\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>

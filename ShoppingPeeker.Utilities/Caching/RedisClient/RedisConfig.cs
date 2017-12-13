@@ -29,7 +29,7 @@ namespace ShoppingPeeker.Utilities.Caching
         /// <summary>
         /// 默认的配置文件
         /// </summary>
-        private static readonly string _configPath = Path.Combine(Directory.GetCurrentDirectory(), "Configs", "redis.config.json");
+        private static readonly string _configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configs", "redis.config.json");
         /// <summary>
         /// 从指定的配置文件加载配置
         /// </summary>

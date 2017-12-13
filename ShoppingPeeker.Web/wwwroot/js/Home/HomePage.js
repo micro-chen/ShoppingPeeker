@@ -83,18 +83,18 @@ $(function () {
 
             //向api发送商品搜索
             homePage.handler_api_search_tmall_products();
-            homePage.handler_api_search_taobao_products();
-            homePage.handler_api_search_jd_products();
-            homePage.handler_api_search_pdd_products();
-            homePage.handler_api_search_vip_products();
-            homePage.handler_api_search_guomei_products();
-            homePage.handler_api_search_suning_products();
-            homePage.handler_api_search_yhd_products();
-            homePage.handler_api_search_mls_products();
-            homePage.handler_api_search_mgj_products();
-            homePage.handler_api_search_dangdang_products();
-            homePage.handler_api_search_zhe800_products();
-            homePage.handler_api_search_etao_products()
+            //homePage.handler_api_search_taobao_products();
+            //homePage.handler_api_search_jd_products();
+            //homePage.handler_api_search_pdd_products();
+            //homePage.handler_api_search_vip_products();
+            //homePage.handler_api_search_guomei_products();
+            //homePage.handler_api_search_suning_products();
+            //homePage.handler_api_search_yhd_products();
+            //homePage.handler_api_search_mls_products();
+            //homePage.handler_api_search_mgj_products();
+            //homePage.handler_api_search_dangdang_products();
+            //homePage.handler_api_search_zhe800_products();
+            //homePage.handler_api_search_etao_products();
         },
 
         //天猫商品检索

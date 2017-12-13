@@ -20,7 +20,7 @@ namespace ShoppingPeeker.Web.Controllers
 {
     public class ServiceBusController : BaseApiController
     {
-       
+
         /// <summary>
         /// 获取自动完成的词目
         /// </summary>
@@ -36,7 +36,7 @@ namespace ShoppingPeeker.Web.Controllers
             IEnumerable<string> topWords = null;
             try
             {
-                 topWords = Single<AutoMappingService>().QueryThisKeywordMappings(key);
+                topWords = Single<AutoMappingService>().QueryThisKeywordMappings(key);
             }
             catch (Exception ex)
             {
@@ -45,6 +45,31 @@ namespace ShoppingPeeker.Web.Controllers
 
             return new SuggestionsViewModdel { suggestions = topWords };
         }
-        
+
+        /// <summary>
+        /// 检索天猫的商品
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        [ActionName("search_tmall_products")]
+        [HttpPost]
+        public SuggestionsViewModdel SearchTmallsProducts(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                return null;
+            }
+            IEnumerable<string> topWords = null;
+            try
+            {
+                topWords = Single<AutoMappingService>().QueryThisKeywordMappings(key);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return new SuggestionsViewModdel { suggestions = topWords };
+        }
     }
 }

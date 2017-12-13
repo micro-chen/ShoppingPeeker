@@ -195,18 +195,8 @@ namespace ShoppingPeeker.Utilities.TypeFinder
         public static string GetBinDirectory()
         {
 
-            return Directory.GetCurrentDirectory();
+            return AppDomain.CurrentDomain.BaseDirectory;
 
-            //if (HostingEnvironment.IsHosted)
-            //{
-            //    //hosted
-            //    return HttpRuntime.BinDirectory;
-            //}
-            //else
-            //{
-            //    //not hosted. For example, run either in unit tests
-            //    return AppDomain.CurrentDomain.BaseDirectory;
-            //}
         }
 
         /// <summary>

@@ -78,7 +78,7 @@ namespace ShoppingPeeker.Utilities
         {
 
 
-            string configDir = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
+            string configDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configs");
             string configFileFullPath = Path.Combine(configDir, configFileName);
             if (!File.Exists(configFileFullPath))
             {

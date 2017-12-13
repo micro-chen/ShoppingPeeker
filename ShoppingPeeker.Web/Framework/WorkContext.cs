@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Web;
 using Microsoft.AspNetCore.Http;
-//using ShoppingPeeker.Data.Interfaces;
-//using ShoppingPeeker.DomainEntity.TableModels;
-using ShoppingPeeker.Utilities.Security;
-using ShoppingPeeker.Utilities.Interface;
 using Microsoft.AspNetCore.Hosting;
 using ShoppingPeeker.Utilities;
 using ShoppingPeeker.Utilities.Ioc;
@@ -60,7 +56,7 @@ namespace ShoppingPeeker.Web
         {
             get
             {
-               
+
                 if (string.IsNullOrEmpty(_SiteName))
                 {
                     _SiteName = ConfigHelper.HostingConfiguration.GetConfig(Contanst.Config_Node_SiteName);
@@ -83,10 +79,11 @@ namespace ShoppingPeeker.Web
         /// <summary>
         /// 请求标识的失效时间（秒）
         /// </summary>
-        public static int SignTimeOut {
+        public static int SignTimeOut
+        {
             get
             {
-                if (_signTimeOut<=0)
+                if (_signTimeOut <= 0)
                 {
                     _signTimeOut = Contanst.Default_SignTimeOut;
                 }
@@ -102,6 +99,32 @@ namespace ShoppingPeeker.Web
         public static IHostingEnvironment HostingEnvironment { get; set; }
 
         /// <summary>
+        /// 蜘蛛ip地址
+        /// </summary>
+        public static string ShoppingWebCrawlerAddress {
+            get {
+
+                var addr= ConfigHelper.AppSettingsConfiguration.GetConfig("ShoppingWebCrawlerAddress");
+                if (string.IsNullOrEmpty(addr))
+                {
+                    addr= "127.0.0.1";
+                }
+                return addr;
+            } }
+        /// <summary>
+        /// 蜘蛛端口
+        /// </summary>
+        public static int ShoppingWebCrawlerPort
+        {
+            get
+            {
+                var port = ConfigHelper.AppSettingsConfiguration.GetConfigInt("ShoppingWebCrawlerPort");
+                return port;
+            }
+        }
+
+
+        /// <summary>
         /// 暴露 当前的Http 上下文
         /// </summary>
         public static HttpContext HttpContext
@@ -109,7 +132,7 @@ namespace ShoppingPeeker.Web
             get
             {
                 object factory = NativeIocContainer.GetInstance<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
-                if (null==factory)
+                if (null == factory)
                 {
                     throw new Exception("未能找到 IHttpContextAccessor 的实例");
                 }
@@ -206,14 +229,12 @@ namespace ShoppingPeeker.Web
         /// <summary>
         /// 当前用户的登录请求IP地址
         /// </summary>
-        public static string CurrentUserFromIpAddress
+        public static string CurrentUserIpAddress
         {
             get
             {
                 string userIP = HttpContext.Request.GetIP();
                 return userIP;
-
-
             }
         }
 
@@ -232,7 +253,6 @@ namespace ShoppingPeeker.Web
 
 
         #endregion
-
 
 
         #region Utilities
@@ -265,11 +285,11 @@ namespace ShoppingPeeker.Web
                 //2 获取里面的时间戳内容对应的时间
                 DateTime clientTimeSign = deCodeString.ToLong().ConvertUnixTimeTokenToDateTime();
                 //3 比较时间是否超出 2分钟 超过2分钟的请求sign 标志为失效的请求
-                if (DateTime.Now.Subtract(clientTimeSign).TotalSeconds<=SignTimeOut)
+                if (DateTime.Now.Subtract(clientTimeSign).TotalSeconds <= SignTimeOut)
                 {
                     result = true;
                 }
-                
+
             }
             catch (Exception ex)
             {
