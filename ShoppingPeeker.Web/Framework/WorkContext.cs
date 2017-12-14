@@ -98,30 +98,30 @@ namespace ShoppingPeeker.Web
 
         public static IHostingEnvironment HostingEnvironment { get; set; }
 
-        /// <summary>
-        /// 蜘蛛ip地址
-        /// </summary>
-        public static string ShoppingWebCrawlerAddress {
-            get {
+        ///// <summary>
+        ///// 蜘蛛ip地址
+        ///// </summary>
+        //public static string ShoppingWebCrawlerAddress {
+        //    get {
 
-                var addr= ConfigHelper.AppSettingsConfiguration.GetConfig("ShoppingWebCrawlerAddress");
-                if (string.IsNullOrEmpty(addr))
-                {
-                    addr= "127.0.0.1";
-                }
-                return addr;
-            } }
-        /// <summary>
-        /// 蜘蛛端口
-        /// </summary>
-        public static int ShoppingWebCrawlerPort
-        {
-            get
-            {
-                var port = ConfigHelper.AppSettingsConfiguration.GetConfigInt("ShoppingWebCrawlerPort");
-                return port;
-            }
-        }
+        //        var addr= ConfigHelper.AppSettingsConfiguration.GetConfig("ShoppingWebCrawlerAddress");
+        //        if (string.IsNullOrEmpty(addr))
+        //        {
+        //            addr= "127.0.0.1";
+        //        }
+        //        return addr;
+        //    } }
+        ///// <summary>
+        ///// 蜘蛛端口
+        ///// </summary>
+        //public static int ShoppingWebCrawlerPort
+        //{
+        //    get
+        //    {
+        //        var port = ConfigHelper.AppSettingsConfiguration.GetConfigInt("ShoppingWebCrawlerPort");
+        //        return port;
+        //    }
+        //}
 
 
         /// <summary>

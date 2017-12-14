@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ShoppingPeeker.Utilities.DataStructure;
-using System.IO;
 using Microsoft.Extensions.Caching.Memory;
+using NTCPMessage.Client;
+
+using ShoppingPeeker.Utilities.DataStructure;
 using ShoppingPeeker.Utilities.Caching;
 using ShoppingPeeker.Utilities.Logging;
 
@@ -27,7 +29,8 @@ namespace ShoppingPeeker.Utilities
         /// <summary>
         /// 运行时host 配置
         /// </summary>
-        public static IConfiguration HostingConfiguration {
+        public static IConfiguration HostingConfiguration
+        {
             get => _hostingConfiguration;
             set => _hostingConfiguration = value;
         }
@@ -42,6 +45,23 @@ namespace ShoppingPeeker.Utilities
         {
             get => _appSettingsConfiguration;
             set => _appSettingsConfiguration = value;
+        }
+
+
+        private static ShoppingWebCrawlerSection _ShoppingWebCrawlerSection;
+        /// <summary>
+        /// 蜘蛛连接配置
+        /// </summary>
+        public static ShoppingWebCrawlerSection ShoppingWebCrawlerSection
+        {
+            get
+            {
+                if (null == _ShoppingWebCrawlerSection)
+                {
+                    _ShoppingWebCrawlerSection = GetShoppingWebCrawlerSection();
+                }
+                return _ShoppingWebCrawlerSection;
+            }
         }
 
         private static IMemoryCache _MonitorConfingSnapshot;
@@ -61,6 +81,7 @@ namespace ShoppingPeeker.Utilities
                 return _MonitorConfingSnapshot;
             }
         }
+
 
 
         #endregion
@@ -119,7 +140,7 @@ namespace ShoppingPeeker.Utilities
                         MonitorConfingSnapshot.Set(snapshotKey, value, dependency, handler);
 
                         //通知订阅的事件触发
-                        if (configRoot==HostingConfiguration&& null!=OnHostingConfigChangedEvent)
+                        if (configRoot == HostingConfiguration && null != OnHostingConfigChangedEvent)
                         {
                             OnHostingConfigChangedEvent.Invoke("ConfigHelper", new ConfigChangedEventArgs { ResultOfChangedConfig = configRoot });
                         }
@@ -176,6 +197,23 @@ namespace ShoppingPeeker.Utilities
 
         }
 
+        /// <summary>
+        /// 得到AppSettings中的配置蜘蛛信息
+        /// </summary>
+        /// <returns></returns>
+        public static ShoppingWebCrawlerSection GetShoppingWebCrawlerSection()
+        {
+            var key = ShoppingWebCrawlerSection.SectionName;
+            var section = AppSettingsConfiguration.GetSection(key);
+            if (null == section)
+            {
+                throw new Exception("GetShoppingWebCrawlerSection failed,not set ShoppingWebCrawlerSection. ");
+            }
+
+            var configSection = section.Get<ShoppingWebCrawlerSection>();
+
+            return configSection;
+        }
 
         /// <summary>
         /// 得到AppSettings中的配置Bool信息

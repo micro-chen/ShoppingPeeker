@@ -31,6 +31,9 @@
 	  <Folder Include="Events\" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\SocketLibrary\NTCPMSG.Portable\NTCPMessage.Portable.csproj" />
+	</ItemGroup>
+	<ItemGroup>
 	  <PackageReference Update="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.0.0" />
 	  <PackageReference Update="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
 	</ItemGroup>

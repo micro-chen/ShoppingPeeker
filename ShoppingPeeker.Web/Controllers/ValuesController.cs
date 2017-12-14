@@ -9,6 +9,8 @@ using NTCPMessage.Serialize;
 using NTCPMessage.EntityPackage;
 using System.Net;
 using System.Text;
+using ShoppingPeeker.Utilities;
+using NTCPMessage;
 
 /// <summary>
 /// 示范的 Web API 地址。
@@ -31,21 +33,24 @@ namespace ShoppingPeeker.Web.Controllers
         public string TestTcp()
         {
             var resut = string.Empty;
-
-            var endPoint = new IPEndPoint(IPAddress.Parse(WorkContext.ShoppingWebCrawlerAddress), WorkContext.ShoppingWebCrawlerPort);
-            SingleConnectionCable client = new SingleConnectionCable(endPoint, 7);
-            //ISerialize<SoapMessage> iSendMessageSerializer = new NTCPMessage.Serialize.JsonSerializer<SoapMessage>();
-            //ISerialize<DataContainer> iReturnDataSerializer = new NTCPMessage.Serialize.JsonSerializer<DataContainer>();
             try
             {
-                client.Connect(5000);
-                //发送ping
-                var buffer = Encoding.UTF8.GetBytes("ping");
-                var resultBytes = client.SyncSend((UInt32)MessageType.None, buffer);
 
-                var str = Encoding.UTF8.GetString(resultBytes);
+                var connStr = ConfigHelper.ShoppingWebCrawlerSection.ConnectionStringCollection.First();
+                using (var conn = new SoapTcpConnection(connStr))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                    {
+                        conn.Open();
+                    }
 
-                resut = string.Concat("time :", DateTime.Now.ToString(), "; tcp server response: ", str);
+                    //发送ping
+
+                    var str = conn.SendString(CommandConstants.CMD_Ping);
+                    resut = string.Concat("time :", DateTime.Now.ToString(), "; tcp server response: ", str);
+                }
+
+
             }
             catch (Exception ex)
             {

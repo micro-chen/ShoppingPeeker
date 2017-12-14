@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using ShoppingPeeker.Utilities;
 using ShoppingPeeker.Utilities.Ioc;
 using ShoppingPeeker.Utilities.Logging;
+using NTCPMessage.Client;
 //using ShoppingPeeker.DbManage;
 
 namespace ShoppingPeeker.Web
@@ -28,7 +29,15 @@ namespace ShoppingPeeker.Web
 		{
 			//保证配置的全局
 			ConfigHelper.AppSettingsConfiguration = configuration;
-		}
+            //配置蜘蛛程序连接池
+            var crawlerConfigSection = ConfigHelper.ShoppingWebCrawlerSection;
+            if (null!= crawlerConfigSection)
+            {
+                SoapTcpPool.InitPoolManager(crawlerConfigSection.ConnectionStringCollection);
+            }
+            
+
+        }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
