@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NTCPMessage.EntityPackage.Arguments;
+
 using Microsoft.AspNetCore.Mvc;
 using ShoppingPeeker.Web.Mvc;
 using ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord;
@@ -53,23 +55,30 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_tmall_products")]
         [HttpPost]
-        public SuggestionsViewModdel SearchTmallsProducts(string key)
+        public BusinessViewModelContainer<SearchProductViewModel> SearchTmallsProducts(TmallFetchWebPageArgument webArgs)
         {
-            if (string.IsNullOrEmpty(key))
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+            SearchProductViewModel dataModel = new SearchProductViewModel();
+            container.Data = dataModel;
+
+            if (null==webArgs||!webArgs.IsValid())
             {
-                return null;
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
             }
-            IEnumerable<string> topWords = null;
+
+            
             try
             {
-                topWords = Single<AutoMappingService>().QueryThisKeywordMappings(key);
+              //使用指定平台的页面检索服务 进行搜索商品
+
             }
             catch (Exception ex)
             {
                 Logger.Error(ex);
             }
 
-            return new SuggestionsViewModdel { suggestions = topWords };
+            return container;
         }
     }
 }

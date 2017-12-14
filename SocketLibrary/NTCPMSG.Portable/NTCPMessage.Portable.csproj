@@ -11,6 +11,8 @@
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\ETaoFetchWebPageArgument.cs" Link="EntityPackage\Arguments\ETaoFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\GuomeiFetchWebPageArgument.cs" Link="EntityPackage\Arguments\GuomeiFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\JingdongFetchWebPageArgument.cs" Link="EntityPackage\Arguments\JingdongFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\KeyWordTag.cs" Link="EntityPackage\Arguments\KeyWordTag.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\KeyWordTagGroup.cs" Link="EntityPackage\Arguments\KeyWordTagGroup.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\MeilishuoFetchWebPageArgument.cs" Link="EntityPackage\Arguments\MeilishuoFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\MogujieFetchWebPageArgument.cs" Link="EntityPackage\Arguments\MogujieFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\PddFetchWebPageArgument.cs" Link="EntityPackage\Arguments\PddFetchWebPageArgument.cs" />

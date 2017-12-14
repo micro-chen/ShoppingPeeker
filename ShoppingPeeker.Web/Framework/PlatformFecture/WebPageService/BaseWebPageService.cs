@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net;
 using System.Threading.Tasks;
+using NTCPMessage.EntityPackage.Arguments;
 using ShoppingPeeker.Utilities.Interface;
 using ShoppingPeeker.Utilities.Http;
 using ShoppingPeeker.Web.ViewModels;
@@ -15,15 +16,15 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
     /// web 页面请求服务的基类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class BaseWebPageService<T>: BaseRequest,IPlatformService where T: BaseProductViewModel,new()
+    public abstract class BaseWebPageService: BaseRequest,IPlatformService 
     {
         /// <summary>
-        /// 根据关键词 请求对应平台上的返回结果
+        /// 根据关键词 ,筛选条件， 请求对应平台上的返回结果
         /// 结果是各自平台上的 商品Item列表
         /// </summary>
-        /// <param name="keyWord"></param>
+        /// <param name="webArgs"></param>
         /// <returns></returns>
-        public abstract List<T> QueryProductsByWords(string keyWord);
+        public abstract SearchProductViewModel QueryProductsByWords(BaseFetchWebPageArgument webArgs);
 
         /// <summary>
         /// 格式化 字符串 并且过滤

@@ -1,24 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
+
+using NTCPMessage.EntityPackage;
+using NTCPMessage.EntityPackage.Arguments;
 
 namespace ShoppingPeeker.Web.ViewModels
 {
     /// <summary>
-    /// 商品视图模型的基类-抽象类
+    /// 查询商品视图模型
     /// </summary>
-    public abstract class BaseProductViewModel
+    public  class SearchProductViewModel
     {
-        /* --基础字段---
-         //商品ID
-         //商品的链接基础地址--抽象属性
-         //是否有优惠券
-         //优惠券地址-----抽象属性
-         //主图地址
-         //商品标题
-         //商品现价
-         //交易成功数目
-         //卖家店铺名称
-         //付款或者交易笔数*/
+        /// <summary>
+        /// 本次使用的搜索关键词
+        /// </summary>
+        public string KeyWord { get; set; }
+        /// <summary>
+        /// 关联的tag集合
+        /// </summary>
+        public List<KeyWordTag> Tags { get; set; }
 
+        /// <summary>
+        /// 搜索结果商品列表
+        /// </summary>
+        public List<ProductBase>Products { get; set; }
 
 
     }

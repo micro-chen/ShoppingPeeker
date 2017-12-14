@@ -14,8 +14,14 @@ namespace ShoppingPeeker.Web.ViewModels
         public BusinessViewModelContainer()
         {
             this.Data = default(T);
+            this.Status = true;
         }
+        /// <summary>
+        /// 结果状态
+        /// </summary>
+        public bool Status { get; set; }
 
+        public string ErrorMsg { get; set; }
         /// <summary>
         /// 数据承载
         /// </summary>
@@ -25,8 +31,15 @@ namespace ShoppingPeeker.Web.ViewModels
         /// 分页信息
         /// </summary>
         public PageInfo PagerInfomation { get; set; }
-
-
+        /// <summary>
+        /// 设置为失败结果
+        /// </summary>
+        /// <param name="errMsg"></param>
+        public void SetFalied(string errMsg="")
+        {
+            this.Status = false;
+            this.ErrorMsg = errMsg;
+        }
         /// <summary>
         /// 判断数据是否是空白数据类型
         /// </summary>
