@@ -43,7 +43,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord
         /// <returns></returns>
         public Task<string> QueryWordsResonseAsync(HttpClient client, CookieContainer cookies = null)
         {
-            return this.SendRequesntAsync(client, cookies);
+            return this.SendHttpRequesntAsync(client, cookies);
 
         }
     }

@@ -9,6 +9,7 @@ using ShoppingPeeker.Web.Mvc;
 using ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord;
 using ShoppingPeeker.Utilities.Logging;
 using ShoppingPeeker.Web.ViewModels;
+using ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 /// <summary>
@@ -58,8 +59,6 @@ namespace ShoppingPeeker.Web.Controllers
         public BusinessViewModelContainer<SearchProductViewModel> SearchTmallsProducts(TmallFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
-            SearchProductViewModel dataModel = new SearchProductViewModel();
-            container.Data = dataModel;
 
             if (null==webArgs||!webArgs.IsValid())
             {
@@ -67,11 +66,11 @@ namespace ShoppingPeeker.Web.Controllers
                 return container;
             }
 
-            
             try
             {
-              //使用指定平台的页面检索服务 进行搜索商品
-
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {

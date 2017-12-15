@@ -49,7 +49,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord
         static TmallAutoMapping()
         {
             //初始化头信息
-            var tmallRequestHeaders = BaseAutoMappingWord.GetCommonRequestHeaders();
+            var tmallRequestHeaders = BaseAutoMappingWord.GetCommonHttpRequestHeaders();
             tmallRequestHeaders.Add("Referer", "https://www.tmall.com/");
             tmallHttpClient = new HttpClient();
             tmallHttpClient.Timeout = TimeSpan.FromMilliseconds(2000);

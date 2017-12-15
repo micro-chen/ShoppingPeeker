@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingPeeker.Web.Mvc;
+using NTCPMessage;
 using NTCPMessage.Client;
 using NTCPMessage.Serialize;
 using NTCPMessage.EntityPackage;
 using System.Net;
 using System.Text;
 using ShoppingPeeker.Utilities;
-using NTCPMessage;
+
 
 /// <summary>
 /// 示范的 Web API 地址。

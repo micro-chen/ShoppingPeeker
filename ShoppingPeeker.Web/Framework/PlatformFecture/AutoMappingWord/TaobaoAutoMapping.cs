@@ -47,7 +47,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord
         static TaobaoAutoMapping()
         {
             //初始化头信息
-            var taobaoRequestHeaders = BaseAutoMappingWord.GetCommonRequestHeaders();
+            var taobaoRequestHeaders = BaseAutoMappingWord.GetCommonHttpRequestHeaders();
             taobaoRequestHeaders.Add("Referer", "https://www.taobao.com/");
             taobaoHttpClient = new HttpClient();
             taobaoHttpClient.Timeout = TimeSpan.FromMilliseconds(2000);

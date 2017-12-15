@@ -23,23 +23,23 @@ namespace System
             {
                 return string.Empty;
             }
-            IsoDateTimeConverter timeFormat = new IsoDateTimeConverter();
-            timeFormat.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
-            return Newtonsoft.Json.JsonConvert.SerializeObject(obj, timeFormat);
+            return JsonConvert.SerializeObject(obj);
+
+            //IsoDateTimeConverter timeFormat = new IsoDateTimeConverter();
+            //timeFormat.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+            //return Newtonsoft.Json.JsonConvert.SerializeObject(obj, timeFormat);
         }
 
-       ///// <summary>
-       ///// 字符串反序列化到实体
-       ///// </summary>
-       ///// <typeparam name="T"></typeparam>
-       ///// <param name="jsonStr"></param>
-       ///// <returns></returns>
-       // public static T FromJsonToObject<T>(this string jsonStr)
-       // {
-
-       //     return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonStr);
-
-       // }
+        /// <summary>
+        /// 字符串反序列化到实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jsonStr"></param>
+        /// <returns></returns>
+        public static T FromJsonToObject<T>(this string jsonStr)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonStr);
+        }
 
 
 

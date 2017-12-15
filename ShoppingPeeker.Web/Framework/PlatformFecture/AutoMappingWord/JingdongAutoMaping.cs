@@ -66,7 +66,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord
         static JingdongAutoMaping()
         {
             //初始化头信息
-           var  jdRequestHeaders = BaseAutoMappingWord.GetCommonRequestHeaders();
+           var  jdRequestHeaders = BaseAutoMappingWord.GetCommonHttpRequestHeaders();
             jdRequestHeaders.Add("Referer", "https://www.jd.com/");
 
             jdHttpClient = new HttpClient();
