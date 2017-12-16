@@ -6,10 +6,10 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using ShoppingPeeker.Plugins;
 using ShoppingPeeker.Utilities.TypeFinder;
 using ShoppingPeeker.Utilities.Caching;
-using Microsoft.Extensions.Caching.Memory;
 using ShoppingPeeker.Utilities.Logging;
 
 namespace ShoppingPeeker.Utilities.Plugins

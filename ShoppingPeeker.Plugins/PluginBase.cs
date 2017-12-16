@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.IO;
-using System.Reflection;
 using System.Linq;
 
 namespace ShoppingPeeker.Plugins
@@ -56,7 +55,9 @@ namespace ShoppingPeeker.Plugins
             if (string.IsNullOrEmpty(this._MetaManifest.Name))
             {
                 var pluginFile=new DirectoryInfo(this.PluginDirectory)
-                .EnumerateFiles("Plugin.*.Extension.dll").FirstOrDefault();
+                .EnumerateFiles("Plugin.*.Extension.dll")
+                .FirstOrDefault();
+
                 if (null!=pluginFile)
                 {
                     this._MetaManifest.Name = pluginFile.Name;
