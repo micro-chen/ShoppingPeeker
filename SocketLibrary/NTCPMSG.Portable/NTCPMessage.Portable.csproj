@@ -33,6 +33,7 @@
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\OrderRule.cs" Link="EntityPackage\OrderRule.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\PriceVolumesResult.cs" Link="EntityPackage\PriceVolumesResult.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\ProductBase.cs" Link="EntityPackage\ProductBase.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\ProductBaseCollection.cs" Link="EntityPackage\ProductBaseCollection.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\DangdangProduct.cs" Link="EntityPackage\Products\DangdangProduct.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\ETaoProduct.cs" Link="EntityPackage\Products\ETaoProduct.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\GuomeiProduct.cs" Link="EntityPackage\Products\GuomeiProduct.cs" />

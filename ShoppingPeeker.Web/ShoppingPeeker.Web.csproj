@@ -52,7 +52,7 @@
     <None Update="Configs\SupportPlatforms.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Plugins\Plugin.Tmall.Extension\MetaManifest.txt">
+    <None Update="Plugins\Plugin.Tmall.Extension\readMe.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Plugins\readMe.txt">

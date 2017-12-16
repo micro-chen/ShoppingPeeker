@@ -14,12 +14,12 @@ namespace ShoppingPeeker.Web.ViewModels
         public BusinessViewModelContainer()
         {
             this.Data = default(T);
-            this.Status = true;
+            this.Status = 1;
         }
         /// <summary>
         /// 结果状态
         /// </summary>
-        public bool Status { get; set; }
+        public int Status { get; set; }
 
         public string ErrorMsg { get; set; }
         /// <summary>
@@ -37,7 +37,7 @@ namespace ShoppingPeeker.Web.ViewModels
         /// <param name="errMsg"></param>
         public void SetFalied(string errMsg="")
         {
-            this.Status = false;
+            this.Status = 0;
             this.ErrorMsg = errMsg;
         }
         /// <summary>

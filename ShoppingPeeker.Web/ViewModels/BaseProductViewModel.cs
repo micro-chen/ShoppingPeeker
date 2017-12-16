@@ -23,7 +23,7 @@ namespace ShoppingPeeker.Web.ViewModels
         /// <summary>
         /// 搜索结果商品列表
         /// </summary>
-        public List<ProductBase>Products { get; set; }
+        public ProductBaseCollection Products { get; set; }
 
 
     }

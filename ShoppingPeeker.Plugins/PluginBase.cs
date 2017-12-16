@@ -60,7 +60,7 @@ namespace ShoppingPeeker.Plugins
 
                 if (null!=pluginFile)
                 {
-                    this._MetaManifest.Name = pluginFile.Name;
+                    this._MetaManifest.Name = Path.GetFileNameWithoutExtension( pluginFile.FullName);
                 }
             }
             //3 判断是否插件名称初始化;如果没有，那么使用插件所在的文件夹名称

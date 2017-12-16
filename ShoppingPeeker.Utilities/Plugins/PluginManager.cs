@@ -18,17 +18,17 @@ namespace ShoppingPeeker.Utilities.Plugins
     /// 插件管理器
     /// 插件dll的标准命名：Plugin.*.Extension.dll
     /// </summary>
-    public class PluginManager
+    public static class PluginManager
     {
         /// <summary>
         /// 当前系统加载的插件集合
         /// </summary>
-        public static ConcurrentDictionary<string, IPlugin> AppPlugins = new ConcurrentDictionary<string, IPlugin>();
+        public static readonly ConcurrentDictionary<string, IPlugin> AppPlugins = new ConcurrentDictionary<string, IPlugin>();
 
         /// <summary>
         /// 插件放置的根目录
         /// </summary>
-        public static string PluginRootDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
+        public static readonly string PluginRootDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
 
         /// <summary>
         /// 插件type
@@ -140,7 +140,7 @@ namespace ShoppingPeeker.Utilities.Plugins
         /// </summary>
         /// <param name="pluginName"></param>
         /// <returns></returns>
-        public IPlugin Load(string pluginName)
+        public static IPlugin Load(string pluginName)
         {
             IPlugin plugin = null;
             //1 首先尝试从注册登记的字典查询

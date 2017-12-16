@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ShoppingPeeker.Plugins\ShoppingPeeker.Plugins.csproj" />
+    <ProjectReference Include="..\..\SocketLibrary\NTCPMSG.Portable\NTCPMessage.Portable.csproj" />
   </ItemGroup>
 
   <ItemGroup>

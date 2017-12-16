@@ -56,7 +56,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_tmall_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchTmallsProducts(TmallFetchWebPageArgument webArgs)
+        public BusinessViewModelContainer<SearchProductViewModel> SearchTmallsProducts([FromBody]TmallFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 

@@ -10,12 +10,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Logging;
+using NTCPMessage.Client;
 
 using ShoppingPeeker.Utilities;
 using ShoppingPeeker.Utilities.Ioc;
 using ShoppingPeeker.Utilities.Logging;
-using NTCPMessage.Client;
-//using ShoppingPeeker.DbManage;
+using ShoppingPeeker.Utilities.Plugins;
 
 namespace ShoppingPeeker.Web
 {
@@ -31,11 +31,12 @@ namespace ShoppingPeeker.Web
 			ConfigHelper.AppSettingsConfiguration = configuration;
             //配置蜘蛛程序连接池
             var crawlerConfigSection = ConfigHelper.ShoppingWebCrawlerSection;
-            if (null!= crawlerConfigSection)
+            if (null != crawlerConfigSection)
             {
                 SoapTcpPool.InitPoolManager(crawlerConfigSection.ConnectionStringCollection);
             }
-            
+            //插件自动加载
+            PluginManager.AutoDiscoverPlugins();
 
         }
 
