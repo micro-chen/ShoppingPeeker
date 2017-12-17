@@ -82,6 +82,9 @@ namespace ShoppingPeeker.Utilities.Plugins
                                     pluginInstance.MetaManifest.Name,
                                     pluginInstance,
                                     (key, oldValue) => pluginInstance);
+                                //监视当前插件
+                                var currentPluginDir = itemType.Assembly.GetDirectoryPath();
+                                ListenSinglePlugin(currentPluginDir);
                             }
                             catch { }
                         }
@@ -94,30 +97,23 @@ namespace ShoppingPeeker.Utilities.Plugins
             }
             finally
             {
-                //监控插件变更
-                ListenPluginsChanged();
+                ListenGlobleRootPlugin();
             }
         }
 
-        private static void ListenPluginsChanged()
+        /// <summary>
+        /// 监视根目录下的全部插件
+        /// 根据根目录下的 缓存监视标志文件的变更，进行事件监视
+        /// </summary>
+        private static void ListenGlobleRootPlugin()
         {
-            string configFileFullPath = Path.Combine(PluginRootDir, _load_plugins_completed_token);
-            //创建标识文件
-            if (!File.Exists(configFileFullPath))
-            {
-                File.WriteAllText(configFileFullPath, DateTime.Now.ToString(), Encoding.UTF8);
-            }
-            FileCacheDependency dependency = new FileCacheDependency(configFileFullPath);
-
-            string snapshotKey = string.Concat("__plugin_", _load_plugins_completed_token);
-            var value = DateTime.Now;
-
+            string cacheBinFileFullPath = Path.Combine(PluginRootDir, _load_plugins_completed_token);
             PostEvictionDelegate handler = null;
             handler = (key, valueNew, reason, state) =>
             {
                 try
                 {
-                    Logger.Info(string.Format("plugin cache file {0} has changed and the plugins reload!", configFileFullPath));
+                    Logger.Info(string.Format("plugin cache file {0} has changed and the plugins reload!", cacheBinFileFullPath));
 
                     //移除上次监视
                     ConfigHelper.MonitorConfingSnapshot.Remove(key);
@@ -131,8 +127,95 @@ namespace ShoppingPeeker.Utilities.Plugins
                 }
 
             };
+            //监控插件变更
+            ListenFileChanged(cacheBinFileFullPath, handler);
+        }
 
-            ConfigHelper.MonitorConfingSnapshot.Set(snapshotKey, value, dependency, handler);
+        /// <summary>
+        /// 对单个插件进行状态监视
+        /// </summary>
+        /// <param name="pluginDir"></param>
+        private static void ListenSinglePlugin(string pluginDir)
+        {
+            if (!Directory.Exists(pluginDir))
+            {
+                Logger.Info(string.Format("pluginDir  not Exists  {0} ", pluginDir));
+                return;
+            }
+
+            string cacheBinFileFullPath = Path.Combine(pluginDir, _load_plugins_completed_token);
+            PostEvictionDelegate handler = null;
+            handler = (key, valueNew, reason, state) =>
+            {
+                try
+                {
+                    Logger.Info(string.Format("plugin cache file {0} has changed and the plugins reload!", cacheBinFileFullPath));
+
+                    //移除上次监视
+                    ConfigHelper.MonitorConfingSnapshot.Remove(key);
+                    //强制刷新当前插件，并进行下次的监视
+                    var pluginFiles = new DirectoryInfo(pluginDir)
+                .EnumerateFiles("Plugin.*.Extension.dll", SearchOption.TopDirectoryOnly);//查询插件格式的dll;
+                    if (pluginFiles.IsNotEmpty())
+                    {
+                        foreach (var assFile in pluginFiles)
+                        {
+                            var ass = Assembly.LoadFrom(assFile.FullName);
+                            var typeFinder = new AppDomainTypeFinder();
+                            var lstPluginTypes = typeFinder.FindClassesOfType(_PluginType, new Assembly[] { ass }, true);
+                            if (lstPluginTypes.IsNotEmpty())
+                            {
+                                foreach (var itemType in lstPluginTypes)
+                                {
+                                    try
+                                    {
+                                        //仅仅加载可以正常实例化的插件，测试是否可以实例化
+                                        var pluginInstance = itemType.InvokeMember(
+                                        PluginBase.CreatNewInstanceMethodName,
+                                        BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod,
+                                        null,
+                                        null,
+                                        new object[] { }) as IPlugin;
+                                        //注册到插件字典
+                                        AppPlugins.AddOrUpdate(
+                                            pluginInstance.MetaManifest.Name,
+                                            pluginInstance,
+                                            (oldkey, oldValue) => pluginInstance);
+                                        //监视当前插件
+                                        var currentPluginDir = itemType.Assembly.GetDirectoryPath();
+                                        ListenSinglePlugin(currentPluginDir);
+                                    }
+                                    catch { }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                }
+
+            };
+            //监控插件变更
+            ListenFileChanged(cacheBinFileFullPath, handler);
+        }
+
+        private static void ListenFileChanged(string cacheBinPath, PostEvictionDelegate callBackHandler)
+        {
+            //创建标识文件
+            if (!File.Exists(cacheBinPath))
+            {
+                File.WriteAllText(cacheBinPath, DateTime.Now.ToString(), Encoding.UTF8);
+            }
+            FileCacheDependency dependency = new FileCacheDependency(cacheBinPath);
+
+            string snapshotKey = string.Concat("plugin_listen:", cacheBinPath);
+            var value = DateTime.Now;
+
+           
+
+            ConfigHelper.MonitorConfingSnapshot.Set(snapshotKey, value, dependency, callBackHandler);
         }
 
         /// <summary>
