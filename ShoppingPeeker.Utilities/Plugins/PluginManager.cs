@@ -33,7 +33,7 @@ namespace ShoppingPeeker.Utilities.Plugins
         /// <summary>
         /// 插件type
         /// </summary>
-        private static Type _PluginType = typeof(PluginBase);
+        private static Type _PluginType = typeof(IPlugin);
         /// <summary>
         /// 标识已经加载完毕插件的文件标识
         /// 一旦此文件 变更 或者被移除 ，那么重新加载全部的插件
@@ -47,7 +47,7 @@ namespace ShoppingPeeker.Utilities.Plugins
         {
             //匹配全部的 插件格式的dll
             var pluginFiles = new DirectoryInfo(PluginRootDir)
-                .EnumerateFiles("Plugin.*.Extension.dll", SearchOption.AllDirectories);//查询插件格式的dll;
+                .EnumerateFiles(PluginConstant.PluginFileNameFormat, SearchOption.AllDirectories);//查询插件格式的dll;
 
             try
             {
@@ -71,8 +71,8 @@ namespace ShoppingPeeker.Utilities.Plugins
                             try
                             {
                                 //仅仅加载可以正常实例化的插件，测试是否可以实例化
-                                var pluginInstance = itemType.InvokeMember(
-                                PluginBase.CreatNewInstanceMethodName,
+                                var pluginInstance = itemType.BaseType.InvokeMember(
+                                PluginConstant.InstanceFactoryMethodName,
                                 BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod,
                                 null,
                                 null,
@@ -86,7 +86,10 @@ namespace ShoppingPeeker.Utilities.Plugins
                                 var currentPluginDir = itemType.Assembly.GetDirectoryPath();
                                 ListenSinglePlugin(currentPluginDir);
                             }
-                            catch { }
+                            catch ( Exception ex)
+                            {
+                                throw ex;
+                            }
                         }
                     }
                 }
@@ -155,7 +158,7 @@ namespace ShoppingPeeker.Utilities.Plugins
                     ConfigHelper.MonitorConfingSnapshot.Remove(key);
                     //强制刷新当前插件，并进行下次的监视
                     var pluginFiles = new DirectoryInfo(pluginDir)
-                .EnumerateFiles("Plugin.*.Extension.dll", SearchOption.TopDirectoryOnly);//查询插件格式的dll;
+                .EnumerateFiles(PluginConstant.PluginFileNameFormat, SearchOption.TopDirectoryOnly);//查询插件格式的dll;
                     if (pluginFiles.IsNotEmpty())
                     {
                         foreach (var assFile in pluginFiles)
@@ -170,8 +173,8 @@ namespace ShoppingPeeker.Utilities.Plugins
                                     try
                                     {
                                         //仅仅加载可以正常实例化的插件，测试是否可以实例化
-                                        var pluginInstance = itemType.InvokeMember(
-                                        PluginBase.CreatNewInstanceMethodName,
+                                        var pluginInstance = itemType.BaseType.InvokeMember(
+                                        PluginConstant.InstanceFactoryMethodName,
                                         BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod,
                                         null,
                                         null,
@@ -247,8 +250,8 @@ namespace ShoppingPeeker.Utilities.Plugins
                     if (null!= itemType)
                     {
                         //仅仅加载可以正常实例化的插件，测试是否可以实例化
-                        plugin = itemType.InvokeMember(
-                        PluginBase.CreatNewInstanceMethodName,
+                        plugin = itemType.BaseType.InvokeMember(
+                        PluginConstant.InstanceFactoryMethodName,
                         BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod,
                         null,
                         null,

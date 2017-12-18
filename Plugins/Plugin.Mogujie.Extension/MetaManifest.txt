@@ -1,0 +1,4 @@
+﻿Name: Plugin.Mogujie.Extension
+Author: The ShoppingPeeker Team
+Website: http://www.huidangso.com
+Version: 1.6

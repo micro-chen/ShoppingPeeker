@@ -9,20 +9,18 @@ using NTCPMessage.EntityPackage;
 
 using ShoppingPeeker.Plugins;
 
-namespace Plugin.Tmall.Extension
+namespace Plugin.Meilishuo.Extension
 {
-    public class TmallPlugin : PluginBase <TmallPlugin>
+    public class MeilishuoPlugin : PluginBase <MeilishuoPlugin>
     {
-
-
-       
+ 
         /// <summary>
         /// 自我创建新实例
         /// </summary>
         /// <returns></returns>
         public override IPlugin CreateNew()
         {
-            var instance = new TmallPlugin();
+            var instance = new MeilishuoPlugin();
             return instance;
         }
         /// <summary>
@@ -53,7 +51,7 @@ namespace Plugin.Tmall.Extension
             //1 tags 解析
             var lstTags = new List<KeyWordTag> {
                 new KeyWordTag {
-                    Platform = NTCPMessage.EntityPackage.SupportPlatformEnum.Tmall,
+                    Platform = NTCPMessage.EntityPackage.SupportPlatformEnum.Meilishuo,
                     TagName = "大衣", Value = "dayi", FilterFiled = "sku"
                 } };
             resultBag.Add("Tags", lstTags);
@@ -61,7 +59,7 @@ namespace Plugin.Tmall.Extension
             // 2 products  解析
             ProductBaseCollection lstProducts =new  ProductBaseCollection()
             {
-                new TmallProduct { ItemId=1,Title="测试大衣"}
+                new MeilishuoProduct { ItemId=1,Title="测试大衣"}
             };
             resultBag.Add("Products", lstProducts);
 

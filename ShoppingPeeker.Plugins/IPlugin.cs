@@ -17,6 +17,7 @@ namespace ShoppingPeeker.Plugins
         /// <returns></returns>
         IPlugin CreateNew();
 
+
         /// <summary>
         /// 执行插件的方法
         /// </summary>
