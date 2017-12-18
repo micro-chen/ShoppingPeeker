@@ -71,24 +71,11 @@ namespace ShoppingPeeker.Utilities.Plugins
                             try
                             {
                                 //仅仅加载可以正常实例化的插件，测试是否可以实例化
-                                var pluginInstance = itemType.BaseType.InvokeMember(
-                                PluginConstant.InstanceFactoryMethodName,
-                                BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod,
-                                null,
-                                null,
-                                new object[] { }) as IPlugin;
-                                //注册到插件字典
-                                AppPlugins.AddOrUpdate(
-                                    pluginInstance.MetaManifest.Name,
-                                    pluginInstance,
-                                    (key, oldValue) => pluginInstance);
-                                //监视当前插件
-                                var currentPluginDir = itemType.Assembly.GetDirectoryPath();
-                                ListenSinglePlugin(currentPluginDir);
+                                var pluginInstance = CreatePluginInstance(itemType);
                             }
-                            catch ( Exception ex)
+                            catch (Exception ex)
                             {
-                                throw ex;
+                                Logging.Logger.Error(ex);
                             }
                         }
                     }
@@ -172,23 +159,9 @@ namespace ShoppingPeeker.Utilities.Plugins
                                 {
                                     try
                                     {
-                                        //仅仅加载可以正常实例化的插件，测试是否可以实例化
-                                        var pluginInstance = itemType.BaseType.InvokeMember(
-                                        PluginConstant.InstanceFactoryMethodName,
-                                        BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod,
-                                        null,
-                                        null,
-                                        new object[] { }) as IPlugin;
-                                        //注册到插件字典
-                                        AppPlugins.AddOrUpdate(
-                                            pluginInstance.MetaManifest.Name,
-                                            pluginInstance,
-                                            (oldkey, oldValue) => pluginInstance);
-                                        //监视当前插件
-                                        var currentPluginDir = itemType.Assembly.GetDirectoryPath();
-                                        ListenSinglePlugin(currentPluginDir);
+                                        CreatePluginInstance(itemType);
                                     }
-                                    catch { }
+                                    catch (Exception ex) { Logger.Error(ex); }
                                 }
                             }
                         }
@@ -204,6 +177,40 @@ namespace ShoppingPeeker.Utilities.Plugins
             ListenFileChanged(cacheBinFileFullPath, handler);
         }
 
+        /// <summary>
+        /// 创建插件的实例
+        /// </summary>
+        /// <param name="itemType"></param>
+        private static IPlugin CreatePluginInstance(Type itemType)
+        {
+            try
+            {
+
+
+                //仅仅加载可以正常实例化的插件，测试是否可以实例化
+                var pluginInstance = itemType.BaseType.InvokeMember(
+                PluginConstant.InstanceFactoryMethodName,
+                BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod,
+                null,
+                null,
+                new object[] { }) as IPlugin;
+                //注册到插件字典
+                AppPlugins.AddOrUpdate(
+                    pluginInstance.MetaManifest.Name,
+                    pluginInstance,
+                    (oldkey, oldValue) => pluginInstance);
+                //监视当前插件
+                var currentPluginDir = itemType.Assembly.GetDirectoryPath();
+                ListenSinglePlugin(currentPluginDir);
+
+                return pluginInstance;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private static void ListenFileChanged(string cacheBinPath, PostEvictionDelegate callBackHandler)
         {
             //创建标识文件
@@ -216,7 +223,7 @@ namespace ShoppingPeeker.Utilities.Plugins
             string snapshotKey = string.Concat("plugin_listen:", cacheBinPath);
             var value = DateTime.Now;
 
-           
+
 
             ConfigHelper.MonitorConfingSnapshot.Set(snapshotKey, value, dependency, callBackHandler);
         }
@@ -229,40 +236,40 @@ namespace ShoppingPeeker.Utilities.Plugins
         public static IPlugin Load(string pluginName)
         {
             IPlugin plugin = null;
-            //1 首先尝试从注册登记的字典查询
-            if (AppPlugins.ContainsKey(pluginName))
+            try
             {
-                var pluginFactory = AppPlugins[pluginName];
-                plugin = pluginFactory.CreateNew();
-            }
-            //2 如果依然为空的插件类实例，那么尝试从目录查找
-            if (plugin==null)
-            {
-                //匹配全部的 插件格式的dll
-                var pluginFiles = new DirectoryInfo(PluginRootDir)
-                    .EnumerateFiles(pluginName+".dll", SearchOption.AllDirectories);//查询插件格式的dll;
-                if (pluginFiles.IsNotEmpty())
+
+
+                //1 首先尝试从注册登记的字典查询
+                if (AppPlugins.ContainsKey(pluginName))
                 {
-                    var assPath = pluginFiles.ElementAt(0).FullName;
-                    var ass = Assembly.LoadFrom(assPath);
-                    var itemType = new AppDomainTypeFinder()
-                        .FindClassesOfType(_PluginType, new Assembly[] { ass }, true).FirstOrDefault();
-                    if (null!= itemType)
+                    var pluginFactory = AppPlugins[pluginName];
+                    plugin = pluginFactory.CreateNew();
+                }
+                //2 如果依然为空的插件类实例，那么尝试从目录查找
+                if (plugin == null)
+                {
+                    //匹配全部的 插件格式的dll
+                    var pluginFiles = new DirectoryInfo(PluginRootDir)
+                        .EnumerateFiles(pluginName + ".dll", SearchOption.AllDirectories);//查询插件格式的dll;
+                    if (pluginFiles.IsNotEmpty())
                     {
-                        //仅仅加载可以正常实例化的插件，测试是否可以实例化
-                        plugin = itemType.BaseType.InvokeMember(
-                        PluginConstant.InstanceFactoryMethodName,
-                        BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod,
-                        null,
-                        null,
-                        new object[] { }) as IPlugin;
-                        //注册到插件字典
-                        AppPlugins.AddOrUpdate(
-                            plugin.MetaManifest.Name,
-                            plugin,
-                            (key, oldValue) => plugin);
+                        var assPath = pluginFiles.ElementAt(0).FullName;
+                        var ass = Assembly.LoadFrom(assPath);
+                        var itemType = new AppDomainTypeFinder()
+                            .FindClassesOfType(_PluginType, new Assembly[] { ass }, true).FirstOrDefault();
+                        if (null != itemType)
+                        {
+                            //仅仅加载可以正常实例化的插件，测试是否可以实例化
+                            plugin = CreatePluginInstance(itemType);
+                        }
                     }
                 }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
             }
             return plugin;
         }

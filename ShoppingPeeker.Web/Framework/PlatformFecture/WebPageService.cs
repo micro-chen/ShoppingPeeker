@@ -86,7 +86,10 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                     //工厂模式 获取指定平台的内容解析器
                     var resolver = ResolverFactory.GetSearchProductResolver(webArgs.Platform);
                     dataModel = resolver.Resolve(pageContent);
-
+                    if (null!=dataModel)
+                    {
+                        dataModel.KeyWord = webArgs.KeyWord;
+                    }
                 }
 
             }
