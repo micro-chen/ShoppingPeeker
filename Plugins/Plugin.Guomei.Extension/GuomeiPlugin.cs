@@ -44,7 +44,7 @@ namespace Plugin.Guomei.Extension
         /// </summary>
         /// <param name="content">要解析的内容</param>
         /// <returns>返回需要的字段对应的字典</returns>
-        public override object Execute(string content)
+        public override Dictionary<string, object> ResolveSearchPageContent(string content)
         {
            
             var resultBag = new Dictionary<string, object>();

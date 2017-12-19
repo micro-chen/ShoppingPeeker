@@ -16,16 +16,39 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
     /// <summary>
     /// 天猫内容解析
     /// </summary>
-    public class TmallSearchProductResolver : ISearchProductResolver
+    public class TmallSearchProductResolver : BaseSearchProductResolver
     {
         /// <summary>
         /// 需要的插件名称
         /// </summary>
         const string NeedPluginName = "Plugin.Tmall.Extension";
+
          public TmallSearchProductResolver()
         {
          }
-        public SearchProductViewModel Resolve(string pageContent)
+
+        /// <summary>
+        /// 尝试解析 来自web 参数
+        /// 解析为具体的平台的搜索地址：附带参数
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        public override string ResolveSearchUrl( BaseFetchWebPageArgument webArgs)
+        {
+            string searchUrl = string.Empty;
+            /// 尝试加载所需的插件，使用插件进行内容解析
+            IPlugin tmallPlugin = PluginManager.Load(NeedPluginName);
+            if (null == tmallPlugin)
+            {
+                throw new Exception("未能加载插件：" + NeedPluginName);
+            }
+
+            searchUrl = tmallPlugin.ResolveSearchUrl(webArgs);
+
+            return searchUrl;
+        }
+
+        public override SearchProductViewModel ResolvePageContent(string pageContent)
         {
             SearchProductViewModel dataModel = new SearchProductViewModel();
 
@@ -36,7 +59,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
                 throw new Exception("未能加载插件："+ NeedPluginName);
             }
 
-            var resultBag = tmallPlugin.Execute(pageContent) as Dictionary<string,object>;
+            var resultBag = tmallPlugin.ResolveSearchPageContent(pageContent) as Dictionary<string,object>;
             if (null==resultBag)
             {
                 throw new Exception("插件：" + NeedPluginName+ " ;未能正确解析内容："+pageContent);

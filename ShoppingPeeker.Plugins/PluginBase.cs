@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.IO;
 using System.Linq;
+using NTCPMessage.EntityPackage.Arguments;
 
 namespace ShoppingPeeker.Plugins
 {
@@ -65,11 +66,22 @@ namespace ShoppingPeeker.Plugins
         protected abstract void Initialize();
 
         /// <summary>
+        /// 尝试解析 来自web 参数
+        /// 解析为具体的平台的搜索地址：附带参数
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        public virtual string ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
+        {
+            return string.Empty;
+        }
+
+        /// <summary>
         /// 执行插件的方法
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
-        public abstract object Execute(string content);
+        public abstract Dictionary<string, object> ResolveSearchPageContent(string content);
 
         public PluginMeta _MetaManifest;
         public PluginMeta MetaManifest

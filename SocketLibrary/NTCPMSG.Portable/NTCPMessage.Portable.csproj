@@ -7,6 +7,7 @@
   <ItemGroup>
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\CommandConstants.cs" Link="CommandConstants.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\BaseFetchWebPageArgument.cs" Link="EntityPackage\Arguments\BaseFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\BrandTag.cs" Link="EntityPackage\Arguments\BrandTag.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\DangdangFetchWebPageArgument.cs" Link="EntityPackage\Arguments\DangdangFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\ETaoFetchWebPageArgument.cs" Link="EntityPackage\Arguments\ETaoFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\GuomeiFetchWebPageArgument.cs" Link="EntityPackage\Arguments\GuomeiFetchWebPageArgument.cs" />

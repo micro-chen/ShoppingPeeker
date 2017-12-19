@@ -7,9 +7,9 @@ using ShoppingPeeker.Web.ViewModels;
 
 namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
 {
-    public class PddSearchProductResolver : ISearchProductResolver
+    public class PddSearchProductResolver : BaseSearchProductResolver
     {
-        public SearchProductViewModel Resolve(string pageContent)
+        public override SearchProductViewModel ResolvePageContent(string pageContent)
         {
             throw new NotImplementedException();
         }

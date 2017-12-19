@@ -46,46 +46,53 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
 
             try
             {
-                string pageContent = "aaaaaaa";// string.Empty;
+                //工厂模式 获取指定平台的内容解析器
+                var resolver = ResolverFactory.GetSearchProductResolver(webArgs.Platform);
+                //尝试解析页面参数的检索地址
+                var searchUrl = resolver.ResolveSearchUrl(webArgs);
+                if (!string.IsNullOrEmpty(searchUrl))
+                {
+                    webArgs.ResolvedSearUrl = searchUrl;
+                }
+                string pageContent = string.Empty;
 
                 ////1 打开tcp 链接 
                 ////2 发送参数
                 ////3 解析结果
-                //var connStr = ConfigHelper.ShoppingWebCrawlerSection.ConnectionStringCollection.First();
-                //using (var conn = new SoapTcpConnection(connStr))
-                //{
-                //    if (conn.State == ConnectionState.Closed)
-                //    {
-                //        conn.Open();
-                //    }
+                var connStr = ConfigHelper.ShoppingWebCrawlerSection.ConnectionStringCollection.First();
+                using (var conn = new SoapTcpConnection(connStr))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                    {
+                        conn.Open();
+                    }
 
-                //    //发送soap
-                //    var soapCmd = new SoapMessage() { Head = CommandConstants.CMD_FetchPage };
-                //    soapCmd.Body = webArgs.ToJson();
-                //    var dataContainer = conn.SendSoapMessage(soapCmd);
-                //    if (null!=dataContainer&&dataContainer.Status==1 )
-                //    {
-                //         pageContent = dataContainer.Result;
-                //    }
-                //    else
-                //    {
-                //        StringBuilder errMsg = new StringBuilder("抓取网页请求失败！参数：");
-                //        errMsg.Append(soapCmd.Body);
-                //        if (null!=dataContainer&&!string.IsNullOrEmpty(dataContainer.ErrorMsg))
-                //        {
-                //            errMsg.Append("；服务端错误消息：")
-                //                .Append(dataContainer.ErrorMsg);
-                //        }
-                //        throw new Exception(errMsg.ToString());
-                //    }
-                //}
+                    //发送soap
+                    var soapCmd = new SoapMessage() { Head = CommandConstants.CMD_FetchPage };
+                    soapCmd.Body = webArgs.ToJson();
+                    var dataContainer = conn.SendSoapMessage(soapCmd);
+                    if (null != dataContainer && dataContainer.Status == 1)
+                    {
+                        pageContent = dataContainer.Result;
+                    }
+                    else
+                    {
+                        StringBuilder errMsg = new StringBuilder("抓取网页请求失败！参数：");
+                        errMsg.Append(soapCmd.Body);
+                        if (null != dataContainer && !string.IsNullOrEmpty(dataContainer.ErrorMsg))
+                        {
+                            errMsg.Append("；服务端错误消息：")
+                                .Append(dataContainer.ErrorMsg);
+                        }
+                        throw new Exception(errMsg.ToString());
+                    }
+                }
 
                 //开始解析内容字符串
                 if (!string.IsNullOrEmpty(pageContent))
                 {
-                    //工厂模式 获取指定平台的内容解析器
-                    var resolver = ResolverFactory.GetSearchProductResolver(webArgs.Platform);
-                    dataModel = resolver.Resolve(pageContent);
+              
+                    dataModel = resolver.ResolvePageContent(pageContent);
                     if (null!=dataModel)
                     {
                         dataModel.KeyWord = webArgs.KeyWord;
