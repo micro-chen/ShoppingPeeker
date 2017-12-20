@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
+using System.Linq;
 using NTCPMessage.EntityPackage.Products;
 using NTCPMessage.EntityPackage.Arguments;
 using NTCPMessage.EntityPackage;
-
 using ShoppingPeeker.Plugins;
 
 namespace Plugin.Pdd.Extension
@@ -36,6 +37,48 @@ namespace Plugin.Pdd.Extension
                 var dir= Assembly.GetExecutingAssembly().GetDirectoryPath();
                 return dir;
             }
+        }
+
+
+        /// <summary>
+        /// 解析搜索地址
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        public override string ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
+        {
+            StringBuilder sbSearchUrl = new StringBuilder("http://apiv4.yangkeduo.com/search?q=@###@");
+
+
+            #region 关键词
+            sbSearchUrl.Replace("@###@", webArgs.KeyWord);
+            #endregion
+
+            #region  排序
+            if (null == webArgs.OrderFiled)
+            {
+                sbSearchUrl.Append("&sort=default");//默认综合排序
+            }
+            else
+            {
+                sbSearchUrl.Append("&sort=").Append(webArgs.OrderFiled.FieldValue);//默认综合排序
+            }
+            #endregion
+
+            #region  筛选-价格区间
+            #endregion
+
+            #region  页码
+
+                sbSearchUrl.Append("&page=").Append(webArgs.PageIndex + 1);
+                sbSearchUrl.Append("&size=50");
+            #endregion
+            # region 杂项
+            sbSearchUrl.Append("&requery=0");
+            sbSearchUrl.Append("&pdduid=0");
+            
+            #endregion
+            return sbSearchUrl.ToString();
         }
 
         /// <summary>

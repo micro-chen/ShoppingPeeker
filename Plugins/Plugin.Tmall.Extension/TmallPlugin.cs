@@ -8,7 +8,6 @@ using System.Linq;
 using NTCPMessage.EntityPackage.Products;
 using NTCPMessage.EntityPackage.Arguments;
 using NTCPMessage.EntityPackage;
-
 using ShoppingPeeker.Plugins;
 
 namespace Plugin.Tmall.Extension
