@@ -56,11 +56,41 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_tmall_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchTmallsProducts([FromBody]TmallFetchWebPageArgument webArgs)
+        public BusinessViewModelContainer<SearchProductViewModel> SearchTmallProducts([FromBody]TmallFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
             if (null==webArgs||!webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+
+        /// <summary>
+        /// 检索当当的商品
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        [ActionName("search_dangdang_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchDangDangProducts([FromBody]DangdangFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
             {
                 container.SetFalied("查询参数不是有效的查询参数！");
                 return container;
@@ -79,5 +109,7 @@ namespace ShoppingPeeker.Web.Controllers
 
             return container;
         }
+
+
     }
 }

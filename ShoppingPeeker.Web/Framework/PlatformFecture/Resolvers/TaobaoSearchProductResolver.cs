@@ -3,15 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NTCPMessage.EntityPackage.Arguments;
+using NTCPMessage.EntityPackage;
 using ShoppingPeeker.Web.ViewModels;
+using ShoppingPeeker.Plugins;
+using ShoppingPeeker.Utilities.Plugins;
 
 namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
 {
     public class TaobaoSearchProductResolver : BaseSearchProductResolver
     {
-        public override SearchProductViewModel ResolvePageContent(string pageContent)
+
+        /// <summary>
+        /// 需要的插件名称
+        /// </summary>
+        protected override string NeedPluginName
         {
-            throw new NotImplementedException();
+            get
+            {
+                return "Plugin.Taoba.Extension";
+            }
         }
+
     }
 }

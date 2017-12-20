@@ -113,7 +113,7 @@ namespace Plugin.Tmall.Extension
 
             #region  页码
 
-            var pageNumber = webArgs.PageNumber;
+            var pageNumber = webArgs.PageIndex;
             if (pageNumber > 0)
             {
                 sbSearchUrl.Append("&s=").Append(pageNumber * 60);//天猫的分页是基于页索引*60
@@ -137,7 +137,12 @@ namespace Plugin.Tmall.Extension
         {
 
             var resultBag = new Dictionary<string, object>();
-            //1 tags 解析
+            //品牌解析
+            var lstBrands = new List<BrandTag>();
+
+            resultBag.Add("Brands", lstBrands);
+
+            // tags 解析
             var lstTags = new List<KeyWordTag> {
                 new KeyWordTag {
                     Platform = NTCPMessage.EntityPackage.SupportPlatformEnum.Tmall,
@@ -145,7 +150,7 @@ namespace Plugin.Tmall.Extension
                 } };
             resultBag.Add("Tags", lstTags);
 
-            // 2 products  解析
+            //  products  解析
             ProductBaseCollection lstProducts = new ProductBaseCollection()
             {
                 new TmallProduct { ItemId=1,Title="测试大衣"}

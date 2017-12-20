@@ -15,6 +15,12 @@ namespace ShoppingPeeker.Web.ViewModels
         /// 本次使用的搜索关键词
         /// </summary>
         public string KeyWord { get; set; }
+
+        /// <summary>
+        /// 品牌集合
+        /// </summary>
+        public List<BrandTag> Brands { get; set; }
+
         /// <summary>
         /// 关联的tag集合
         /// </summary>
