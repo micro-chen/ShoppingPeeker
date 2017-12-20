@@ -27,8 +27,10 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord
         /// </summary>
         /// <param name="keyWord"></param>
         /// <returns></returns>
-        public  IEnumerable<string> QueryThisKeywordMappings(string keyWord)
+        public  Task< IEnumerable<string>> QueryThisKeywordMappingsAsync(string keyWord)
         {
+
+           return Task.Factory.StartNew(() => { 
             //创建一个 基于阻塞集合 用以保证线程安全
             var allWords = new BlockingCollection<string>();
 
@@ -108,13 +110,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord
             cacheManager.Set(cacheKey, resultList);
 
             return resultList;
-            #region 废弃  yield
-            //foreach (var item in gps)
-            //{
-            //    yield return item.Key;
-            //}
-            #endregion
-
+            });
         }
 
 

@@ -21,6 +21,7 @@
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\SuningFetchWebPageArgument.cs" Link="EntityPackage\Arguments\SuningFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\TaobaoFetchWebPageArgument.cs" Link="EntityPackage\Arguments\TaobaoFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\TmallFetchWebPageArgument.cs" Link="EntityPackage\Arguments\TmallFetchWebPageArgument.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\VipFetchWebPageArgument.cs" Link="EntityPackage\Arguments\VipFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\YhdFetchWebPageArgument.cs" Link="EntityPackage\Arguments\YhdFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\YouhuiquanFetchWebPageArgument.cs" Link="EntityPackage\Arguments\YouhuiquanFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\Zhe800FetchWebPageArgument.cs" Link="EntityPackage\Arguments\Zhe800FetchWebPageArgument.cs" />
@@ -59,7 +60,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EntityPackage\Arguments\" />
     <Folder Include="EntityPackage\Products\" />
     <Folder Include="Properties\" />
   </ItemGroup>

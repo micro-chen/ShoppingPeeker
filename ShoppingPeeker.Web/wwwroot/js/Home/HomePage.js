@@ -59,7 +59,7 @@ $(function () {
             });
 
             /*搜索输入框的回车事件*/
-            this.txt_search_keyword.keyup(homePage.btnSearchHandler);
+            this.txt_search_keyword.keyup(homePage.searchKeywordKeyupHandler);
             /*搜索按钮点击事件*/
             this.btn_search.click(homePage.btnSearchHandler);
 
@@ -69,6 +69,14 @@ $(function () {
         saveDetails: function () {
             console.log("has save");
         },*/
+        /*输入关键词的按键事件*/
+        searchKeywordKeyupHandler: function (event) {
+            var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+            if (keyCode == 13) {
+                homePage.btnSearchHandler();
+            }
+        },
+
         /*search handler
         搜索按钮点击事件，将关键词发送到服务端进行检索商品
         */

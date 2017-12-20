@@ -30,7 +30,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("suggest")]
         [HttpGet]
-        public SuggestionsViewModdel GetAutoMappingWords(string key)
+        public async Task<SuggestionsViewModdel> GetAutoMappingWords(string key)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -39,7 +39,7 @@ namespace ShoppingPeeker.Web.Controllers
             IEnumerable<string> topWords = null;
             try
             {
-                topWords = Single<AutoMappingService>().QueryThisKeywordMappings(key);
+                topWords = await Single<AutoMappingService>().QueryThisKeywordMappingsAsync(key);
             }
             catch (Exception ex)
             {
@@ -65,6 +65,281 @@ namespace ShoppingPeeker.Web.Controllers
                 container.SetFalied("查询参数不是有效的查询参数！");
                 return container;
             }
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+        /// <summary>
+        /// 淘宝商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_taobao_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchTaobaoProducts([FromBody]TaobaoFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+        /// <summary>
+        /// 京东商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_jd_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchJingdongProducts([FromBody]JingdongFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+
+        /// <summary>
+        /// 拼多多商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_pdd_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchPddProducts([FromBody]PddFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+
+        /// <summary>
+        /// 唯品会商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_vip_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchVipProducts([FromBody]VipFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+
+        /// <summary>
+        /// 国美商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_guomei_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchGuomeiProducts([FromBody]GuomeiFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+        /// <summary>
+        /// 苏宁商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_suning_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchSuningProducts([FromBody]SuningFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+
+        /// <summary>
+        /// 一号店商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_yhd_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchYhdProducts([FromBody]YhdFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+        /// <summary>
+        /// 美丽说商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_mls_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchMeilishuoProducts([FromBody]MeilishuoFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+
+        /// <summary>
+        /// 蘑菇街商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_mgj_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchMogujieProducts([FromBody]MogujieFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+
             try
             {
                 //使用指定平台的页面检索服务 进行搜索商品
@@ -109,6 +384,71 @@ namespace ShoppingPeeker.Web.Controllers
 
             return container;
         }
+
+        /// <summary>
+        /// 折800商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_zhe800_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchZhe800Products([FromBody]Zhe800FetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+
+        /// <summary>
+        /// 一淘商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_etao_products")]
+        [HttpPost]
+        public BusinessViewModelContainer<SearchProductViewModel> SearchETaoProducts([FromBody]ETaoFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+
+            if (null == webArgs || !webArgs.IsValid())
+            {
+                container.SetFalied("查询参数不是有效的查询参数！");
+                return container;
+            }
+
+            try
+            {
+                //使用指定平台的页面检索服务 进行搜索商品
+                var pageService = WebPageService.CreateNew();
+                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+
+
+
 
 
     }
