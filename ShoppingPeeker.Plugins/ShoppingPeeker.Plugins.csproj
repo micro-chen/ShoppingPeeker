@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Jint" Version="2.11.58" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SocketLibrary\NTCPMSG.Portable\NTCPMessage.Portable.csproj" />
   </ItemGroup>
 
