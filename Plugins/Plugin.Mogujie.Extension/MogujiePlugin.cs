@@ -101,6 +101,8 @@ namespace Plugin.Mogujie.Extension
             #endregion
 
             # region 杂项
+            
+            sbSearchUrl.Append("&ratio=2:3");
             sbSearchUrl.Append("&cKey=43");
             sbSearchUrl.Append("&_mgjuui=c87fe209-480b-4031-b92e-feb3714ae5ba");
             sbSearchUrl.Append("&userId=");
