@@ -49,8 +49,10 @@ namespace Plugin.Dangdang.Extension
         /// </summary>
         /// <param name="webArgs"></param>
         /// <returns></returns>
-        public override string ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
+        public override ResolvedSearchUrlWithParas ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
         {
+            ResolvedSearchUrlWithParas resultUrl = new ResolvedSearchUrlWithParas();
+
             StringBuilder sbSearchUrl = new StringBuilder("http://search.dangdang.com/?key=@###@");
 
 
@@ -123,7 +125,9 @@ namespace Plugin.Dangdang.Extension
             sbSearchUrl.Append("&show=big");//大图的形式获取，而不是列表 &show=list
             sbSearchUrl.Append("&show_shop=0#J_tab");
             #endregion
-            return sbSearchUrl.ToString();
+            resultUrl.Url= sbSearchUrl.ToString();
+
+            return resultUrl;
         }
         /// <summary>
         /// 执行内容解析

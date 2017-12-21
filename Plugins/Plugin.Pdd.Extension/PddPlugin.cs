@@ -45,8 +45,11 @@ namespace Plugin.Pdd.Extension
         /// </summary>
         /// <param name="webArgs"></param>
         /// <returns></returns>
-        public override string ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
+        public override ResolvedSearchUrlWithParas ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
         {
+            ResolvedSearchUrlWithParas resultUrl = new ResolvedSearchUrlWithParas();
+
+
             StringBuilder sbSearchUrl = new StringBuilder("http://apiv4.yangkeduo.com/search?q=@###@");
 
 
@@ -76,9 +79,10 @@ namespace Plugin.Pdd.Extension
             # region 杂项
             sbSearchUrl.Append("&requery=0");
             sbSearchUrl.Append("&pdduid=0");
-            
+
             #endregion
-            return sbSearchUrl.ToString();
+            resultUrl.Url= sbSearchUrl.ToString();
+            return resultUrl;
         }
 
         /// <summary>

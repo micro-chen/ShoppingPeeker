@@ -1,7 +1,8 @@
-﻿using NTCPMessage.EntityPackage.Arguments;
+﻿
 using System;
 using System.Collections.Generic;
-
+using NTCPMessage.EntityPackage;
+using NTCPMessage.EntityPackage.Arguments;
 namespace ShoppingPeeker.Plugins
 {
     public interface IPlugin
@@ -24,7 +25,7 @@ namespace ShoppingPeeker.Plugins
         /// </summary>
         /// <param name="webArgs"></param>
         /// <returns></returns>
-        string ResolveSearchUrl( BaseFetchWebPageArgument webArgs);
+        ResolvedSearchUrlWithParas ResolveSearchUrl( BaseFetchWebPageArgument webArgs);
 
         /// <summary>
         /// 解析搜索列表内容方法

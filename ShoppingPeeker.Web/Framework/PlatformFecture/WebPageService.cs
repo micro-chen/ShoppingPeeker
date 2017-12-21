@@ -50,9 +50,9 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                 var resolver = ResolverFactory.GetSearchProductResolver(webArgs.Platform);
                 //尝试解析页面参数的检索地址
                 var searchUrl = resolver.ResolveSearchUrl(webArgs);
-                if (!string.IsNullOrEmpty(searchUrl))
+                if (null!=searchUrl)
                 {
-                    webArgs.ResolvedSearUrl = searchUrl;
+                    webArgs.ResolvedUrl = searchUrl;
                 }
                 string pageContent = string.Empty;
 

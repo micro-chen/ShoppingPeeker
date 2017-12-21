@@ -20,7 +20,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
         /// </summary>
         /// <param name="webArgs"></param>
         /// <returns></returns>
-        string ResolveSearchUrl( BaseFetchWebPageArgument webArgs);
+        ResolvedSearchUrlWithParas ResolveSearchUrl( BaseFetchWebPageArgument webArgs);
         /// <summary>
         /// 解析页面内容，返回商品视图模型
         /// </summary>

@@ -49,8 +49,10 @@ namespace Plugin.Taobao.Extension
         /// </summary>
         /// <param name="webArgs"></param>
         /// <returns></returns>
-        public override string ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
+        public override ResolvedSearchUrlWithParas ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
         {
+            ResolvedSearchUrlWithParas resultUrl = new ResolvedSearchUrlWithParas();
+
             StringBuilder sbSearchUrl = new StringBuilder("https://list.tmall.com/search_product.htm?spm=a220m.1000858.1000720.1.348abe64rj5JVg");
 
 
@@ -127,7 +129,8 @@ namespace Plugin.Taobao.Extension
             sbSearchUrl.Append("&type=pc");
             sbSearchUrl.Append("&style=g");
             #endregion
-            return sbSearchUrl.ToString();
+            resultUrl.Url= sbSearchUrl.ToString();
+            return resultUrl;
         }
 
         /// <summary>

@@ -52,6 +52,7 @@
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\YhdProduct.cs" Link="EntityPackage\Products\YhdProduct.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\Zhe800Product.cs" Link="EntityPackage\Products\Zhe800Product.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\QingTaoKeHideQuanResult.cs" Link="EntityPackage\QingTaoKeHideQuanResult.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\ResolvedSearchUrlWithParas.cs" Link="EntityPackage\ResolvedSearchUrlWithParas.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\SkuItem.cs" Link="EntityPackage\SkuItem.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\SoapMessage.cs" Link="EntityPackage\SoapMessage.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\SupportPlatform.cs" Link="EntityPackage\SupportPlatform.cs" />

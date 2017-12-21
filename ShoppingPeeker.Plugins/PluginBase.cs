@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 using NTCPMessage.EntityPackage.Arguments;
+using NTCPMessage.EntityPackage;
 
 namespace ShoppingPeeker.Plugins
 {
@@ -71,9 +72,9 @@ namespace ShoppingPeeker.Plugins
         /// </summary>
         /// <param name="webArgs"></param>
         /// <returns></returns>
-        public virtual string ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
+        public virtual ResolvedSearchUrlWithParas ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
         {
-            return string.Empty;
+            return null;
         }
 
         /// <summary>

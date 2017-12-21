@@ -47,8 +47,11 @@ namespace Plugin.Jingdong.Extension
         /// </summary>
         /// <param name="webArgs"></param>
         /// <returns></returns>
-        public override string ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
+        public override ResolvedSearchUrlWithParas ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
         {
+            ResolvedSearchUrlWithParas resultUrl = new ResolvedSearchUrlWithParas();
+
+
             StringBuilder sbSearchUrl = new StringBuilder("https://search.jd.com/Search?keyword=@###@&enc=utf-8&wq=@###@");
 
 
@@ -137,9 +140,10 @@ namespace Plugin.Jingdong.Extension
             sbSearchUrl.Append("&stop=1");
             sbSearchUrl.Append("&vt=2");
             sbSearchUrl.Append("&stock=1");
-            
+
             #endregion
-            return sbSearchUrl.ToString();
+            resultUrl.Url= sbSearchUrl.ToString();
+            return resultUrl;
         }
 
 

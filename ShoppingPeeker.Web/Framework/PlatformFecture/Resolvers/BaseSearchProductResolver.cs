@@ -23,9 +23,9 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
         /// </summary>
         /// <param name="webArgs"></param>
         /// <returns></returns>
-        public virtual string ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
+        public virtual ResolvedSearchUrlWithParas ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
         {
-            string searchUrl = string.Empty;
+            ResolvedSearchUrlWithParas searchUrl =null;
             if (string.IsNullOrEmpty(this.NeedPluginName))
             {
                 throw new Exception("必须制定依赖的插件名称！");
