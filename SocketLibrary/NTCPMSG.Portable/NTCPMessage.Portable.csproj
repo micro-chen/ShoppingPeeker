@@ -26,7 +26,6 @@
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\VipSearchResultBag.cs" Link="EntityPackage\Arguments\VipSearchResultBag.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\YhdFetchWebPageArgument.cs" Link="EntityPackage\Arguments\YhdFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\YouhuiquanFetchWebPageArgument.cs" Link="EntityPackage\Arguments\YouhuiquanFetchWebPageArgument.cs" />
-    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\Zhe800FetchWebPageArgument.cs" Link="EntityPackage\Arguments\Zhe800FetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\DataResultContainer.cs" Link="EntityPackage\DataResultContainer.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\FilterFiled.cs" Link="EntityPackage\FilterFiled.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\IDataContainer.cs" Link="EntityPackage\IDataContainer.cs" />
@@ -50,7 +49,6 @@
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\TmallProduct.cs" Link="EntityPackage\Products\TmallProduct.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\VipProduct.cs" Link="EntityPackage\Products\VipProduct.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\YhdProduct.cs" Link="EntityPackage\Products\YhdProduct.cs" />
-    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Products\Zhe800Product.cs" Link="EntityPackage\Products\Zhe800Product.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\QingTaoKeHideQuanResult.cs" Link="EntityPackage\QingTaoKeHideQuanResult.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\ResolvedSearchUrlWithParas.cs" Link="EntityPackage\ResolvedSearchUrlWithParas.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\SkuItem.cs" Link="EntityPackage\SkuItem.cs" />
