@@ -32,7 +32,6 @@ $(function () {
         api_search_mls_products: "api/servicebus/search_mls_products",//美丽说商品检索
         api_search_mgj_products: "api/servicebus/search_mgj_products",//蘑菇街商品检索
         api_search_dangdang_products: "api/servicebus/search_dangdang_products",//当当商品检索
-        api_search_zhe800_products: "api/servicebus/search_zhe800_products",//zhe800商品检索
         api_search_etao_products: "api/servicebus/search_etao_products",//一淘商品检索
         api_search_taoquan: "api/servicebus/search_taoquan",//淘宝天猫优惠券检索
 
@@ -101,7 +100,6 @@ $(function () {
             //homePage.handler_api_search_mls_products();
             //homePage.handler_api_search_mgj_products();
             //homePage.handler_api_search_dangdang_products();
-            //homePage.handler_api_search_zhe800_products();
             //homePage.handler_api_search_etao_products();
         },
 
@@ -170,12 +168,7 @@ $(function () {
             var paras = {};
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_dangdang_products);
         },
-        //zhe800商品检索
-        handler_api_search_zhe800_products: function () {
-            var queryAddress = homePage.api_search_zhe800_products;
-            var paras = {};
-            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_zhe800_products);
-        },
+
         //一淘商品检索
         handler_api_search_etao_products: function () {
             var queryAddress = homePage.api_search_etao_products;
@@ -224,9 +217,7 @@ $(function () {
         callBackHandler_api_search_dangdang_products: function (data) {
             console.log('callBackHandler_api_search_dangdang_products');
         },
-        callBackHandler_api_search_zhe800_products: function (data) {
-            console.log('callBackHandler_api_search_zhe800_products');
-        },
+
         callBackHandler_api_search_etao_products: function (data) {
             console.log('callBackHandler_api_search_etao_products');
         },

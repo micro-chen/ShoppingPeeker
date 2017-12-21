@@ -63,10 +63,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
                     resolver = new MogujieSearchProductResolver();
 
                     break;
-                case SupportPlatformEnum.Zhe800:
-                    resolver = new Zhe800SearchProductResolver();
 
-                    break;
                 case SupportPlatformEnum.ETao:
                     resolver = new ETaoSearchProductResolver();
 

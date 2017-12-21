@@ -25,29 +25,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{7CE5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Tmall.Extension", "Plugins\Plugin.Tmall.Extension\Plugin.Tmall.Extension.csproj", "{2F67467F-2530-4B1E-94AE-4E933BBDD4BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Taobao.Extension", "Plugins\Plugin.Taobao.Extension\Plugin.Taobao.Extension.csproj", "{203D606F-97FC-4BA5-AAF6-58F2208A66B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Taobao.Extension", "Plugins\Plugin.Taobao.Extension\Plugin.Taobao.Extension.csproj", "{203D606F-97FC-4BA5-AAF6-58F2208A66B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Dangdang.Extension", "Plugins\Plugin.Dangdang.Extension\Plugin.Dangdang.Extension.csproj", "{0BEE133C-9001-4C4C-91E8-72CD45AC1408}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Dangdang.Extension", "Plugins\Plugin.Dangdang.Extension\Plugin.Dangdang.Extension.csproj", "{0BEE133C-9001-4C4C-91E8-72CD45AC1408}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.ETao.Extension", "Plugins\Plugin.ETao.Extension\Plugin.ETao.Extension.csproj", "{753E97E9-CB92-4E70-8679-2AE4CAFA06F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.ETao.Extension", "Plugins\Plugin.ETao.Extension\Plugin.ETao.Extension.csproj", "{753E97E9-CB92-4E70-8679-2AE4CAFA06F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Guomei.Extension", "Plugins\Plugin.Guomei.Extension\Plugin.Guomei.Extension.csproj", "{D6F8B678-0C59-46B5-A340-D0FECC7BE12D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Guomei.Extension", "Plugins\Plugin.Guomei.Extension\Plugin.Guomei.Extension.csproj", "{D6F8B678-0C59-46B5-A340-D0FECC7BE12D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Jingdong.Extension", "Plugins\Plugin.Jingdong.Extension\Plugin.Jingdong.Extension.csproj", "{8309A2BD-59D7-445A-992F-8B99BB80BBA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Jingdong.Extension", "Plugins\Plugin.Jingdong.Extension\Plugin.Jingdong.Extension.csproj", "{8309A2BD-59D7-445A-992F-8B99BB80BBA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Meilishuo.Extension", "Plugins\Plugin.Meilishuo.Extension\Plugin.Meilishuo.Extension.csproj", "{43DA52F2-9464-49FB-BB96-253E9C09DDB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Meilishuo.Extension", "Plugins\Plugin.Meilishuo.Extension\Plugin.Meilishuo.Extension.csproj", "{43DA52F2-9464-49FB-BB96-253E9C09DDB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Mogujie.Extension", "Plugins\Plugin.Mogujie.Extension\Plugin.Mogujie.Extension.csproj", "{9DBE73C0-EBA7-4B61-97D6-94C5AF9C82EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Mogujie.Extension", "Plugins\Plugin.Mogujie.Extension\Plugin.Mogujie.Extension.csproj", "{9DBE73C0-EBA7-4B61-97D6-94C5AF9C82EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Pdd.Extension", "Plugins\Plugin.Pdd.Extension\Plugin.Pdd.Extension.csproj", "{CB5B4157-02D5-404E-8804-15A701151DB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Pdd.Extension", "Plugins\Plugin.Pdd.Extension\Plugin.Pdd.Extension.csproj", "{CB5B4157-02D5-404E-8804-15A701151DB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Suning.Extension", "Plugins\Plugin.Suning.Extension\Plugin.Suning.Extension.csproj", "{3017AA78-F3C9-467D-A762-2896F8639B6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Suning.Extension", "Plugins\Plugin.Suning.Extension\Plugin.Suning.Extension.csproj", "{3017AA78-F3C9-467D-A762-2896F8639B6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Vip.Extension", "Plugins\Plugin.Vip.Extension\Plugin.Vip.Extension.csproj", "{A717900C-3AA6-4DC5-B1A9-D01376CC0248}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Vip.Extension", "Plugins\Plugin.Vip.Extension\Plugin.Vip.Extension.csproj", "{A717900C-3AA6-4DC5-B1A9-D01376CC0248}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Yhd.Extension", "Plugins\Plugin.Yhd.Extension\Plugin.Yhd.Extension.csproj", "{EB7043A5-D8B6-4BA9-A2A7-A684510B0F2D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Zhe800.Extension", "Plugins\Plugin.Zhe800.Extension\Plugin.Zhe800.Extension.csproj", "{8A45A15C-3AE1-4E81-85ED-64C51FAE807C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Yhd.Extension", "Plugins\Plugin.Yhd.Extension\Plugin.Yhd.Extension.csproj", "{EB7043A5-D8B6-4BA9-A2A7-A684510B0F2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -164,12 +162,6 @@ Global
 		{EB7043A5-D8B6-4BA9-A2A7-A684510B0F2D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB7043A5-D8B6-4BA9-A2A7-A684510B0F2D}.ReleaseNET40_Only|Any CPU.ActiveCfg = Release|Any CPU
 		{EB7043A5-D8B6-4BA9-A2A7-A684510B0F2D}.ReleaseNET40_Only|Any CPU.Build.0 = Release|Any CPU
-		{8A45A15C-3AE1-4E81-85ED-64C51FAE807C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A45A15C-3AE1-4E81-85ED-64C51FAE807C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A45A15C-3AE1-4E81-85ED-64C51FAE807C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A45A15C-3AE1-4E81-85ED-64C51FAE807C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A45A15C-3AE1-4E81-85ED-64C51FAE807C}.ReleaseNET40_Only|Any CPU.ActiveCfg = Release|Any CPU
-		{8A45A15C-3AE1-4E81-85ED-64C51FAE807C}.ReleaseNET40_Only|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -191,7 +183,6 @@ Global
 		{3017AA78-F3C9-467D-A762-2896F8639B6B} = {7CE5FC32-A3DC-4F18-9DBA-FFA1997D382F}
 		{A717900C-3AA6-4DC5-B1A9-D01376CC0248} = {7CE5FC32-A3DC-4F18-9DBA-FFA1997D382F}
 		{EB7043A5-D8B6-4BA9-A2A7-A684510B0F2D} = {7CE5FC32-A3DC-4F18-9DBA-FFA1997D382F}
-		{8A45A15C-3AE1-4E81-85ED-64C51FAE807C} = {7CE5FC32-A3DC-4F18-9DBA-FFA1997D382F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DE4D2FBD-D13D-4D4A-B3E0-4A383D799357}

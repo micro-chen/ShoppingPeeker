@@ -385,36 +385,6 @@ namespace ShoppingPeeker.Web.Controllers
             return container;
         }
 
-        /// <summary>
-        /// 折800商品检索
-        /// </summary>
-        /// <param name="webArgs"></param>
-        /// <returns></returns>
-        [ActionName("search_zhe800_products")]
-        [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchZhe800Products([FromBody]Zhe800FetchWebPageArgument webArgs)
-        {
-            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
-
-            if (null == webArgs || !webArgs.IsValid())
-            {
-                container.SetFalied("查询参数不是有效的查询参数！");
-                return container;
-            }
-
-            try
-            {
-                //使用指定平台的页面检索服务 进行搜索商品
-                var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
-
-            return container;
-        }
 
         /// <summary>
         /// 一淘商品检索
