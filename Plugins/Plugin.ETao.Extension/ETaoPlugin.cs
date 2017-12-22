@@ -42,11 +42,12 @@ namespace Plugin.ETao.Extension
         /// <summary>
         /// 执行内容解析
         /// </summary>
+        ///<param name="isNeedHeadFilter">是否要解析头部筛选</param> 
         /// <param name="content">要解析的内容</param>
         /// <returns>返回需要的字段对应的字典</returns>
-        public override Dictionary<string, object> ResolveSearchPageContent(string content)
+        public override Dictionary<string, object> ResolveSearchPageContent(bool isNeedHeadFilter, string content)
         {
-           
+
             var resultBag = new Dictionary<string, object>();
             //1 tags 解析
             var lstTags = new List<KeyWordTag> {

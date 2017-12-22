@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Text;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AngleSharp.Dom;
+using AngleSharp.Parser.Html;
 
 
 using NTCPMessage.EntityPackage.Products;
@@ -138,43 +143,278 @@ namespace Plugin.Tmall.Extension
         /// <summary>
         /// 执行内容解析
         /// </summary>
+        ///<param name="isNeedHeadFilter">是否要解析头部筛选</param> 
         /// <param name="content">要解析的内容</param>
         /// <returns>返回需要的字段对应的字典</returns>
-        public override Dictionary<string, object> ResolveSearchPageContent(string content)
+        public override Dictionary<string, object> ResolveSearchPageContent(bool isNeedHeadFilter, string content)
         {
 
             var resultBag = new Dictionary<string, object>();
 
             //创建html 文档对象
-            //var htmlDoc= new HtmlDocument();
-            //htmlDoc.LoadHtml(content);
+            HtmlParser htmlParser = new HtmlParser();
+            var htmlDoc = htmlParser.Parse(content);
 
-            //var div_Attrs=
-            #region 品牌解析
-            var lstBrands = new List<BrandTag>();
+            if (isNeedHeadFilter == true)
+            {
 
-            resultBag.Add("Brands", lstBrands);
+
+                var div_AttrsDom = htmlDoc.QuerySelector("div.j_NavAttrs");
+
+                #region 品牌解析
+                var lstBrands = new List<BrandTag>();
+                if (null != div_AttrsDom)
+                {
+                    //从属性区域解析dom-品牌内容
+                    var brandULDom = div_AttrsDom.QuerySelector("div.attrValues>ul");
+                    if (null != brandULDom)
+                    {
+                        var liDomArray = brandULDom.QuerySelectorAll("li");
+                        foreach (var itemLi in liDomArray)
+                        {
+                            var model = new BrandTag();
+                            model.Platform = SupportPlatformEnum.Tmall;
+                            model.BrandId = itemLi.GetAttribute("atpanel").Split(',')[1];//品牌id    atpanel="18,137330879,,,spu-brand-qp,4,brand-qp,"
+                            model.BrandName = itemLi.GetAttribute("title");
+                            lstBrands.Add(model);
+                        }
+                    }
+                }
+                resultBag.Add("Brands", lstBrands);
+
+                #endregion
+
+                // tags 解析
+                //var lstTags = new List<KeyWordTag> {
+                //new KeyWordTag {
+                //    Platform = NTCPMessage.EntityPackage.SupportPlatformEnum.Tmall,
+                //    TagName = "大衣", Value = "dayi", FilterFiled = "sku"
+                //} };
+
+                var lstTags = new List<KeyWordTag>();
+                if (null != div_AttrsDom)
+                {
+                    var blockList = new BlockingCollection<KeyWordTag>();
+
+                    //分类 or 属性
+                    var ulDomArray = div_AttrsDom.QuerySelectorAll("div.attrValues>ul");
+                    var taskArray = new Task[ulDomArray.Length];
+                    int counter = 0;
+                    foreach (var itemUl in ulDomArray)
+                    {
+                        var taskResolveAEmelems = Task.Factory.StartNew(() =>
+                        {
+
+
+                            var childLiADomArray = itemUl.QuerySelectorAll("li>a");
+                            foreach (var itemADom in childLiADomArray)
+                            {
+                                var modelTag = new KeyWordTag();
+                                modelTag.Platform = SupportPlatformEnum.Tmall;
+                                modelTag.TagName = itemADom.TextContent;//标签名称
+
+
+                                //////----解析 a标签开始-------
+                                //////检查 a 的href 中的参数；cat 或者prop
+                                string hrefValue = itemADom.GetAttribute("href");
+                                if (!string.IsNullOrEmpty(hrefValue))
+                                {
+                                    var urlParas = HttpValueCollection.ParseQueryString(hrefValue);
+                                    if (null != urlParas)
+                                    {
+                                        if (hrefValue.IndexOf("cat=") > -1)
+                                        {
+                                            //1 cat
+                                            string catValue = urlParas["cat"];
+                                            modelTag.FilterFiled = "cat";
+                                            modelTag.Value = catValue;
+                                        }
+                                        else if (hrefValue.IndexOf("prop=") > -1)
+                                        {
+                                            //2 prop
+                                            string propValue = urlParas["prop"];
+                                            modelTag.FilterFiled = "prop";
+                                            modelTag.Value = propValue;
+                                        }
+                                    }
+                                }
+                                //----解析 a标签完毕-------
+                                blockList.Add(modelTag);
+
+                            }
+
+                        });
+                        //将并行任务放到数组
+                        taskArray[counter] = taskResolveAEmelems;
+                        counter += 1;
+                    }
+
+                    Task.WaitAll(taskArray);
+                    lstTags = blockList.ToList();
+                }
+                resultBag.Add("Tags", lstTags);
+
+            }
+
+            #region products  解析
+            //ProductBaseCollection lstProducts = new ProductBaseCollection()
+            //{
+            //    new TmallProduct { ItemId=1,Title="测试大衣"}
+            //};
+            ProductBaseCollection lstProducts = new ProductBaseCollection();
+
+            var div_J_ItemListDom = htmlDoc.QuerySelector("div#J_ItemList");
+            if (null != div_J_ItemListDom)
+            {
+                var div_productDomArray = div_J_ItemListDom.QuerySelectorAll("div.product");
+                if (null != div_productDomArray && div_productDomArray.Any())
+                {
+                    //多任务并行解析商品
+                    BlockingCollection<TmallProduct> blockingList_Products = new BlockingCollection<TmallProduct>();
+                    var taskArray = new Task[div_productDomArray.Length];
+                    int counter = 0;
+                    foreach (var itemProductDom in div_productDomArray)
+                    {
+                        var tsk = Task.Factory.StartNew(() =>
+                        {
+                            //解析一个商品的节点
+                             
+                            TmallProduct modelProduct = this.ResolverProductDom(itemProductDom);
+                            if (null!= modelProduct)
+                            {
+                                blockingList_Products.Add(modelProduct);
+                            }
+                          
+                        });
+                        taskArray[counter] = tsk;
+                    }
+
+                    Task.WaitAll(taskArray);
+                    var productsList = blockingList_Products.ToArray();
+                    lstProducts.AddRange(productsList);
+
+                }
+            }
+            resultBag.Add("Products", lstProducts);
 
             #endregion
 
-            // tags 解析
-            var lstTags = new List<KeyWordTag> {
-                new KeyWordTag {
-                    Platform = NTCPMessage.EntityPackage.SupportPlatformEnum.Tmall,
-                    TagName = "大衣", Value = "dayi", FilterFiled = "sku"
-                } };
-            resultBag.Add("Tags", lstTags);
-
-            //  products  解析
-            ProductBaseCollection lstProducts = new ProductBaseCollection()
-            {
-                new TmallProduct { ItemId=1,Title="测试大衣"}
-            };
-            resultBag.Add("Products", lstProducts);
-
-
 
             return resultBag;// string.Concat("has process input :" + content);
+        }
+
+        /// <summary>
+        /// 解析商品节点
+        /// </summary>
+        /// <param name="modelProduct"></param>
+        /// <param name="productDom"></param>
+        private TmallProduct ResolverProductDom( IElement productDom)
+        {
+            TmallProduct modelProduct = null;
+            if (null == productDom || null == modelProduct)
+            {
+                return modelProduct;
+            }
+            try
+            {
+                //id
+                string itemId = productDom.GetAttribute("data-id");
+                if (string.IsNullOrEmpty(itemId))
+                {
+                    return modelProduct;//凡是没有id 的商品，要么是广告 要么是其他非正常的商品
+                }
+                long.TryParse(itemId, out long _ItemId);
+                modelProduct.ItemId = _ItemId;
+
+                //title
+                var titleDom = productDom.QuerySelector("p.productTitle>a");
+                modelProduct.Title = titleDom.TextContent;
+                modelProduct.ItemUrl = titleDom.GetAttribute("href");
+
+                //price
+                var priceDom = productDom.QuerySelector("p.productPrice>em");
+                if (null != priceDom)
+                {
+                    long.TryParse(priceDom.GetAttribute("title"), out long _price);
+                    modelProduct.Price = _price;
+                }
+                //pic
+                var picDom = productDom.QuerySelector("div.productImg-wrap>a>img");
+                if (null != picDom)
+                {
+                    modelProduct.PicUrl = picDom.GetAttribute("src");
+                }
+
+                //shop
+                var shopDom = productDom.QuerySelector("div.productShop>a");
+                if (null != shopDom)
+                {
+                    string shopHref = shopDom.GetAttribute("href");
+                    if (shopHref.Contains("user_number_id"))
+                    {
+                        string shopId = HttpValueCollection.ParseQueryString(shopHref)["user_number_id"];
+                        long.TryParse(shopId, out long _shopId);
+                        modelProduct.ShopId = _shopId;
+
+                    }
+
+
+                    modelProduct.ShopName = shopDom.TextContent;
+                }
+
+                //status
+                var statusDom = productDom.QuerySelector("p.productStatus");
+                //成交量
+                var biz30dayDomSpan = statusDom.Children[0];
+                if (null != biz30dayDomSpan)
+                {
+                    string bizTotal = biz30dayDomSpan.Children[0].TextContent;
+                    if (!string.IsNullOrEmpty(bizTotal))
+                    {
+                        bizTotal = bizTotal.Trim().Replace("笔", "");
+                        int.TryParse(bizTotal, out int _bizTotal);
+                        modelProduct.Biz30Day = _bizTotal;
+                    }
+                }
+                //评论量
+                var remarkDomSpan = statusDom.Children[1];
+                if (null != remarkDomSpan)
+                {
+                    string remarkTotal = remarkDomSpan.Children[0].TextContent;
+                    if (!string.IsNullOrEmpty(remarkTotal))
+                    {
+                        int.TryParse(remarkTotal.Trim(), out int _remarkTotal);
+                        modelProduct.TotalBizRemarkCount = _remarkTotal;
+                    }
+                    modelProduct.RemarkUrl = remarkDomSpan.Children[0].GetAttribute("href");
+                }
+
+                //sku list
+                var skuListDom = productDom.QuerySelector("div.proThumb-wrap");
+                if (null != skuListDom)
+                {
+                    var skuDomArry = skuListDom.QuerySelectorAll("b.proThumb-img");
+                    if (skuDomArry != null && skuDomArry.Length > 0)
+                    {
+                        foreach (var itemSkuDom in skuDomArry)
+                        {
+                            var skuItemObj = new SkuItem();
+                            skuItemObj.skuId = itemSkuDom.GetAttribute("data-sku");
+                            skuItemObj.skuUrl = string.Concat(modelProduct.ItemUrl, "&sku_properties=", skuItemObj.skuId);
+                            skuItemObj.skuImgUrl = itemSkuDom.Children["img"].GetAttribute("src");
+
+                            modelProduct.SkuList.Add(skuItemObj);
+                        }
+                    }
+                }
+
+             
+            }
+            catch (Exception ex)
+            {
+                PluginContext.OutPutError(ex);
+            }
+            return modelProduct;
         }
 
     }

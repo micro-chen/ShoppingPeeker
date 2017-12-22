@@ -28,10 +28,11 @@ namespace ShoppingPeeker.Plugins
         ResolvedSearchUrlWithParas ResolveSearchUrl( BaseFetchWebPageArgument webArgs);
 
         /// <summary>
-        /// 解析搜索列表内容方法
+        ///  解析搜索列表内容方法
         /// </summary>
+        /// <param name="isNeedHeadFilter"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-        Dictionary<string, object> ResolveSearchPageContent(string content);
+        Dictionary<string, object> ResolveSearchPageContent(bool isNeedHeadFilter, string content);
     }
 }

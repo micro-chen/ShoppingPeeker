@@ -16,6 +16,7 @@ using ShoppingPeeker.Utilities;
 using ShoppingPeeker.Utilities.Ioc;
 using ShoppingPeeker.Utilities.Logging;
 using ShoppingPeeker.Utilities.Plugins;
+using ShoppingPeeker.Plugins;
 
 namespace ShoppingPeeker.Web
 {
@@ -85,6 +86,9 @@ namespace ShoppingPeeker.Web
 			#endregion
 			var logger = loggerFactory as LoggerFactory;
             Logger.LogFactory = loggerFactory;
+            PluginContext.LogFactory = loggerFactory;
+
+
 
             logger.AddLog4Net();//注册log4日志记录组件
             if (env.IsDevelopment())

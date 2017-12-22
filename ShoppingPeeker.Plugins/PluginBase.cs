@@ -77,12 +77,14 @@ namespace ShoppingPeeker.Plugins
             return null;
         }
 
+ 
         /// <summary>
-        /// 执行插件的方法
+        ///  解析搜索列表内容方法
         /// </summary>
+        /// <param name="isNeedHeadFilter"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-        public abstract Dictionary<string, object> ResolveSearchPageContent(string content);
+        public abstract Dictionary<string, object> ResolveSearchPageContent(bool isNeedHeadFilter, string content);
 
         public PluginMeta _MetaManifest;
         public PluginMeta MetaManifest
