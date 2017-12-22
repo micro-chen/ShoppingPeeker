@@ -3,10 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.6.8" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ShoppingPeeker.Plugins\ShoppingPeeker.Plugins.csproj" />
     <ProjectReference Include="..\..\SocketLibrary\NTCPMSG.Portable\NTCPMessage.Portable.csproj" />

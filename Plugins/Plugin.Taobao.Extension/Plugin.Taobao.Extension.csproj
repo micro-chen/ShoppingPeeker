@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.6.8" />
+    <PackageReference Include="AngleSharp" Version="0.9.9" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ShoppingPeeker.Plugins\ShoppingPeeker.Plugins.csproj" />

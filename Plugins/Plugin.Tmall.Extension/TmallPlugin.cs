@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
 using System.Linq;
+
+
 using NTCPMessage.EntityPackage.Products;
 using NTCPMessage.EntityPackage.Arguments;
 using NTCPMessage.EntityPackage;
@@ -42,7 +44,7 @@ namespace Plugin.Tmall.Extension
             }
         }
 
-       
+
         /// <summary>
         /// 解析搜索地址
         /// </summary>
@@ -54,7 +56,7 @@ namespace Plugin.Tmall.Extension
 
 
             StringBuilder sbSearchUrl = new StringBuilder("https://list.tmall.com/search_product.htm?spm=a220m.1000858.1000720.1.348abe64rj5JVg");
-          
+
 
             #region 品牌
             if (null != webArgs.Brands && webArgs.Brands.Count > 0)
@@ -71,7 +73,7 @@ namespace Plugin.Tmall.Extension
 
                 //2 非当前平台的品牌--选择其中的一个 作为关键词 分割
                 var otherPlatformBrands = webArgs.Brands.FirstOrDefault(x => x.Platform != SupportPlatformEnum.Tmall);
-                if (null!= otherPlatformBrands)
+                if (null != otherPlatformBrands)
                 {
                     webArgs.KeyWord += " " + otherPlatformBrands.BrandName;
                 }
@@ -79,11 +81,11 @@ namespace Plugin.Tmall.Extension
             #endregion
 
             #region  属性标签
-            if (null!=webArgs.TagGroup)
+            if (null != webArgs.TagGroup)
             {
                 //1 当前平台的
                 var currentPlatformTag = webArgs.TagGroup.Tags.FirstOrDefault(x => x.Platform == SupportPlatformEnum.Tmall);
-                if (null!=currentPlatformTag)
+                if (null != currentPlatformTag)
                 {
                     sbSearchUrl.Append("&prop=").Append(currentPlatformTag.Value);
                 }
@@ -121,7 +123,7 @@ namespace Plugin.Tmall.Extension
             {
                 sbSearchUrl.Append("&s=").Append(pageNumber * 60);//天猫的分页是基于页索引*60
                 sbSearchUrl.Append("&search_condition=2");
-                
+
             }
             #endregion
             # region 杂项
@@ -129,7 +131,7 @@ namespace Plugin.Tmall.Extension
             sbSearchUrl.Append("&type=pc");
             sbSearchUrl.Append("&style=g");
             #endregion
-            resultUrl.Url= sbSearchUrl.ToString();
+            resultUrl.Url = sbSearchUrl.ToString();
 
             return resultUrl;
         }
@@ -142,10 +144,18 @@ namespace Plugin.Tmall.Extension
         {
 
             var resultBag = new Dictionary<string, object>();
-            //品牌解析
+
+            //创建html 文档对象
+            //var htmlDoc= new HtmlDocument();
+            //htmlDoc.LoadHtml(content);
+
+            //var div_Attrs=
+            #region 品牌解析
             var lstBrands = new List<BrandTag>();
 
             resultBag.Add("Brands", lstBrands);
+
+            #endregion
 
             // tags 解析
             var lstTags = new List<KeyWordTag> {
