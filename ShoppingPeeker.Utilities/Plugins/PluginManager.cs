@@ -27,8 +27,9 @@ namespace ShoppingPeeker.Utilities.Plugins
 
         /// <summary>
         /// 插件放置的根目录
+        /// 放置在项目的Plugins目录下，跟View平级
         /// </summary>
-        public static readonly string PluginRootDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
+        public static readonly string PluginRootDir = Path.Combine(Environment.CurrentDirectory, "Plugins");
 
         /// <summary>
         /// 插件type

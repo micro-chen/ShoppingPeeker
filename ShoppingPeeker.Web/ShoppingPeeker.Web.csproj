@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
     <UserSecretsId>aspnet-ShoppingPeeker.Web-D2591AA8-61AB-450F-BF4C-66C497CC3534</UserSecretsId>
   </PropertyGroup>
@@ -53,49 +54,10 @@
     <None Update="Configs\SupportPlatforms.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Plugins\Plugin.Dangdang.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.ETao.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.Guomei.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.Jingdong.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.Meilishuo.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.Mogujie.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.Pdd.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.QingTaoke.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.Suning.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.Taobao.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.Tmall.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.Vip.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\Plugin.Yhd.Extension\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Plugins\readMe.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+   
+  
   </ItemGroup>
+
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
 

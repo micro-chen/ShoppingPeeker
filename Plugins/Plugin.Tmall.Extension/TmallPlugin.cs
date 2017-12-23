@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Reflection;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Web;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Parser.Html;
@@ -16,6 +18,7 @@ using NTCPMessage.EntityPackage.Products;
 using NTCPMessage.EntityPackage.Arguments;
 using NTCPMessage.EntityPackage;
 using ShoppingPeeker.Plugins;
+
 
 namespace Plugin.Tmall.Extension
 {
@@ -160,22 +163,28 @@ namespace Plugin.Tmall.Extension
 
 
                 var div_AttrsDom = htmlDoc.QuerySelector("div.j_NavAttrs");
-
+                var ulDomArray = div_AttrsDom.QuerySelectorAll("div.attrValues>ul");
                 #region 品牌解析
                 var lstBrands = new List<BrandTag>();
                 if (null != div_AttrsDom)
                 {
                     //从属性区域解析dom-品牌内容
-                    var brandULDom = div_AttrsDom.QuerySelector("div.attrValues>ul");
+                    var brandULDom = ulDomArray[0];// div_AttrsDom.QuerySelector("div.j_Brand>div.attrValues>ul");
+
                     if (null != brandULDom)
                     {
-                        var liDomArray = brandULDom.QuerySelectorAll("li");
-                        foreach (var itemLi in liDomArray)
+                        var regex_MatchBrandId = new Regex(@"brand=(\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                        var li_ADomArray = brandULDom.QuerySelectorAll("li>a");
+                        foreach (var itemADom in li_ADomArray)
                         {
                             var model = new BrandTag();
                             model.Platform = SupportPlatformEnum.Tmall;
-                            model.BrandId = itemLi.GetAttribute("atpanel").Split(',')[1];//品牌id    atpanel="18,137330879,,,spu-brand-qp,4,brand-qp,"
-                            model.BrandName = itemLi.GetAttribute("title");
+                            var urlBrand = itemADom.GetAttribute("href");
+                            if (!string.IsNullOrEmpty(urlBrand)&&urlBrand.Contains("brand="))
+                            {
+                                model.BrandId = regex_MatchBrandId.Match(urlBrand).Groups[1].Value;//new//品牌id   href="?brand=110910&amp;q=%B4%F3%C3%D7&amp;sort=s&amp;style=g&amp;from=sn_1_brand-qp&amp;spm=a220m.1000858.1000720.1.348abe64rj5JVg#J_crumbs
+                            }
+                            model.BrandName = itemADom.GetAttribute("title");
                             lstBrands.Add(model);
                         }
                     }
@@ -196,14 +205,15 @@ namespace Plugin.Tmall.Extension
                 {
                     var blockList = new BlockingCollection<KeyWordTag>();
 
-                    //分类 or 属性
-                    var ulDomArray = div_AttrsDom.QuerySelectorAll("div.attrValues>ul");
+                    //分类 or 属性;品牌是第一个，其他属性是后续
                     var taskArray = new Task[ulDomArray.Length];
                     int counter = 0;
-                    foreach (var itemUl in ulDomArray)
+                    for (int i = 1; i < ulDomArray.Length; i++)
                     {
-                        var taskResolveAEmelems = Task.Factory.StartNew(() =>
-                        {
+                        var itemUl = ulDomArray[i];
+                   
+                        //var taskResolveAEmelems = Task.Factory.StartNew(() =>
+                        //{
 
 
                             var childLiADomArray = itemUl.QuerySelectorAll("li>a");
@@ -219,7 +229,7 @@ namespace Plugin.Tmall.Extension
                                 string hrefValue = itemADom.GetAttribute("href");
                                 if (!string.IsNullOrEmpty(hrefValue))
                                 {
-                                    var urlParas = HttpValueCollection.ParseQueryString(hrefValue);
+                                    var urlParas = HttpUtility.ParseQueryString(hrefValue, Encoding.UTF8);
                                     if (null != urlParas)
                                     {
                                         if (hrefValue.IndexOf("cat=") > -1)
@@ -243,13 +253,13 @@ namespace Plugin.Tmall.Extension
 
                             }
 
-                        });
-                        //将并行任务放到数组
-                        taskArray[counter] = taskResolveAEmelems;
-                        counter += 1;
+                        //});
+                        ////将并行任务放到数组
+                        //taskArray[counter] = taskResolveAEmelems;
+                        //counter += 1;
                     }
 
-                    Task.WaitAll(taskArray);
+                    //Task.WaitAll(taskArray);
                     lstTags = blockList.ToList();
                 }
                 resultBag.Add("Tags", lstTags);
@@ -275,8 +285,8 @@ namespace Plugin.Tmall.Extension
                     int counter = 0;
                     foreach (var itemProductDom in div_productDomArray)
                     {
-                        var tsk = Task.Factory.StartNew(() =>
-                        {
+                        //var tsk = Task.Factory.StartNew(() =>
+                        //{
                             //解析一个商品的节点
                              
                             TmallProduct modelProduct = this.ResolverProductDom(itemProductDom);
@@ -285,11 +295,11 @@ namespace Plugin.Tmall.Extension
                                 blockingList_Products.Add(modelProduct);
                             }
                           
-                        });
-                        taskArray[counter] = tsk;
+                        //});
+                        //taskArray[counter] = tsk;
                     }
 
-                    Task.WaitAll(taskArray);
+                    //Task.WaitAll(taskArray);
                     var productsList = blockingList_Products.ToArray();
                     lstProducts.AddRange(productsList);
 
@@ -352,7 +362,7 @@ namespace Plugin.Tmall.Extension
                     string shopHref = shopDom.GetAttribute("href");
                     if (shopHref.Contains("user_number_id"))
                     {
-                        string shopId = HttpValueCollection.ParseQueryString(shopHref)["user_number_id"];
+                        string shopId = HttpUtility.ParseQueryString(shopHref,Encoding.UTF8)["user_number_id"];
                         long.TryParse(shopId, out long _shopId);
                         modelProduct.ShopId = _shopId;
 
