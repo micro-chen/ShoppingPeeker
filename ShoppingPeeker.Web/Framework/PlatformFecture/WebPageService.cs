@@ -92,7 +92,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                 if (!string.IsNullOrEmpty(pageContent))
                 {
               
-                    dataModel = resolver.ResolvePageContent(pageContent);
+                    dataModel = resolver.ResolvePageContent(webArgs.IsNeedResolveHeaderTags,pageContent);
                     if (null!=dataModel)
                     {
                         dataModel.KeyWord = webArgs.KeyWord;

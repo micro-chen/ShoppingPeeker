@@ -21,12 +21,13 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
         /// <param name="webArgs"></param>
         /// <returns></returns>
         ResolvedSearchUrlWithParas ResolveSearchUrl( BaseFetchWebPageArgument webArgs);
-        /// <summary>
-        /// 解析页面内容，返回商品视图模型
+        // <summary>
+        /// 执行内容解析
         /// </summary>
-        /// <param name="pageContent"></param>
+        ///<param name="isNeedHeadFilter">是否要解析头部筛选</param> 
+        /// <param name="content">要解析的内容</param>
         /// <returns></returns>
-        SearchProductViewModel ResolvePageContent(string pageContent);
+        SearchProductViewModel ResolvePageContent(bool isNeedHeadFilter, string pageContent);
        
     }
 }

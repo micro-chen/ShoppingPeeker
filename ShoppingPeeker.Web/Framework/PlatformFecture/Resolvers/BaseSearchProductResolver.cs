@@ -43,12 +43,13 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
             return searchUrl;
         }
 
-        /// <summary>
-        /// 解析搜索页面列表的内容
+        // <summary>
+        /// 执行内容解析
         /// </summary>
-        /// <param name="pageContent"></param>
+        ///<param name="isNeedHeadFilter">是否要解析头部筛选</param> 
+        /// <param name="content">要解析的内容</param>
         /// <returns></returns>
-        public virtual SearchProductViewModel ResolvePageContent(string pageContent)
+        public virtual SearchProductViewModel ResolvePageContent(bool isNeedHeadFilter, string pageContent)
         {
             SearchProductViewModel dataModel = new SearchProductViewModel();
             if (string.IsNullOrEmpty(this.NeedPluginName))
@@ -62,7 +63,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
                 throw new Exception("未能加载插件：" + NeedPluginName);
             }
 
-            var resultBag = pluginInstance.ResolveSearchPageContent(pageContent) as Dictionary<string, object>;
+            var resultBag = pluginInstance.ResolveSearchPageContent(isNeedHeadFilter,pageContent) as Dictionary<string, object>;
             if (null == resultBag)
             {
                 throw new Exception("插件：" + NeedPluginName + " ;未能正确解析内容：" + pageContent);
