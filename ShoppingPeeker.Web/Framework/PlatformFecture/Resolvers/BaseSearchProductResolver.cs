@@ -68,8 +68,12 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
             {
                 throw new Exception("插件：" + NeedPluginName + " ;未能正确解析内容：" + pageContent);
             }
-            dataModel.Brands = resultBag["Brands"] as List<BrandTag>;
-            dataModel.Tags = resultBag["Tags"] as List<KeyWordTag>;
+            if (isNeedHeadFilter==true)
+            {
+                dataModel.Brands = resultBag["Brands"] as List<BrandTag>;
+                dataModel.Tags = resultBag["Tags"] as List<KeyWordTag>;
+            }
+            
             dataModel.Products = resultBag["Products"] as ProductBaseCollection;
             return dataModel;
         }
