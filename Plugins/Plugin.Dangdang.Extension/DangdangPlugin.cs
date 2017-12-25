@@ -154,9 +154,9 @@ namespace Plugin.Dangdang.Extension
             resultBag.Add("Tags", lstTags);
 
             //  products  解析
-            ProductBaseCollection lstProducts = new ProductBaseCollection()
+            var lstProducts = new ProductBaseCollection()
             {
-                new TmallProduct { ItemId=1,Title="测试大衣"}
+                new DangdangProduct { ItemId=1,Title="测试大衣"}
             };
             resultBag.Add("Products", lstProducts);
 

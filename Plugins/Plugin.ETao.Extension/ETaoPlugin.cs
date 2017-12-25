@@ -58,7 +58,7 @@ namespace Plugin.ETao.Extension
             resultBag.Add("Tags", lstTags);
 
             // 2 products  解析
-            ProductBaseCollection lstProducts =new  ProductBaseCollection()
+            var lstProducts =new  ProductBaseCollection()
             {
                 new ETaoProduct { ItemId=1,Title="测试大衣"}
             };

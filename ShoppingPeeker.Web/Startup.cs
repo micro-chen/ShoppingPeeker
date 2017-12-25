@@ -45,10 +45,14 @@ namespace ShoppingPeeker.Web
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMemoryCache();
-			services.AddMvc();
+			services.AddMvc()// //返回json  大小写控制
+                  .AddJsonOptions(op => op.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver()); ;
 
-			//将http 上下文中间件 添加的依赖注册容器
-			services.AddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
+           
+      
+                  
+            //将http 上下文中间件 添加的依赖注册容器
+            services.AddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
 
 			//var t= ConfigHelper.Configuration.GetValue<string>("option1");
 		}

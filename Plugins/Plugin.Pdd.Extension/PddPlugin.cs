@@ -104,7 +104,7 @@ namespace Plugin.Pdd.Extension
             resultBag.Add("Tags", lstTags);
 
             // 2 products  解析
-            ProductBaseCollection lstProducts =new  ProductBaseCollection()
+            var lstProducts =new  ProductBaseCollection()
             {
                 new PddProduct { ItemId=1,Title="测试大衣"}
             };

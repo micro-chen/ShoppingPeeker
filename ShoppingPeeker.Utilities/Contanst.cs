@@ -42,6 +42,10 @@ namespace ShoppingPeeker.Utilities
         /// 站点名称的配置节
         /// </summary>
         public const string Config_Node_SignTimeOut = "signTimeOut";
+        /// <summary>
+        /// 抓取页面是否开启结果缓存
+        /// </summary>
+        public const string Config_Node_IsFetchPageCacheaAble = "IsFetchPageCacheaAble";
 
         /// <summary>
         /// 默认请求过期标识

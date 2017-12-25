@@ -46,6 +46,16 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
 
             try
             {
+                //是否开启内容缓存，如果开启，那么从缓存中加载内容
+                if (true==WorkContext. IsFetchPageCacheaAble)
+                {
+                    dataModel = WorkContext.GetFetchPageResultFromCache(webArgs);
+                    if (null!=dataModel)
+                    {
+                        return dataModel;
+                    }
+                }
+
                 //工厂模式 获取指定平台的内容解析器
                 var resolver = ResolverFactory.GetSearchProductResolver(webArgs.Platform);
                 //尝试解析页面参数的检索地址
@@ -103,6 +113,11 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
             catch (Exception ex)
             {
                 Logger.Error(ex);
+            }
+
+            if (true == WorkContext.IsFetchPageCacheaAble)
+            {
+                WorkContext.SetFetchPageResultFromCache(webArgs, dataModel);
             }
             return dataModel;
         }

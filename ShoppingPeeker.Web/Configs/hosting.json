@@ -2,5 +2,7 @@
     "server": "Microsoft.AspNetCore.Server.Kestrel",
     "server.urls": "http://localhost:8001",
     "siteName": "惠当搜",
-    "signTimeOut": 20
+    "signTimeOut": 20,
+    "----是否开启抓取页面的缓存----": "",
+    "IsFetchPageCacheaAble": "true"
 }

@@ -16,7 +16,7 @@ namespace ShoppingPeeker.Utilities.Caching
     {
 
         private const string _redis_config_fileName = "redis.config.json";
-        private const string _redis_test_connt_key = "ShoppingWebCrawler.DeskTop.Redis.Test";
+        private const string _redis_test_connt_key = "ShoppingPeeker.Redis.Test";
 
 
         public string IpAddress { get; set; }

@@ -7,6 +7,9 @@ using ShoppingPeeker.Utilities.Ioc;
 using ShoppingPeeker.Utilities.Logging;
 using ShoppingPeeker.Utilities.DEncrypt;
 using Microsoft.Extensions.Configuration;
+using ShoppingPeeker.Web.ViewModels;
+using NTCPMessage.EntityPackage.Arguments;
+using ShoppingPeeker.Utilities.Caching;
 
 namespace ShoppingPeeker.Web
 {
@@ -94,8 +97,17 @@ namespace ShoppingPeeker.Web
                 _signTimeOut = value;
             }
         }
-
-
+        /// <summary>
+        /// 是否开启抓取页面的缓存
+        /// </summary>
+        public static bool IsFetchPageCacheaAble
+        {
+            get
+            {
+                var isAble = ConfigHelper.HostingConfiguration.GetConfigBool(Contanst.Config_Node_IsFetchPageCacheaAble);
+                return isAble;
+            }
+        }
         public static IHostingEnvironment HostingEnvironment { get; set; }
 
         ///// <summary>
@@ -251,11 +263,57 @@ namespace ShoppingPeeker.Web
 
 
 
+        private static RedisCacheManager _RedisClient;
+        /// <summary>
+        /// redis 客户端
+        /// </summary>
+        public static RedisCacheManager RedisClient
+        {
+            get
+            {
+                if (null == _RedisClient)
+                {
+                    _RedisClient = RedisCacheManager.Current;
+                }
+                return _RedisClient;
+            }
+            set
+            {
+                _RedisClient = value;
+            }
+        }
+
 
         #endregion
 
 
         #region Utilities
+
+
+        /// <summary>
+        /// 从缓存中读取抓取页面的结果
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        public static SearchProductViewModel GetFetchPageResultFromCache(BaseFetchWebPageArgument webArgs)
+        {
+            SearchProductViewModel reultModel = null;
+            var key = webArgs.CacheKey;
+            reultModel = RedisClient.Get< SearchProductViewModel>(key);
+            return reultModel;
+        }
+
+        /// <summary>
+        ///  将指定的参数的抓取的页面的解析结果放到缓存
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <param name="reultModel"></param>
+        /// <param name="timeOut">默认为60秒</param>
+        public static void SetFetchPageResultFromCache(BaseFetchWebPageArgument webArgs, SearchProductViewModel reultModel, int timeOut = 60)
+        {
+            var key = webArgs.CacheKey;
+            RedisClient.SetAsync(key, reultModel, timeOut);
+        }
 
         /// <summary>
         /// 直接重定向请求 到错误页面
