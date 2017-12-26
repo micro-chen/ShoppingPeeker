@@ -179,6 +179,7 @@ namespace Plugin.Tmall.Extension
                         {
                             var model = new BrandTag();
                             model.Platform = SupportPlatformEnum.Tmall;
+                            model.FilterField = "brand";//使用的过滤字段参数
                             var urlBrand = itemADom.GetAttribute("href");
                             if (!string.IsNullOrEmpty(urlBrand) && urlBrand.Contains("brand="))
                             {

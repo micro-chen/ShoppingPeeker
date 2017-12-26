@@ -21,7 +21,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
         {
             get
             {
-                return "Plugin.Taoba.Extension";
+                return "Plugin.Taobao.Extension";
             }
         }
 
