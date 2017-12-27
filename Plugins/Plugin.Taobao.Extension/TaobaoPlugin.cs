@@ -21,10 +21,10 @@ using ShoppingPeeker.Plugins;
 
 namespace Plugin.Taobao.Extension
 {
-    public class TaobaoPlugin : PluginBase <TaobaoPlugin>
+    public class TaobaoPlugin : PluginBase<TaobaoPlugin>
     {
 
- 
+
         /// <summary>
         /// 自我创建新实例
         /// --比较复杂，未完成
@@ -41,12 +41,12 @@ namespace Plugin.Taobao.Extension
         protected override void Initialize()
         {
         }
- 
+
         public override string PluginDirectory
         {
             get
             {
-                var dir= Assembly.GetExecutingAssembly().GetDirectoryPath();
+                var dir = Assembly.GetExecutingAssembly().GetDirectoryPath();
                 return dir;
             }
         }
@@ -94,7 +94,7 @@ namespace Plugin.Taobao.Extension
                 {
                     //1 分类 cat
                     var catFilter = currentPlatformTag.FirstOrDefault(x => x.FilterFiled == "cat");
-                    if (null!= catFilter)
+                    if (null != catFilter)
                     {
                         sbSearchUrl.Append("&cat=").Append(catFilter.Value);
                     }
@@ -105,10 +105,10 @@ namespace Plugin.Taobao.Extension
                     {
                         string ppathIds = string.Join(";", ppathFilter.Select(x => x.Value));
                         filerValueString += ";";
-                       filerValueString += ppathIds;
+                        filerValueString += ppathIds;
 
                     }
-                  
+
                 }
                 //2 其他平台的tag 作为关键词的一部分
                 var otherPlatformTag = webArgs.TagGroup.Tags.FirstOrDefault(x => x.Platform != SupportPlatformEnum.Taobao);
@@ -131,11 +131,7 @@ namespace Plugin.Taobao.Extension
             #endregion
 
             #region  排序
-            if (null == webArgs.OrderFiled)
-            {
-                sbSearchUrl.Append("&sort=default");//默认综合排序
-            }
-            else
+            if (null != webArgs.OrderFiled)
             {
                 sbSearchUrl.Append("&sort=").Append(webArgs.OrderFiled.FieldValue);//默认综合排序
             }
@@ -146,36 +142,34 @@ namespace Plugin.Taobao.Extension
 
             #region  页码
 
-            var pageNumber = webArgs.PageIndex;
+            var pageNumber = webArgs.PageIndex + 1;
             if (pageNumber > 0)
             {
-                sbSearchUrl.Append("&data-key=s&data-value=").Append(pageNumber * 44);//淘宝的分页是基于页索引*44
+                //sbSearchUrl.Append("&data-key=s&data-value=").Append(pageNumber * 44);//淘宝的分页是基于页索引*44
+                sbSearchUrl.Append("&s=").Append(webArgs.PageIndex * 44);
             }
             #endregion
 
             # region 杂项
-            string timeToken = JavascriptContext.getUnixTimestamp();
-            sbSearchUrl.AppendFormat("&_ksTS={0}_897", timeToken);
-            sbSearchUrl.Append("&commend=all");
-            sbSearchUrl.Append("&ssid=s5-e");
-            sbSearchUrl.Append("&search_type=item");
-            sbSearchUrl.Append("&sourceId=tb.index");
-            sbSearchUrl.Append("&spm=a21bo.50862.201856-taobao-item.1");
+            //string timeToken = JavascriptContext.getUnixTimestamp();
+            //sbSearchUrl.AppendFormat("&_ksTS={0}_897", timeToken);
+            //sbSearchUrl.Append("&commend=all");
+            //sbSearchUrl.Append("&ssid=s5-e");
+            //sbSearchUrl.Append("&search_type=item");
+            //sbSearchUrl.Append("&sourceId=tb.index");
+            //sbSearchUrl.Append("&spm=a21bo.50862.201856-taobao-item.1");
             sbSearchUrl.Append("&ie=utf8");
-             //当不用加载分类的时候 使用jsonp的数据，否则使用html 返回的数据，这个标识用来控制数据的返回格式
-            //jsonp的数据中不包含 导航筛选分类
-            if (webArgs.IsNeedResolveHeaderTags==false)
-            {
-                sbSearchUrl.Append("&ajax=true");
-                sbSearchUrl.Append("&js=1");
-                sbSearchUrl.Append("&stats_click=search_radio_all%3A1");
-                sbSearchUrl.Append("&bcoffset=");
-                sbSearchUrl.Append("&ntoffset=");
-                sbSearchUrl.Append("&p4ppushleft=");
-            }
-            sbSearchUrl.AppendFormat("&initiative_id=tbindexz_{0}",DateTime.Now.ToString("yyyyMMdd"));
+            //sbSearchUrl.Append("&ajax=true");
+            sbSearchUrl.Append("&js=1");
+            //sbSearchUrl.Append("&style=grid");
+            sbSearchUrl.Append("&stats_click=search_radio_all%3A1");
+            sbSearchUrl.Append("&bcoffset=4");
+            sbSearchUrl.Append("&ntoffset=4");
+            sbSearchUrl.Append("&p4ppushleft=1%2C48");
+
+            sbSearchUrl.AppendFormat("&initiative_id=staobaoz_{0}", DateTime.Now.ToString("yyyyMMdd"));
             #endregion
-            resultUrl.Url= sbSearchUrl.ToString();
+            resultUrl.Url = sbSearchUrl.ToString();
             return resultUrl;
         }
 
@@ -193,201 +187,242 @@ namespace Plugin.Taobao.Extension
 
             string jsonData = string.Empty;
 
-            if (content.IndexOf("g_page_config")<0)
+            if (content.IndexOf("g_page_config") < 0)
             {
                 return null;//无效的页面结果数据
             }
 
+            int startPos = content.IndexOf("g_page_config");
+            int endPos = content.IndexOf("g_srp_loadCss") - startPos;
+            var secondContent = content.Substring(startPos, endPos);
+            int secStartPos = secondContent.IndexOf('{');
+            int secEndPos = secondContent.IndexOf("};") - secStartPos + 1;
+            jsonData = secondContent.Substring(secStartPos, secEndPos);
+
+            TaobaoPageJsonResut pageJsonObj = JsonConvert.DeserializeObject<TaobaoPageJsonResut>(jsonData);
+            if (null == pageJsonObj)
+            {
+                return null;
+            }
 
             if (isNeedHeadFilter == true)
             {
 
-                ////创建html 文档对象
-                //HtmlParser htmlParser = new HtmlParser();
-                //var htmlDoc = htmlParser.Parse(content);
-                ////html  的数据 从内容检索数据节点 g_page_config
-                //var scriptsNode= htmlDoc.QuerySelectorAll("head>script");
-                //IElement g_page_configScriptNode = null;
-                //for (int i = scriptsNode.Length-1; i >=0; i--)
-                //{
+                var navNode = pageJsonObj.mods.nav;
+                if (null != navNode && null != navNode.data)
+                {
 
-                //    if (scriptsNode[i].TextContent.Contains("g_page_config"))
-                //    {
-                //        g_page_configScriptNode = scriptsNode[i];
-                //        break;
-                //    }
-                //}
-               
+                    var commonNode = navNode.data.common;
+                    var advNode = navNode.data.adv;
 
-                int startPos = content.IndexOf("g_page_config");
-                int endPos = content.IndexOf("g_srp_loadCss") - startPos;
-                var secondContent = content.Substring(startPos, endPos);
-                int secStartPos = secondContent.IndexOf('{');
-                int secEndPos = secondContent.IndexOf("};")- secStartPos+1;
-                jsonData = secondContent.Substring(secStartPos, secEndPos);
-
-                //todo ：开始解析json
-                //var div_AttrsDom = htmlDoc.QuerySelector("div.groups.J_NavGroup");
-                //var ulDomArray = div_AttrsDom.QuerySelectorAll("div.attrValues>ul");
-                //#region 品牌解析
-                //var lstBrands = new List<BrandTag>();
-                //if (null != div_AttrsDom)
-                //{
-                //    //从属性区域解析dom-品牌内容
-                //    var brandULDom = ulDomArray[0];// div_AttrsDom.QuerySelector("div.j_Brand>div.attrValues>ul");
-
-                //    if (null != brandULDom)
-                //    {
-                //        var regex_MatchBrandId = new Regex(@"brand=(\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                //        var li_ADomArray = brandULDom.QuerySelectorAll("li>a");
-                //        foreach (var itemADom in li_ADomArray)
-                //        {
-                //            var model = new BrandTag();
-                //            model.Platform = SupportPlatformEnum.Taobao;
-                //            model.FilterField = "ppath";//使用的过滤字段参数
-                //            var urlBrand = itemADom.GetAttribute("href");
-                //            if (!string.IsNullOrEmpty(urlBrand) && urlBrand.Contains("brand="))
-                //            {
-                //                model.BrandId = regex_MatchBrandId.Match(urlBrand).Groups[1].Value;//new//品牌id   href="?brand=110910&amp;q=%B4%F3%C3%D7&amp;sort=s&amp;style=g&amp;from=sn_1_brand-qp&amp;spm=a220m.1000858.1000720.1.348abe64rj5JVg#J_crumbs
-                //            }
-                //            model.BrandName = itemADom.GetAttribute("title");
-                //            lstBrands.Add(model);
-                //        }
-                //    }
-                //}
-                //resultBag.Add("Brands", lstBrands);
-
-                //#endregion
-
-                //// tags 解析
-                ////var lstTags = new List<KeyWordTag> {
-                ////new KeyWordTag {
-                ////    Platform = NTCPMessage.EntityPackage.SupportPlatformEnum.Taobao,
-                ////    TagName = "大衣", Value = "dayi", FilterFiled = "sku"
-                ////} };
-
-                //var lstTags = new List<KeyWordTag>();
-                //if (null != div_AttrsDom)
-                //{
-                //    var blockList = new BlockingCollection<KeyWordTag>();
-
-                //    //分类 or 属性;品牌是第一个，其他属性是后续
-                //    var taskArray = new Task[ulDomArray.Length - 1];
-                //    int counter = 0;
-                //    for (int i = 1; i < ulDomArray.Length; i++)
-                //    {
-                //        int cursor = i;
-
-                //        var taskResolveAEmelems = Task.Factory.StartNew(() =>
-                //        {
-                //            var itemUl = ulDomArray[cursor];
-
-                //            //找到归属的组
-                //            var attrKeyDom = itemUl.ParentElement.ParentElement.QuerySelector("div.attrKey");
-                //            string groupName = "";
-                //            if (null != attrKeyDom)
-                //            {
-                //                groupName = attrKeyDom.TextContent.Replace("\n", "").Trim();
-                //            }
+                    //解析common节点
+                    if (null != commonNode && commonNode.Any())
+                    {
+                        //1 检测是否有品牌，有的话 解析品牌
+                        #region 品牌解析
 
 
+                        var brandNode = commonNode.FirstOrDefault(x => x.text == "品牌" && x.sub != null);
+                        if (null != brandNode && brandNode.sub != null)
+                        {
+                            var lstBrands = new List<BrandTag>();
+                            foreach (var subItem in brandNode.sub)
+                            {
+                                var model = new BrandTag();
+                                model.Platform = SupportPlatformEnum.Taobao;
+                                model.FilterField = "ppath";//使用的过滤字段参数
 
-                //            var childLiADomArray = itemUl.QuerySelectorAll("li>a");
-                //            foreach (var itemADom in childLiADomArray)
-                //            {
-                //                var modelTag = new KeyWordTag();
-                //                modelTag.Platform = SupportPlatformEnum.Taobao;
-                //                modelTag.TagName = itemADom.TextContent.Replace("\n", "");//标签名称
-                //                modelTag.GroupShowName = groupName;
+                                model.BrandId = subItem.value;
+                                model.BrandName = subItem.text;
+                                lstBrands.Add(model);
+                            }
+                            //解析完毕品牌
+                            resultBag.Add("Brands", lstBrands);
+                        }
 
-                //                //////----解析 a标签开始-------
-                //                //////检查 a 的href 中的参数；cat 或者prop
-                //                string hrefValue = itemADom.GetAttribute("href");
-                //                if (!string.IsNullOrEmpty(hrefValue))
-                //                {
-                //                    var urlParas = HttpUtility.ParseQueryString(hrefValue, Encoding.UTF8);
-                //                    if (null != urlParas)
-                //                    {
-                //                        if (hrefValue.IndexOf("cat=") > -1)
-                //                        {
-                //                            //1 cat
-                //                            string catValue = urlParas["cat"];
-                //                            modelTag.FilterFiled = "cat";
-                //                            modelTag.Value = catValue;
-                //                        }
-                //                        else if (hrefValue.IndexOf("prop=") > -1)
-                //                        {
-                //                            //2 prop
-                //                            string propValue = urlParas["prop"];
-                //                            modelTag.FilterFiled = "prop";
-                //                            modelTag.Value = propValue;
-                //                        }
-                //                    }
-                //                }
-                //                //----解析 a标签完毕-------
-                //                blockList.Add(modelTag);
+                        #endregion
 
-                //            }
+                    }
 
-                //        });
-                //        //将并行任务放到数组
-                //        taskArray[counter] = taskResolveAEmelems;
-                //        counter += 1;
-                //    }
-                //    var safeTaskArray = taskArray.Where(x => null != x).ToArray();
-                //    Task.WaitAll(safeTaskArray);
-                //    lstTags = blockList.ToList();
-                //}
-                //resultBag.Add("Tags", lstTags);
+
+                    //2其他筛选节点的分析
+
+                    #region tags 解析
+
+
+                    var lstTags = new List<KeyWordTag>();
+
+                    var otherFilterNode1 = commonNode.Where(x => x.text != "品牌" && x.sub != null);
+                    foreach (var itemNode in otherFilterNode1)
+                    {
+                        //找到归属的组
+                        string groupName = itemNode.text;
+                        ProcessTags(lstTags, itemNode.sub, groupName);
+                    }
+
+                    //advNode 的解析
+                    foreach (var itemNode in advNode)
+                    {
+                        //找到归属的组
+                        string groupName = itemNode.text;
+                        ProcessTags(lstTags, itemNode.sub, groupName);
+                    }
+                    resultBag.Add("Tags", lstTags);
+
+                    #endregion 
+                }
+
+
 
             }
 
-            //#region products  解析
-            ////ProductBaseCollection lstProducts = new ProductBaseCollection()
-            ////{
-            ////    new TaobaoProduct { ItemId=1,Title="测试大衣"}
-            ////};
-            //var lstProducts = new ProductBaseCollection();
+            #region products  解析
+            var itemListNode = pageJsonObj.mods.itemlist;
+            if (null != itemListNode && itemListNode.data != null && null != itemListNode.data.auctions)
+            {
+                var lstProducts = new ProductBaseCollection();
+                foreach (var itemProduct in itemListNode.data.auctions)
+                {
+                    TaobaoProduct modelProduct = this.ResolverProductDom(itemProduct);
 
-            //var div_J_ItemListDom = htmlDoc.QuerySelector("div#J_ItemList");
-            //if (null != div_J_ItemListDom)
-            //{
-            //    var div_productDomArray = div_J_ItemListDom.QuerySelectorAll("div.product");
-            //    if (null != div_productDomArray && div_productDomArray.Any())
-            //    {
-            //        //多任务并行解析商品
-            //        BlockingCollection<TaobaoProduct> blockingList_Products = new BlockingCollection<TaobaoProduct>();
-            //        var taskArray = new Task[div_productDomArray.Length];
-            //        int counter = 0;
-            //        foreach (var itemProductDom in div_productDomArray)
-            //        {
-            //            var tsk = Task.Factory.StartNew(() =>
-            //            {
-            //                //解析一个商品的节点
+                    if (null != modelProduct)
+                    {
+                        lstProducts.Add(modelProduct);
+                    }
 
-            //                TaobaoProduct modelProduct = this.ResolverProductDom(itemProductDom);
-            //                if (null != modelProduct)
-            //                {
-            //                    blockingList_Products.Add(modelProduct);
-            //                }
+                }
 
-            //            });
-            //            taskArray[counter] = tsk;
-            //            counter += 1;
-            //        }
-            //        var safeTaskArray = taskArray.Where(x => null != x).ToArray();
-            //        Task.WaitAll(safeTaskArray);
-            //        var productsList = blockingList_Products.ToArray();
-            //        lstProducts.AddRange(productsList);
+                resultBag.Add("Products", lstProducts);
+            }
 
-            //    }
-            //}
-            //resultBag.Add("Products", lstProducts);
 
-            //#endregion
+            #endregion
 
 
             return resultBag;// string.Concat("has process input :" + content);
+        }
+
+
+        private static void ProcessTags(List<KeyWordTag> lstTags, IEnumerable<TaobaoPageJsonResut.sub> lstSub, string groupName)
+        {
+            if (null == lstTags)
+            {
+                lstTags = new List<KeyWordTag>();
+            }
+
+
+            foreach (var itemSub in lstSub)
+            {
+                var modelTag = new KeyWordTag();
+                modelTag.Platform = SupportPlatformEnum.Taobao;
+                modelTag.TagName = itemSub.text;
+                modelTag.GroupShowName = groupName;
+                modelTag.FilterFiled = itemSub.key;
+                modelTag.Value = itemSub.value;
+
+                lstTags.Add(modelTag);
+            }
+
+        }
+
+        /// <summary>
+        /// 解析商品节点
+        /// </summary>
+        /// <param name="modelProduct"></param>
+        /// <param name="productDom"></param>
+        private TaobaoProduct ResolverProductDom(TaobaoPageJsonResut.Auctions productDom)
+        {
+            TaobaoProduct modelProduct = null;
+            if (null == productDom)
+            {
+                return modelProduct;
+            }
+            modelProduct = new TaobaoProduct();
+            try
+            {
+                //id
+                string itemId = productDom.nid;
+                if (string.IsNullOrEmpty(itemId))
+                {
+                    return modelProduct;//凡是没有id 的商品，要么是广告 要么是其他非正常的商品
+                }
+                long.TryParse(itemId, out long _ItemId);
+                modelProduct.ItemId = _ItemId;
+
+                //title
+                modelProduct.Title = productDom.title;
+                modelProduct.ItemUrl = productDom.detail_url;
+
+                //price
+                var priceDom = productDom.view_price;
+                if (null != priceDom)
+                {
+                    decimal.TryParse(priceDom, out decimal _price);
+                    modelProduct.Price = _price;
+                }
+                //pic
+                modelProduct.PicUrl = productDom.pic_url;
+                //shop
+                string shopId = productDom.user_id;
+                long.TryParse(shopId, out long _shopId);
+                //modelProduct.ShopId = _shopId;//天猫店铺id 在搜索列表未出现
+                modelProduct.SellerId = _shopId;
+
+                modelProduct.ShopName = productDom.nick;
+
+
+                //status
+                //成交量
+
+                modelProduct.Biz30Day = productDom.view_sales;
+
+                //评论量
+                modelProduct.TotalBizRemarkCount = productDom.comment_count;
+                modelProduct.RemarkUrl = productDom.comment_url;
+
+                //卖家地址
+                modelProduct.SellerAddress = productDom.item_loc;
+
+                //是否天猫
+                if (null != productDom.shopcard)
+                {
+                    modelProduct.IsTmall = productDom.shopcard.isTmall;
+                }
+                //是否金牌卖家 运费险等
+                if (productDom.icon != null && productDom.icon.Any())
+                {
+                    foreach (var item in productDom.icon)
+                    {
+                        if (item.icon_key == "icon-service-jinpaimaijia")
+                        {
+                            modelProduct.IsGold = true;
+                        }
+                        else if (item.icon_key == "icon-service-baoxian")
+                        {
+                            modelProduct.IsHasYunfeiXian = true;
+                        }
+                        else if (item.icon_key == "icon-service-xinpin")
+                        {
+                            modelProduct.IsXinPin = true;
+                        }
+                        else if (item.icon_key == "icon-fest-ifashion")
+                        {
+                            modelProduct.IsFashion = true;
+                        }
+
+                    }
+
+
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                PluginContext.OutPutError(ex);
+            }
+            return modelProduct;
         }
 
 
