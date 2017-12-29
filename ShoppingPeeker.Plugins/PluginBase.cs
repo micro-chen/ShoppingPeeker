@@ -84,7 +84,7 @@ namespace ShoppingPeeker.Plugins
         /// <param name="isNeedHeadFilter"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-        public abstract Dictionary<string, object> ResolveSearchPageContent(bool isNeedHeadFilter, string content);
+        public abstract Dictionary<string, object> ResolveSearchPageContent(BaseFetchWebPageArgument webArgs, string content);
 
         public PluginMeta _MetaManifest;
         public PluginMeta MetaManifest

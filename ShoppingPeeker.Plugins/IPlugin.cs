@@ -30,9 +30,9 @@ namespace ShoppingPeeker.Plugins
         /// <summary>
         ///  解析搜索列表内容方法
         /// </summary>
-        /// <param name="isNeedHeadFilter"></param>
+        /// <param name="webArgs"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-        Dictionary<string, object> ResolveSearchPageContent(bool isNeedHeadFilter, string content);
+        Dictionary<string, object> ResolveSearchPageContent(BaseFetchWebPageArgument webArgs, string content);
     }
 }

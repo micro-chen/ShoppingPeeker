@@ -90,7 +90,7 @@ namespace ShoppingPeeker.Web
 			#endregion
 			var logger = loggerFactory as LoggerFactory;
             Logger.LogFactory = loggerFactory;
-            PluginContext.LogFactory = loggerFactory;
+            PluginContext.Logger.LogFactory = loggerFactory;
 
 
 

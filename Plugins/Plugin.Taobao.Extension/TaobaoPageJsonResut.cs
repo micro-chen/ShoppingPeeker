@@ -5,10 +5,26 @@ using System.Text;
 namespace Plugin.Taobao.Extension
 {
     /// <summary>
+    /// 淘宝分割的jsonp结构
+    /// </summary>
+    public class TaobaoSlicedJsonpResut
+    {
+        public Itemlist itemlist { get; set; }
+
+        public class Itemlist
+        {
+            public IEnumerable<TaobaoPageJsonResut.Auctions> auctions { get; set; }
+            public string trace { get; set; }
+            public string query { get; set; }
+        }
+    }
+
+    /// <summary>
     /// 淘宝返回的json查询结果模型
     /// </summary>
     public class TaobaoPageJsonResut
     {
+
         //public string pageName { get; set; }
         public Mods mods { get; set; }
         public MainInfo mainInfo { get; set; }
@@ -18,6 +34,10 @@ namespace Plugin.Taobao.Extension
         //{
         //    public string status { get; set; }
         //}
+
+     
+
+
         public class LevelClasses
         {
             public string levelClass { get; set; }

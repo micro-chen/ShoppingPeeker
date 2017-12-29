@@ -11,46 +11,62 @@ namespace ShoppingPeeker.Plugins
     public class PluginContext
     {
 
-        #region 日志相关
 
-        /// <summary>
-        /// 插件运行时使用的日志工厂
-        /// </summary>
-        public static ILoggerFactory LogFactory { get; set; }
-
-        public static ILogger _Logger;
-        /// <summary>
-        /// 程序内置的日志记录器
-        /// </summary>
-        private static ILogger LoggerWriter
+        public class Logger
         {
-            get
+            #region 日志相关
+
+            /// <summary>
+            /// 插件运行时使用的日志工厂
+            /// </summary>
+            public static ILoggerFactory LogFactory { get; set; }
+
+            public static ILogger _Logger;
+            /// <summary>
+            /// 程序内置的日志记录器
+            /// </summary>
+            private static ILogger LoggerWriter
             {
-                if (null == _Logger)
+                get
                 {
-                    if (null == LogFactory)
+                    if (null == _Logger)
                     {
-                        throw new Exception("app logfactory is null  !");
+                        if (null == LogFactory)
+                        {
+                            throw new Exception("app logfactory is null  !");
+                        }
+                        _Logger = LogFactory.CreateLogger("PluginContextLogger");
                     }
-                    _Logger = LogFactory.CreateLogger("PluginContextLogger");
+                    return _Logger;
                 }
-                return _Logger;
+
             }
-           
-        }
-        /// <summary>
-        /// Error 级别的log
-        /// </summary>
-        /// <param name="ex"></param>
-        /// <param name="title"></param>
+            /// <summary>
+            /// Error 级别的log
+            /// </summary>
+            /// <param name="errMsg"></param>
+            /// <param name="title"></param>
 
-        public static void OutPutError(Exception ex, string title = "Error")
-        {
-            string errMsg = string.Concat(title, ex.ToString());
-            LoggerWriter.LogError(errMsg);
+            public static void Error(string errMsg, string title = "Error")
+            {
+                LoggerWriter.LogError(errMsg);
+            }
+
+            /// <summary>
+            /// Error 级别的log
+            /// </summary>
+            /// <param name="ex"></param>
+            /// <param name="title"></param>
+
+            public static void Error(Exception ex, string title = "Error")
+            {
+                string errMsg = string.Concat(title, ex.ToString());
+                Error(errMsg, title);
+            }
+
+            #endregion
         }
 
-        #endregion
 
     }
 }

@@ -69,8 +69,9 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                 ////1 打开tcp 链接 
                 ////2 发送参数
                 ////3 解析结果
-                var connStr = ConfigHelper.ShoppingWebCrawlerSection.ConnectionStringCollection.First();
-                using (var conn = new SoapTcpConnection(connStr))
+                var connStrConfig = ConfigHelper.ShoppingWebCrawlerSection.ConnectionStringCollection.First();
+                webArgs.SystemAttachParas["SoapTcpConnectionString"] = connStrConfig;//register to attach paras
+                using (var conn = new SoapTcpConnection(connStrConfig))
                 {
                     if (conn.State == ConnectionState.Closed)
                     {
@@ -102,7 +103,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                 if (!string.IsNullOrEmpty(pageContent))
                 {
               
-                    dataModel = resolver.ResolvePageContent(webArgs.IsNeedResolveHeaderTags,pageContent);
+                    dataModel = resolver.ResolvePageContent(webArgs,pageContent);
                     if (null!=dataModel)
                     {
                         dataModel.KeyWord = webArgs.KeyWord;

@@ -24,6 +24,6 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
                 return "Plugin.Taobao.Extension";
             }
         }
-
+ 
     }
 }

@@ -146,10 +146,10 @@ namespace Plugin.Tmall.Extension
         /// <summary>
         /// 执行内容解析
         /// </summary>
-        ///<param name="isNeedHeadFilter">是否要解析头部筛选</param> 
+        ///<param name="webArgs"> </param> 
         /// <param name="content">要解析的内容</param>
         /// <returns>返回需要的字段对应的字典</returns>
-        public override Dictionary<string, object> ResolveSearchPageContent(bool isNeedHeadFilter, string content)
+        public override Dictionary<string, object> ResolveSearchPageContent(BaseFetchWebPageArgument webArgs, string content)
         {
 
             var resultBag = new Dictionary<string, object>();
@@ -158,7 +158,7 @@ namespace Plugin.Tmall.Extension
             HtmlParser htmlParser = new HtmlParser();
             var htmlDoc = htmlParser.Parse(content);
 
-            if (isNeedHeadFilter == true)
+            if (webArgs.IsNeedResolveHeaderTags == true)
             {
 
 
@@ -439,7 +439,7 @@ namespace Plugin.Tmall.Extension
             }
             catch (Exception ex)
             {
-                PluginContext.OutPutError(ex);
+                PluginContext.Logger.Error(ex);
             }
             return modelProduct;
         }
