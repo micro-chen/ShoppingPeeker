@@ -4,5 +4,5 @@
     "siteName": "惠当搜",
     "signTimeOut": 20,
     "----是否开启抓取页面的缓存----": "",
-    "IsFetchPageCacheaAble": "true"
+    "IsFetchPageCacheaAble": "false"
 }

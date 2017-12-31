@@ -56,7 +56,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_tmall_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchTmallProducts([FromBody]TmallFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchTmallProducts([FromBody]TmallFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -69,7 +69,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data =  await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {
@@ -85,7 +85,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_taobao_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchTaobaoProducts([FromBody]TaobaoFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchTaobaoProducts([FromBody]TaobaoFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -99,7 +99,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data = await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {
@@ -115,7 +115,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_jd_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchJingdongProducts([FromBody]JingdongFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchJingdongProducts([FromBody]JingdongFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -129,7 +129,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data = await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {
@@ -146,7 +146,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_pdd_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchPddProducts([FromBody]PddFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchPddProducts([FromBody]PddFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -160,7 +160,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data = await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {
@@ -177,7 +177,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_vip_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchVipProducts([FromBody]VipFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchVipProducts([FromBody]VipFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -191,7 +191,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data = await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {
@@ -208,7 +208,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_guomei_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchGuomeiProducts([FromBody]GuomeiFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchGuomeiProducts([FromBody]GuomeiFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -222,7 +222,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data = await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {
@@ -238,7 +238,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_suning_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchSuningProducts([FromBody]SuningFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchSuningProducts([FromBody]SuningFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -252,7 +252,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data = await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {
@@ -269,7 +269,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_yhd_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchYhdProducts([FromBody]YhdFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchYhdProducts([FromBody]YhdFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -283,7 +283,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data = await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {
@@ -299,7 +299,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_mls_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchMeilishuoProducts([FromBody]MeilishuoFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchMeilishuoProducts([FromBody]MeilishuoFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -313,7 +313,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data = await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {
@@ -330,7 +330,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_mgj_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchMogujieProducts([FromBody]MogujieFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchMogujieProducts([FromBody]MogujieFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -344,7 +344,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data = await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {
@@ -361,7 +361,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_dangdang_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchDangDangProducts([FromBody]DangdangFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchDangDangProducts([FromBody]DangdangFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -375,7 +375,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data = await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {
@@ -393,7 +393,7 @@ namespace ShoppingPeeker.Web.Controllers
         /// <returns></returns>
         [ActionName("search_etao_products")]
         [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchETaoProducts([FromBody]ETaoFetchWebPageArgument webArgs)
+        public async Task<BusinessViewModelContainer<SearchProductViewModel>> SearchETaoProducts([FromBody]ETaoFetchWebPageArgument webArgs)
         {
             BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
@@ -407,7 +407,7 @@ namespace ShoppingPeeker.Web.Controllers
             {
                 //使用指定平台的页面检索服务 进行搜索商品
                 var pageService = WebPageService.CreateNew();
-                container.Data = pageService.QueryProductsByKeyWords(webArgs);
+                container.Data = await pageService.QueryProductsByKeyWords(webArgs);
             }
             catch (Exception ex)
             {

@@ -59,19 +59,21 @@ namespace NTCPMessage.Client
         public SoapTcpConnection()
         {
             this.State = ConnectionState.Closed;
-            TimeOut = 10 * 1000;//设置默认连接超时时间
+           //TimeOut = 30 * 1000;//设置默认连接超时时间
         }
+ 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="address">远程地址</param>
         /// <param name="port">端口</param>
-        public SoapTcpConnection(string address, int port) : base()
+        ///<param name="timeOut">连接超时时间（秒）</param>
+        public SoapTcpConnection(string address, int port, int timeOut = 30) : this()
         {
-
+            this.State = ConnectionState.Closed;
             this.IPAddress = address;
             this.Port = port;
-
+            this.TimeOut = timeOut * 1000;
         }
 
         public SoapTcpConnection(ShoppingWebCrawlerSection.ConnectionStringConfig connectionString)
@@ -124,6 +126,37 @@ namespace NTCPMessage.Client
             }
             return repData;
 
+        }
+
+
+        /// <summary>
+        /// 异步发送SOAP消息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public Task<IDataContainer> SendSoapMessageAsync(SoapMessage data)
+        {
+
+            return Task.Factory.StartNew(() =>
+            {
+                IDataContainer repData = null;
+
+                try
+                {
+
+                    repData = this.driver.SyncSend(
+                                  (UInt32)MessageType.Json,
+                               data,
+                               this.TimeOut,
+                              iSendMessageSerializer);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                return repData;
+
+            });
         }
         /// <summary>
         /// Ping
@@ -209,7 +242,7 @@ namespace NTCPMessage.Client
             if (this.State != ConnectionState.Closed && driver != null)
             {
                 //扔回连接池中
-                var currentSettings = new ShoppingWebCrawlerSection.ConnectionStringConfig { Address = this.IPAddress, Port = this.Port };
+                var currentSettings = new ShoppingWebCrawlerSection.ConnectionStringConfig { Address = this.IPAddress, Port = this.Port, TimeOut = this.TimeOut };
                 SoapTcpPool pool = SoapTcpPool.GetPool(currentSettings);
                 if (null != pool)
                 {
