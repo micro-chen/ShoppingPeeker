@@ -244,7 +244,7 @@ namespace Plugin.Jingdong.Extension
                     {
 
 
-                        for (int i = 1; i < div_AttrsDom_CategoryList.Length; i++)
+                        for (int i = 0; i < div_AttrsDom_CategoryList.Length; i++)
                         {
 
                             var itemCategory = div_AttrsDom_CategoryList[i];
@@ -267,18 +267,19 @@ namespace Plugin.Jingdong.Extension
                                     if (catValueParas.AllKeys.Contains("ev"))
                                     {
                                         modelTag.FilterFiled = "ev";
-                                        modelTag.Value = catValueParas["ev"];
+                                        modelTag.Value = catValueParas["ev"].Replace("^", "");
                                     }
                                     else if (catValueParas.AllKeys.Contains("cid2"))
                                     {
                                         modelTag.FilterFiled = "cid2";
-                                        modelTag.Value = catValueParas["cid2"];
+                                        modelTag.Value = catValueParas["cid2"].Replace("#J_searchWrap", ""); ;
                                     }
                                     else if (catValueParas.AllKeys.Contains("cid3"))
                                     {
                                         modelTag.FilterFiled = "cid3";
-                                        modelTag.Value = catValueParas["cid3"];
+                                        modelTag.Value = catValueParas["cid3"].Replace("#J_searchWrap", ""); ;
                                     }
+
 
                                     //----解析 a标签完毕-------
                                     blockList.Add(modelTag);
@@ -296,7 +297,7 @@ namespace Plugin.Jingdong.Extension
                     //sline 的解析
                     if (null != div_AttrsDom_SlineList)
                     {
-                        for (int i = 1; i < div_AttrsDom_SlineList.Length; i++)
+                        for (int i = 0; i < div_AttrsDom_SlineList.Length; i++)
                         {
 
                             var itemSline = div_AttrsDom_SlineList[i];
@@ -306,7 +307,10 @@ namespace Plugin.Jingdong.Extension
 
                                 //找到归属的组
                                 string groupName = itemSline.QuerySelector("div.sl-key").Children[0].TextContent;
-
+                                if (groupName.Contains("高级选项"))
+                                {
+                                    return;//高级筛选不再这处理
+                                }
                                 var childLiADomArray = itemSline.QuerySelectorAll("ul.J_valueList>li>a");
                                 foreach (var itemADom in childLiADomArray)
                                 {
@@ -319,18 +323,19 @@ namespace Plugin.Jingdong.Extension
                                     if (catValueParas.AllKeys.Contains("ev"))
                                     {
                                         modelTag.FilterFiled = "ev";
-                                        modelTag.Value = catValueParas["ev"];
+                                        modelTag.Value = catValueParas["ev"].Replace("^", "");
                                     }
                                     else if (catValueParas.AllKeys.Contains("cid2"))
                                     {
                                         modelTag.FilterFiled = "cid2";
-                                        modelTag.Value = catValueParas["cid2"];
+                                        modelTag.Value = catValueParas["cid2"].Replace("#J_searchWrap", ""); ;
                                     }
                                     else if (catValueParas.AllKeys.Contains("cid3"))
                                     {
                                         modelTag.FilterFiled = "cid3";
-                                        modelTag.Value = catValueParas["cid3"];
+                                        modelTag.Value = catValueParas["cid3"].Replace("#J_searchWrap", ""); ;
                                     }
+
 
 
                                     //----解析 a标签完毕-------
@@ -348,19 +353,26 @@ namespace Plugin.Jingdong.Extension
                     //高级选项的解析
                     if (null!=div_AttrsDom_Senior)
                     {
-                        var lstAdvDoms = div_AttrsDom_Senior.QuerySelectorAll("div.sl-v-tab>a.trig-item");
+                        var lstAdvDoms = div_AttrsDom_Senior.QuerySelectorAll("div.sl-tab-trigger>a.trig-item");
                         var lstTabContentItems = div_AttrsDom_Senior.QuerySelectorAll("div.sl-tab-cont-item");
                         if (null!=lstAdvDoms)
                         {
-                            int cursor = 0;
-                            foreach (var itemAdv in lstAdvDoms)
+                          
+                            for (int i= 0;i < lstAdvDoms.Length;i++)
                             {
+                                int cursor = i;//执行并行计算的时候 变量游标不要传递到task中，延迟运行的task，变量i 会被在外面循环更改！！导致溢出index
+                                var itemAdv = lstAdvDoms[i];
                                 var taskResolveAEmelems = Task.Factory.StartNew(() =>
                                 {
 
 
                                     //找到归属的组
                                     string groupName= itemAdv.Children[0].TextContent;
+
+                                    if (groupName.Equals("其他分类"))
+                                    {
+                                        return;//不解析与当前关键词无关的分类信息
+                                    }
                                     if (null!= lstTabContentItems[cursor])
                                     {
                                         var childLiADomArray = lstTabContentItems[cursor].QuerySelectorAll("ul.J_valueList>li>a");//找到匹配游标的内容组
@@ -375,16 +387,16 @@ namespace Plugin.Jingdong.Extension
                                             if (catValueParas.AllKeys.Contains("ev"))
                                             {
                                                 modelTag.FilterFiled = "ev";
-                                                modelTag.Value = catValueParas["ev"];
+                                                modelTag.Value = catValueParas["ev"].Replace("^","");
                                             }else if (catValueParas.AllKeys.Contains("cid2"))
                                             {
                                                 modelTag.FilterFiled = "cid2";
-                                                modelTag.Value = catValueParas["cid2"];
+                                                modelTag.Value = catValueParas["cid2"].Replace("#J_searchWrap", ""); ;
                                             }
                                             else if (catValueParas.AllKeys.Contains("cid3"))
                                             {
                                                 modelTag.FilterFiled = "cid3";
-                                                modelTag.Value = catValueParas["cid3"];
+                                                modelTag.Value = catValueParas["cid3"].Replace("#J_searchWrap", ""); ;
                                             }
 
 
@@ -400,7 +412,7 @@ namespace Plugin.Jingdong.Extension
                                 //将并行任务放到数组
                                 taskArray.Add(taskResolveAEmelems);
 
-                                cursor += 1;
+                             
                             }
                         }
                     }
