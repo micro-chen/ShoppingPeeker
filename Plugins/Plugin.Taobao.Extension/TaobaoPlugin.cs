@@ -181,7 +181,7 @@ namespace Plugin.Taobao.Extension
         /// </summary>
         /// <param name="webArgs"></param>
         /// <returns></returns>
-        private string ResolveFisrtSearchPageSilcedUrl(BaseFetchWebPageArgument webArgs)
+        private string ResolveSlicedSearchPageSilcedUrl(BaseFetchWebPageArgument webArgs)
         {
             ResolvedSearchUrlWithParas resultUrl = new ResolvedSearchUrlWithParas();
 
@@ -330,7 +330,7 @@ namespace Plugin.Taobao.Extension
                         return jsonpContent;
                     }
                     //重写解析地址-首页的分片jsonp地址
-                    string urlOfSlicedJsonp = this.ResolveFisrtSearchPageSilcedUrl(webArgs);
+                    string urlOfSlicedJsonp = this.ResolveSlicedSearchPageSilcedUrl(webArgs);
                     webArgs.ResolvedUrl = new ResolvedSearchUrlWithParas { Url = urlOfSlicedJsonp };
                     using (var conn = new SoapTcpConnection(connStrConfig))
                     {
@@ -563,7 +563,7 @@ namespace Plugin.Taobao.Extension
 
                 //title
                 modelProduct.Title = productDom.title;
-                modelProduct.ItemUrl = productDom.detail_url;
+                modelProduct.ItemUrl = productDom.detail_url.GetHttpsUrl();
 
                 //price
                 var priceDom = productDom.view_price;
@@ -573,13 +573,13 @@ namespace Plugin.Taobao.Extension
                     modelProduct.Price = _price;
                 }
                 //pic
-                modelProduct.PicUrl = productDom.pic_url;
+                modelProduct.PicUrl = productDom.pic_url.GetHttpsUrl();
                 //shop
                 string shopId = productDom.user_id;
                 long.TryParse(shopId, out long _shopId);
                 //modelProduct.ShopId = _shopId;//天猫店铺id 在搜索列表未出现
                 modelProduct.SellerId = _shopId;
-
+                modelProduct.ShopUrl = string.Format("https://store.taobao.com/shop/view_shop.htm?user_number_id={0}", shopId);
                 modelProduct.ShopName = productDom.nick;
 
 
@@ -639,123 +639,6 @@ namespace Plugin.Taobao.Extension
 
 
 
-        /// <summary>
-        /// 解析商品节点
-        /// </summary>
-        /// <param name="modelProduct"></param>
-        /// <param name="productDom"></param>
-        private TaobaoProduct ResolverProductDom(IElement productDom)
-        {
-            TaobaoProduct modelProduct = null;
-            if (null == productDom)
-            {
-                return modelProduct;
-            }
-            modelProduct = new TaobaoProduct();
-            try
-            {
-                //id
-                string itemId = productDom.GetAttribute("data-id");
-                if (string.IsNullOrEmpty(itemId))
-                {
-                    return modelProduct;//凡是没有id 的商品，要么是广告 要么是其他非正常的商品
-                }
-                long.TryParse(itemId, out long _ItemId);
-                modelProduct.ItemId = _ItemId;
 
-                //title
-                var titleDom = productDom.QuerySelector("p.productTitle>a");
-                modelProduct.Title = titleDom.TextContent.Replace("\n", "");
-                modelProduct.ItemUrl = titleDom.GetAttribute("href");
-
-                //price
-                var priceDom = productDom.QuerySelector("p.productPrice>em");
-                if (null != priceDom)
-                {
-                    decimal.TryParse(priceDom.GetAttribute("title"), out decimal _price);
-                    modelProduct.Price = _price;
-                }
-                //pic
-                var picDom = productDom.QuerySelector("div.productImg-wrap>a>img");
-                if (null != picDom)
-                {
-                    modelProduct.PicUrl = picDom.GetAttribute("src");
-                }
-
-                //shop
-                var shopDom = productDom.QuerySelector("div.productShop>a");
-                if (null != shopDom)
-                {
-                    string shopHref = shopDom.GetAttribute("href");
-                    if (shopHref.Contains("user_number_id"))
-                    {
-                        var queryString = shopHref.Substring(shopHref.IndexOf('?'));
-                        string shopId = HttpUtility.ParseQueryString(queryString, Encoding.UTF8)["user_number_id"];
-                        long.TryParse(shopId, out long _shopId);
-                        //modelProduct.ShopId = _shopId;//天猫店铺id 在搜索列表未出现
-                        modelProduct.SellerId = _shopId;
-                    }
-
-
-                    modelProduct.ShopName = shopDom.TextContent.Replace("\n", "");
-                }
-
-                //status
-                var statusDom = productDom.QuerySelector("p.productStatus");
-                //成交量
-                if (null != statusDom)
-                {
-
-                    var biz30dayDomSpan = statusDom.Children[0];
-                    if (null != biz30dayDomSpan)
-                    {
-                        string bizTotal = biz30dayDomSpan.Children[0].TextContent;
-                        if (!string.IsNullOrEmpty(bizTotal))
-                        {
-                            modelProduct.Biz30Day = bizTotal.Trim();
-                        }
-                    }
-
-
-                    //评论量
-                    var remarkDomSpan = statusDom.Children[1];
-                    if (null != remarkDomSpan)
-                    {
-                        string remarkTotal = remarkDomSpan.Children[0].TextContent;
-                        if (!string.IsNullOrEmpty(remarkTotal))
-                        {
-                            modelProduct.TotalBizRemarkCount = remarkTotal.Trim();
-                        }
-                        modelProduct.RemarkUrl = remarkDomSpan.Children[0].GetAttribute("href");
-                    }
-
-                }
-                //sku list
-                var skuListDom = productDom.QuerySelector("div.proThumb-wrap");
-                if (null != skuListDom)
-                {
-                    var skuDomArry = skuListDom.QuerySelectorAll("b.proThumb-img");
-                    if (skuDomArry != null && skuDomArry.Length > 0)
-                    {
-                        foreach (var itemSkuDom in skuDomArry)
-                        {
-                            var skuItemObj = new SkuItem();
-                            skuItemObj.SkuId = itemSkuDom.GetAttribute("data-sku");
-                            skuItemObj.SkuUrl = string.Concat(modelProduct.ItemUrl, "&sku_properties=", skuItemObj.SkuId);
-                            skuItemObj.SkuImgUrl = itemSkuDom.Children[0].GetAttribute("data-ks-lazyload");
-
-                            modelProduct.SkuList.Add(skuItemObj);
-                        }
-                    }
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                PluginContext.Logger.Error(ex);
-            }
-            return modelProduct;
-        }
     }
 }

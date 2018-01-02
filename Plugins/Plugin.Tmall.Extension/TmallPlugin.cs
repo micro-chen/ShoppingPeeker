@@ -283,6 +283,9 @@ namespace Plugin.Tmall.Extension
             //    new TmallProduct { ItemId=1,Title="测试大衣"}
             //};
             var lstProducts = new ProductBaseCollection();
+            //多任务并行解析商品
+            //BlockingCollection<TmallProduct> blockingList_Products = new BlockingCollection<TmallProduct>();
+            ConcurrentDictionary<string, ProductOrdered<TmallProduct>> blockingList_Products = new ConcurrentDictionary<string, ProductOrdered<TmallProduct>>();
 
             var div_J_ItemListDom = htmlDoc.QuerySelector("div#J_ItemList");
             if (null != div_J_ItemListDom)
@@ -290,29 +293,39 @@ namespace Plugin.Tmall.Extension
                 var div_productDomArray = div_J_ItemListDom.QuerySelectorAll("div.product");
                 if (null != div_productDomArray && div_productDomArray.Any())
                 {
-                    //多任务并行解析商品
-                    BlockingCollection<TmallProduct> blockingList_Products = new BlockingCollection<TmallProduct>();
-                    var taskArray = new Task[div_productDomArray.Length];
-                    int counter = 0;
-                    foreach (var itemProductDom in div_productDomArray)
+
+                    var pids = div_productDomArray
+                        .Select(x => { return x.GetAttribute("data-id"); });
+                    //设定排序对象
+                    int counter_pid = 0;
+                    foreach (var itemPid in pids)
                     {
-                        var tsk = Task.Factory.StartNew(() =>
+                        if (null!=itemPid)
                         {
-                            //解析一个商品的节点
-
-                            TmallProduct modelProduct = this.ResolverProductDom(itemProductDom);
-                            if (null != modelProduct)
-                            {
-                                blockingList_Products.Add(modelProduct);
-                            }
-
-                        });
-                        taskArray[counter] = tsk;
-                        counter += 1;
+                            blockingList_Products.TryAdd(itemPid, new ProductOrdered<TmallProduct> { UniqKey = itemPid, IndexOrder = counter_pid });
+                            counter_pid++;
+                        }
+  
                     }
-                    var safeTaskArray= taskArray.Where(x => null != x).ToArray();
-                    Task.WaitAll(safeTaskArray);
-                    var productsList = blockingList_Products.ToArray();
+
+                    //并行解析 并保留原序列
+                    div_productDomArray.AsParallel()
+                        .ForAll((itemProductDom) =>
+                    {
+                        //解析一个商品的节点
+                        TmallProduct modelProduct = this.ResolverProductDom(itemProductDom);
+                        if (null != modelProduct&&modelProduct.ItemId>0)
+                        {
+                            var orderedObj = blockingList_Products[modelProduct.ItemId.ToString()];
+                            orderedObj.Product = modelProduct;
+                        }
+                    });
+
+                    //进行排序
+                    var productsList = blockingList_Products
+                        .Where(x => x.Value != null)
+                        .OrderBy(x => x.Value.IndexOrder)
+                        .Select(x => x.Value.Product);
                     lstProducts.AddRange(productsList);
 
                 }
@@ -352,7 +365,7 @@ namespace Plugin.Tmall.Extension
                 //title
                 var titleDom = productDom.QuerySelector("p.productTitle>a");
                 modelProduct.Title = titleDom.TextContent.Replace("\n", "");
-                modelProduct.ItemUrl = titleDom.GetAttribute("href");
+                modelProduct.ItemUrl = titleDom.GetAttribute("href").GetHttpsUrl();
 
                 //price
                 var priceDom = productDom.QuerySelector("p.productPrice>em");
@@ -365,7 +378,7 @@ namespace Plugin.Tmall.Extension
                 var picDom = productDom.QuerySelector("div.productImg-wrap>a>img");
                 if (null != picDom)
                 {
-                    modelProduct.PicUrl = picDom.GetAttribute("src");
+                    modelProduct.PicUrl = picDom.GetAttribute("src").GetHttpsUrl();
                 }
 
                 //shop
@@ -373,6 +386,7 @@ namespace Plugin.Tmall.Extension
                 if (null != shopDom)
                 {
                     string shopHref = shopDom.GetAttribute("href");
+                    modelProduct.ShopUrl = shopHref.GetHttpsUrl();
                     if (shopHref.Contains("user_number_id"))
                     {
                         var queryString = shopHref.Substring(shopHref.IndexOf('?'));
@@ -412,7 +426,8 @@ namespace Plugin.Tmall.Extension
                         {
                             modelProduct.TotalBizRemarkCount = remarkTotal.Trim();
                         }
-                        modelProduct.RemarkUrl = remarkDomSpan.Children[0].GetAttribute("href");
+                        modelProduct.RemarkUrl = remarkDomSpan.Children[0].GetAttribute("href")
+                            .GetHttpsUrl();
                     }
 
                 }
@@ -427,8 +442,11 @@ namespace Plugin.Tmall.Extension
                         {
                             var skuItemObj = new SkuItem();
                             skuItemObj.SkuId = itemSkuDom.GetAttribute("data-sku");
-                            skuItemObj.SkuUrl = string.Concat(modelProduct.ItemUrl, "&sku_properties=", skuItemObj.SkuId);
-                            skuItemObj.SkuImgUrl = itemSkuDom.Children[0].GetAttribute("data-ks-lazyload");
+                            //skuItemObj.SkuName = itemSkuDom.GetAttribute("title");//天猫没有小图的名称
+                            skuItemObj.SkuUrl = string.Concat(modelProduct.ItemUrl, "&sku_properties=", skuItemObj.SkuId)
+                                .GetHttpsUrl();
+                            skuItemObj.SkuImgUrl = itemSkuDom.Children[0].GetAttribute("data-ks-lazyload")
+                                .GetHttpsUrl();
 
                             modelProduct.SkuList.Add(skuItemObj);
                         }
