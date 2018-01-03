@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\Client\ConnectionState.cs" Link="Client\ConnectionState.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\Client\ShoppingWebCrawlerSection.cs" Link="Client\ShoppingWebCrawlerSection.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\Client\SoapTcpConnection.cs" Link="Client\SoapTcpConnection.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\Client\SoapTcpPool.cs" Link="Client\SoapTcpPool.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\CommandConstants.cs" Link="CommandConstants.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\BaseFetchWebPageArgument.cs" Link="EntityPackage\Arguments\BaseFetchWebPageArgument.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\EntityPackage\Arguments\BrandTag.cs" Link="EntityPackage\Arguments\BrandTag.cs" />
