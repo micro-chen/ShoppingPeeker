@@ -378,7 +378,16 @@ namespace Plugin.Tmall.Extension
                 var picDom = productDom.QuerySelector("div.productImg-wrap>a>img");
                 if (null != picDom)
                 {
-                    modelProduct.PicUrl = picDom.GetAttribute("src").GetHttpsUrl();
+                    if (picDom.HasAttribute("src"))
+                    {
+                        modelProduct.PicUrl  = picDom.GetAttribute("src").GetHttpsUrl();
+                    }
+                    else if (picDom.HasAttribute("data-ks-lazyload"))
+                    {
+                        modelProduct.PicUrl = picDom.GetAttribute("data-ks-lazyload").GetHttpsUrl();
+                    }
+
+                    //modelProduct.PicUrl = picDom.GetAttribute("src").GetHttpsUrl();
                 }
 
                 //shop
@@ -445,8 +454,18 @@ namespace Plugin.Tmall.Extension
                             //skuItemObj.SkuName = itemSkuDom.GetAttribute("title");//天猫没有小图的名称
                             skuItemObj.SkuUrl = string.Concat(modelProduct.ItemUrl, "&sku_properties=", skuItemObj.SkuId)
                                 .GetHttpsUrl();
-                            skuItemObj.SkuImgUrl = itemSkuDom.Children[0].GetAttribute("data-ks-lazyload")
-                                .GetHttpsUrl();
+
+                            var imgSkuDom = itemSkuDom.Children[0];
+                            if (imgSkuDom.HasAttribute("data-ks-lazyload"))
+                            {
+                                skuItemObj.SkuImgUrl = imgSkuDom.GetAttribute("data-ks-lazyload").GetHttpsUrl();
+                            }
+                            else if(imgSkuDom.HasAttribute("data-ks-lazyload-custom"))
+                            {
+                                skuItemObj.SkuImgUrl = imgSkuDom.GetAttribute("data-ks-lazyload-custom").GetHttpsUrl();
+                            }
+                           
+                               
 
                             modelProduct.SkuList.Add(skuItemObj);
                         }

@@ -577,15 +577,20 @@ namespace Plugin.Jingdong.Extension
 
                 //send request for load other data of first search page
                 //加载请求京东当前页面的后半页数据
-                var pids1 = div_productDomArray
-                     .Select(x => { return x.GetAttribute("data-pid"); });
+             
+                var skuIds = div_productDomArray
+                    .Select(x => { return x.GetAttribute("data-sku"); });
+                
                 //设定排序对象
-                int counter_pid = 0;
-                foreach (var itemPid in pids1)
+                int counter_sku = 0;
+                foreach (var itemSkuId in skuIds)
                 {
-                    blockingList_Products.TryAdd(itemPid, new ProductOrdered<JingdongProduct> { UniqKey = itemPid, IndexOrder = counter_pid });
-                    counter_pid++;
+                    blockingList_Products.TryAdd(itemSkuId, new ProductOrdered<JingdongProduct> { UniqKey = itemSkuId, IndexOrder = counter_sku });
+                    counter_sku++;
                 }
+
+                var pids1 = div_productDomArray
+                  .Select(x => { return x.GetAttribute("data-pid"); });
                 string show_items = string.Join(",", pids1);
                 int next_start = 0;
                 //	s.init(1,200,"79万+","0",1,0,25,1,0,2);
@@ -651,11 +656,11 @@ namespace Plugin.Jingdong.Extension
                     if (null != sliced_productDomArray && sliced_productDomArray.Any())
                     {
                         //设定排序
-                        var pids2 = sliced_productDomArray.Select(x => { return x.GetAttribute("data-pid"); });
-                        foreach (var itemPid in pids2)
+                        var skuIds2 = sliced_productDomArray.Select(x => { return x.GetAttribute("data-sku"); });
+                        foreach (var itemSkuId in skuIds2)
                         {
-                            blockingList_Products.TryAdd(itemPid, new ProductOrdered<JingdongProduct> { UniqKey = itemPid, IndexOrder = counter_pid });
-                            counter_pid++;
+                            blockingList_Products.TryAdd(itemSkuId, new ProductOrdered<JingdongProduct> { UniqKey = itemSkuId, IndexOrder = counter_sku });
+                            counter_sku++;
                         }
 
                         lstProductDoms.AddRange(sliced_productDomArray);
@@ -676,7 +681,7 @@ namespace Plugin.Jingdong.Extension
                         if (null != modelProduct)
                         {
 
-                            var orderedObj = blockingList_Products[modelProduct.Pid];
+                            var orderedObj = blockingList_Products[modelProduct.ItemId.ToString()];
                             orderedObj.Product = modelProduct;
                         }
                      
@@ -749,7 +754,15 @@ namespace Plugin.Jingdong.Extension
                 var picDom = productDom.QuerySelector("div.p-img>a>img");
                 if (null != picDom)
                 {
-                    modelProduct.PicUrl = picDom.GetAttribute("data-lazy-img").GetHttpsUrl();
+                    if (picDom.HasAttribute("src"))
+                    {
+                        modelProduct.PicUrl = picDom.GetAttribute("src").GetHttpsUrl();
+                    }
+                    else if (picDom.HasAttribute("data-lazy-img"))
+                    {
+                        modelProduct.PicUrl = picDom.GetAttribute("data-lazy-img").GetHttpsUrl();
+                    }
+                     
                 }
 
                 //shop
