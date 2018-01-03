@@ -411,10 +411,7 @@ namespace NTCPMessage.Client
 
                      
                         CableId = LittleEndianBitConverter.ToUInt16(ret, sizeof(int));
-                        if (CableId==0)
-                        {
-                            int x = 0;
-                        }
+ 
 
                         OnConnectedEvent();
                     }
