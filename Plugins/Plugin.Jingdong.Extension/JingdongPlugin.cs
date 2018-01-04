@@ -150,8 +150,14 @@ namespace Plugin.Jingdong.Extension
             #endregion
 
             #region  页码
-            int pageNumber = (webArgs.PageIndex / 2) + 1;//京东每页分割为2个子页，按照页索引0开始，除以2,然后加1 为正确的页码
+            int pageNumber = (webArgs.PageIndex * 2) + 1;//京东每页分割为2个子页，按照页索引0开始，倍乘2,然后加1 为正确的页码
             sbSearchUrl.Append("&page=").Append(pageNumber);
+
+            //京东前后翻页的时候 需要这个s 参数，前为prev 参数 ,后翻为next 参数
+            if (null!=webArgs.AttachParas&&webArgs.AttachParas.ContainsKey("jd_pager_s"))
+            {
+                sbSearchUrl.Append("&s=").Append(webArgs.AttachParas["jd_pager_s"]);
+            }
             #endregion
             # region 杂项
             sbSearchUrl.Append("&qrst=1");
@@ -652,8 +658,34 @@ namespace Plugin.Jingdong.Extension
 
                     }
 
+                    /// <summary>
+                    /// 上一页的起始位置
+                    /// </summary>
+                    int pager_prev_start = 1;
+                    /// <summary>
+                    /// 下一页的起始位置
+                    /// </summary>
+                    int pager_next_start = 1;
+
+
                     if (!string.IsNullOrEmpty(htmlItemsContent))
                     {
+
+                        var nextpageInitDomMatch = Regex.Match(htmlItemsContent, @"SEARCH\.page_html\((.*?)\);", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                        if (null != nextpageInitDomMatch && nextpageInitDomMatch.Groups.Count >= 2)
+                        {
+                            string initContent = nextpageInitDomMatch.Groups[1].Value;
+                            if (!string.IsNullOrEmpty(initContent))
+                            {
+                                var parasArray = initContent.Split(',');
+                                string nextStr = parasArray[4];//第5个参数
+                                int.TryParse(nextStr, out pager_next_start);
+
+                                string prevStr= parasArray[5];//第6个参数
+                                int.TryParse(prevStr, out pager_prev_start);
+                            }
+                        }
+
                         var slicedHtmlDoc = htmlParser.Parse(htmlItemsContent);
                         var sliced_productDomArray = slicedHtmlDoc.QuerySelectorAll("li.gl-item");
                         if (null != sliced_productDomArray && sliced_productDomArray.Any())
@@ -687,7 +719,8 @@ namespace Plugin.Jingdong.Extension
                         JingdongProduct modelProduct = this.ResolverProductDom(itemProductDom);
                             if (null != modelProduct && modelProduct.ItemId > 0)
                             {
-
+                                modelProduct.Prev_start = pager_prev_start;
+                                modelProduct.Next_start = pager_next_start;
                                 var orderedObj = blockingList_Products[modelProduct.ItemId.ToString()];
                                 orderedObj.Product = modelProduct;
                             }
