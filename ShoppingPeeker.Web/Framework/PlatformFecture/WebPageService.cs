@@ -36,7 +36,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
         /// </summary>
         /// <param name="webArgs"></param>
         /// <returns></returns>
-        public  async Task<SearchProductViewModel> QueryProductsByKeyWords(BaseFetchWebPageArgument webArgs)
+        public  SearchProductViewModel QueryProductsByKeyWords(BaseFetchWebPageArgument webArgs)
         {
             SearchProductViewModel dataModel = new SearchProductViewModel();
             if (webArgs.IsValid()==false)
@@ -81,7 +81,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                     //发送soap
                     var soapCmd = new SoapMessage() { Head = CommandConstants.CMD_FetchPage };
                     soapCmd.Body = webArgs.ToJson();
-                    var dataContainer = await conn.SendSoapMessageAsync(soapCmd);
+                    var dataContainer =  conn.SendSoapMessage(soapCmd);
                     if (null != dataContainer && dataContainer.Status == 1)
                     {
                         pageContent = dataContainer.Result;
@@ -102,7 +102,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                 //开始解析内容字符串
                 if (!string.IsNullOrEmpty(pageContent))
                 {
-              
+                 
                     dataModel = resolver.ResolvePageContent(webArgs,pageContent);
                     if (null!=dataModel)
                     {
