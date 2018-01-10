@@ -49,7 +49,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
 
             /// 尝试加载所需的插件，使用插件进行内容解析
             IPlugin pluginInstance = this.GetNeedPluginInstance();
-     
+
             searchUrl = pluginInstance.ResolveSearchUrl(webArgs);
 
             return searchUrl;
@@ -65,11 +65,11 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
         {
 
             SearchProductViewModel dataModel = new SearchProductViewModel();
-           
+
             /// 尝试加载所需的插件，使用插件进行内容解析
             IPlugin pluginInstance = this.GetNeedPluginInstance();
-           
-          
+
+
             var resultBag = pluginInstance.ResolveSearchPageContent(webArgs, pageContent) as Dictionary<string, object>;
             if (null == resultBag)
             {
@@ -77,8 +77,15 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
             }
             if (webArgs.IsNeedResolveHeaderTags == true)
             {
-                dataModel.Brands = resultBag["Brands"] as List<BrandTag>;
-                dataModel.Tags = resultBag["Tags"] as List<KeyWordTag>;
+                if (resultBag.ContainsKey("Brands"))
+                {
+                    dataModel.Brands = resultBag["Brands"] as List<BrandTag>;
+                }
+                if (resultBag.ContainsKey("Tags"))
+                {
+                    dataModel.Tags = resultBag["Tags"] as List<KeyWordTag>;
+                }
+
             }
 
             dataModel.Products = resultBag["Products"] as ProductBaseCollection;
