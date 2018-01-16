@@ -297,13 +297,14 @@ namespace Plugin.Jingdong.Extension
         public override Dictionary<string, object> ResolveSearchPageContent(BaseFetchWebPageArgument webArgs, string content)
         {
 
-            var resultBag = new Dictionary<string, object>();
+        
 
             if (!content.Contains("在京东找到了"))
             {
                 return null;//非法请求结果页面
             }
 
+            var resultBag = new Dictionary<string, object>();
 
             try
             {
@@ -335,22 +336,25 @@ namespace Plugin.Jingdong.Extension
 
                             if (null != brandULDom)
                             {
-                                var li_ADomArray = brandULDom.QuerySelectorAll("li");
-                                foreach (var itemADom in li_ADomArray)
+                                var li_DomArray = brandULDom.QuerySelectorAll("li");
+                                foreach (var itemLiDom in li_DomArray)
                                 {
+                                    var itemADom = itemLiDom.FirstElementChild;//<li>元素下的<a>
+
                                     var model = new BrandTag();
                                     model.Platform = SupportPlatformEnum.Jingdong;
                                     model.FilterField = "ev";//使用的过滤字段参数
                                     var urlBrand = itemADom.GetAttribute("href");
+                                    model.BrandName = itemADom.TextContent.Replace("\n", "").Replace("\t", "");
 
-                                    model.BrandId = itemADom.GetAttribute("id");
+
+                                    model.BrandId = itemLiDom.GetAttribute("id");
                                     if (!string.IsNullOrEmpty(model.BrandId))
                                     {
                                         int stsartPos = model.BrandId.IndexOf('-') + 1;//id=brand-43244
                                         model.BrandId = model.BrandId.Substring(model.BrandId.IndexOf('-') + 1);
                                     }
-
-                                    model.BrandName = itemADom.Children[0].TextContent.Replace("\n", "").Replace("\t", "");//<li>元素下的<a>
+                                    model.CharIndex = itemLiDom.GetAttribute("data-initial");//定位字符
                                     lstBrands.Add(model);
                                 }
                             }

@@ -25,13 +25,17 @@ $(function () {
         api_search_taobao_products: "api/servicebus/search_taobao_products",//淘宝商品检索
         api_search_jd_products: "api/servicebus/search_jd_products",//京东商品检索
         api_search_pdd_products: "api/servicebus/search_pdd_products",//拼多多商品检索
-        api_search_vip_products: "api/servicebus/search_vip_products",//唯品会商品检索
         api_search_guomei_products: "api/servicebus/search_guomei_products",//国美商品检索
+        api_search_guomei_price: "api/servicebus/search_guomei_price",//国美单个商品价格检索
+        
         api_search_suning_products: "api/servicebus/search_suning_products",//苏宁商品检索
+        api_search_dangdang_products: "api/servicebus/search_dangdang_products",//当当商品检索
+        api_search_vip_products: "api/servicebus/search_vip_products",//唯品会商品检索
+        
         api_search_yhd_products: "api/servicebus/search_yhd_products",//一号店商品检索
         api_search_mls_products: "api/servicebus/search_mls_products",//美丽说商品检索
         api_search_mgj_products: "api/servicebus/search_mgj_products",//蘑菇街商品检索
-        api_search_dangdang_products: "api/servicebus/search_dangdang_products",//当当商品检索
+     
         api_search_etao_products: "api/servicebus/search_etao_products",//一淘商品检索
         api_search_taoquan: "api/servicebus/search_taoquan",//淘宝天猫优惠券检索
 
@@ -127,12 +131,6 @@ $(function () {
             var paras = {};
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_pdd_products);
         },
-        //唯品会商品检索
-        handler_api_search_vip_products: function () {
-            var queryAddress = homePage.api_search_vip_products;
-            var paras = {};
-            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_vip_products);
-        },
         //国美商品检索
         handler_api_search_guomei_products: function () {
             var queryAddress = homePage.api_search_guomei_products;
@@ -144,23 +142,11 @@ $(function () {
             var paras = {};
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_suning_products);
         },
-        //一号店商品检索
-        handler_api_search_yhd_products: function () {
-            var queryAddress = homePage.api_search_yhd_products;
+        //唯品会商品检索
+        handler_api_search_vip_products: function () {
+            var queryAddress = homePage.api_search_vip_products;
             var paras = {};
-            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_yhd_products);
-        },
-        //美丽说商品检索
-        handler_api_search_mls_products: function () {
-            var queryAddress = homePage.api_search_mls_products;
-            var paras = {};
-            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_mls_products);
-        },
-        //蘑菇街商品检索
-        handler_api_search_mgj_products: function () {
-            var queryAddress = homePage.api_search_mgj_products;
-            var paras = {};
-            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_mgj_products);
+            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_vip_products);
         },
         //当当商品检索
         handler_api_search_dangdang_products: function () {
@@ -169,6 +155,25 @@ $(function () {
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_dangdang_products);
         },
 
+        //一号店商品检索
+        handler_api_search_yhd_products: function () {
+            var queryAddress = homePage.api_search_yhd_products;
+            var paras = {};
+            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_yhd_products);
+        },
+        ////美丽说商品检索
+        //handler_api_search_mls_products: function () {
+        //    var queryAddress = homePage.api_search_mls_products;
+        //    var paras = {};
+        //    httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_mls_products);
+        //},
+        //蘑菇街商品检索
+        handler_api_search_mgj_products: function () {
+            var queryAddress = homePage.api_search_mgj_products;
+            var paras = {};
+            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_mgj_products);
+        },
+     
         //一淘商品检索
         handler_api_search_etao_products: function () {
             var queryAddress = homePage.api_search_etao_products;

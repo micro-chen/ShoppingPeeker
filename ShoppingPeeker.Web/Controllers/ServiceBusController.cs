@@ -10,6 +10,9 @@ using ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord;
 using ShoppingPeeker.Utilities.Logging;
 using ShoppingPeeker.Web.ViewModels;
 using ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService;
+using ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers;
+using ShoppingPeeker.Plugins;
+using ShoppingPeeker.Utilities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 /// <summary>
@@ -201,6 +204,8 @@ namespace ShoppingPeeker.Web.Controllers
             return container;
         }
 
+
+
         /// <summary>
         /// 国美商品检索
         /// </summary>
@@ -231,6 +236,52 @@ namespace ShoppingPeeker.Web.Controllers
 
             return container;
         }
+        /// <summary>
+        /// 国美商品检索
+        /// </summary>
+        /// <param name="webArgs"></param>
+        /// <returns></returns>
+        [ActionName("search_guomei_price")]
+        [HttpPost]
+        public BusinessViewModelContainer<object> SearchGuomeiPrice([FromBody]GuomeiFetchWebPageArgument webArgs)
+        {
+            BusinessViewModelContainer<object> container = new BusinessViewModelContainer<object>();
+
+            if (null == webArgs 
+                || !webArgs.AttachParas.ContainsKey("pid")
+                || !webArgs.AttachParas.ContainsKey("skuid")
+                )
+            {
+                container.SetFalied("查询参数不是有效的查询参数！缺少AttachParas 中的pid /skuid.");
+                return container;
+            }
+
+            try
+            {
+                //使用国美的插件实例 ，进行价格请求
+                IPlugin guomeiPlugin = null;
+                var guomeiPlugin_QuerySingleProductPrice = new GuomeiSearchProductResolver()
+                    .GetPluginMethodInfo("QuerySingleProductPrice",out guomeiPlugin) ;
+
+                if (null!= guomeiPlugin_QuerySingleProductPrice)
+                {
+                    //设定连接
+                    var connStrConfig = ConfigHelper.ShoppingWebCrawlerSection.ConnectionStringCollection.First();
+                    webArgs.SystemAttachParas["SoapTcpConnectionString"] = connStrConfig;//register to attach paras
+
+                    container.Data = guomeiPlugin_QuerySingleProductPrice.Invoke(guomeiPlugin, new object[] { webArgs });
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            return container;
+        }
+
+
         /// <summary>
         /// 苏宁商品检索
         /// </summary>
@@ -292,36 +343,36 @@ namespace ShoppingPeeker.Web.Controllers
 
             return container;
         }
-        /// <summary>
-        /// 美丽说商品检索
-        /// </summary>
-        /// <param name="webArgs"></param>
-        /// <returns></returns>
-        [ActionName("search_mls_products")]
-        [HttpPost]
-        public BusinessViewModelContainer<SearchProductViewModel> SearchMeilishuoProducts([FromBody]MeilishuoFetchWebPageArgument webArgs)
-        {
-            BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
+        ///// <summary>
+        ///// 美丽说商品检索
+        ///// </summary>
+        ///// <param name="webArgs"></param>
+        ///// <returns></returns>
+        //[ActionName("search_mls_products")]
+        //[HttpPost]
+        //public BusinessViewModelContainer<SearchProductViewModel> SearchMeilishuoProducts([FromBody]MeilishuoFetchWebPageArgument webArgs)
+        //{
+        //    BusinessViewModelContainer<SearchProductViewModel> container = new BusinessViewModelContainer<SearchProductViewModel>();
 
-            if (null == webArgs || !webArgs.IsValid())
-            {
-                container.SetFalied("查询参数不是有效的查询参数！");
-                return container;
-            }
+        //    if (null == webArgs || !webArgs.IsValid())
+        //    {
+        //        container.SetFalied("查询参数不是有效的查询参数！");
+        //        return container;
+        //    }
 
-            try
-            {
-                //使用指定平台的页面检索服务 进行搜索商品
-                var pageService = WebPageService.CreateNew();
-                container.Data =  pageService.QueryProductsByKeyWords(webArgs);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
+        //    try
+        //    {
+        //        //使用指定平台的页面检索服务 进行搜索商品
+        //        var pageService = WebPageService.CreateNew();
+        //        container.Data =  pageService.QueryProductsByKeyWords(webArgs);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.Error(ex);
+        //    }
 
-            return container;
-        }
+        //    return container;
+        //}
 
         /// <summary>
         /// 蘑菇街商品检索

@@ -436,6 +436,7 @@ namespace Plugin.Taobao.Extension
 
                                     model.BrandId = subItem.value;
                                     model.BrandName = subItem.text;
+                                    model.CharIndex = PinYin.GetFirstLetter(model.BrandName);
                                     lstBrands.Add(model);
                                 }
                                 //解析完毕品牌

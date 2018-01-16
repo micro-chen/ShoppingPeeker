@@ -1,6 +1,8 @@
 ﻿
 using System;
+using System.Collections;
 using System.Collections.Generic;
+
 using NTCPMessage.EntityPackage;
 using NTCPMessage.EntityPackage.Arguments;
 namespace ShoppingPeeker.Plugins
@@ -34,5 +36,10 @@ namespace ShoppingPeeker.Plugins
         /// <param name="content"></param>
         /// <returns></returns>
         Dictionary<string, object> ResolveSearchPageContent(BaseFetchWebPageArgument webArgs, string content);
+
+        /// <summary>
+        /// 实例的方法，对外暴露执行委托
+        /// </summary>
+        Dictionary<string, object> NativeMethodDeletegateDictionary { get; }
     }
 }

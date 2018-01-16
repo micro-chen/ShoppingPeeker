@@ -12,7 +12,7 @@ using NTCPMessage.Serialize;
 using NTCPMessage.EntityPackage;
 using NTCPMessage.EntityPackage.Arguments;
 using ShoppingPeeker.Utilities.Interface;
- using ShoppingPeeker.Web.ViewModels;
+using ShoppingPeeker.Web.ViewModels;
 using ShoppingPeeker.Utilities;
 using ShoppingPeeker.Utilities.Logging;
 using ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers;
@@ -23,7 +23,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
     /// web 页面请求服务类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public  class WebPageService:IPlatformService 
+    public class WebPageService : IPlatformService
     {
 
         public static WebPageService CreateNew()
@@ -36,10 +36,10 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
         /// </summary>
         /// <param name="webArgs"></param>
         /// <returns></returns>
-        public  SearchProductViewModel QueryProductsByKeyWords(BaseFetchWebPageArgument webArgs)
+        public SearchProductViewModel QueryProductsByKeyWords(BaseFetchWebPageArgument webArgs)
         {
             SearchProductViewModel dataModel = new SearchProductViewModel();
-            if (webArgs.IsValid()==false)
+            if (webArgs.IsValid() == false)
             {
                 return dataModel;
             }
@@ -47,10 +47,10 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
             try
             {
                 //是否开启内容缓存，如果开启，那么从缓存中加载内容
-                if (true==WorkContext. IsFetchPageCacheaAble)
+                if (true == WorkContext.IsFetchPageCacheaAble)
                 {
                     dataModel = WorkContext.GetFetchPageResultFromCache(webArgs);
-                    if (null!=dataModel)
+                    if (null != dataModel)
                     {
                         return dataModel;
                     }
@@ -60,51 +60,56 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                 var resolver = ResolverFactory.GetSearchProductResolver(webArgs.Platform);
                 //尝试解析页面参数的检索地址
                 var searchUrl = resolver.ResolveSearchUrl(webArgs);
-                if (null!=searchUrl)
+                if (null != searchUrl)
                 {
                     webArgs.ResolvedUrl = searchUrl;
                 }
                 string pageContent = string.Empty;
 
-                ////1 打开tcp 链接 
-                ////2 发送参数
-                ////3 解析结果
                 var connStrConfig = ConfigHelper.ShoppingWebCrawlerSection.ConnectionStringCollection.First();
                 webArgs.SystemAttachParas["SoapTcpConnectionString"] = connStrConfig;//register to attach paras
-                using (var conn = new SoapTcpConnection(connStrConfig))
-                {
-                    if (conn.State == ConnectionState.Closed)
-                    {
-                        conn.Open();
-                    }
 
-                    //发送soap
-                    var soapCmd = new SoapMessage() { Head = CommandConstants.CMD_FetchPage };
-                    soapCmd.Body = webArgs.ToJson();
-                    var dataContainer =  conn.SendSoapMessage(soapCmd);
-                    if (null != dataContainer && dataContainer.Status == 1)
+                if (searchUrl.IsNeedPreRequest == true)
+                {
+                    ////1 打开tcp 链接 
+                    ////2 发送参数
+                    ////3 解析结果
+                 
+                    using (var conn = new SoapTcpConnection(connStrConfig))
                     {
-                        pageContent = dataContainer.Result;
-                    }
-                    else
-                    {
-                        StringBuilder errMsg = new StringBuilder("抓取网页请求失败！参数：");
-                        errMsg.Append(soapCmd.Body);
-                        if (null != dataContainer && !string.IsNullOrEmpty(dataContainer.ErrorMsg))
+                        if (conn.State == ConnectionState.Closed)
                         {
-                            errMsg.Append("；服务端错误消息：")
-                                .Append(dataContainer.ErrorMsg);
+                            conn.Open();
                         }
-                        throw new Exception(errMsg.ToString());
+
+                        //发送soap
+                        var soapCmd = new SoapMessage() { Head = CommandConstants.CMD_FetchPage };
+                        soapCmd.Body = webArgs.ToJson();
+                        var dataContainer = conn.SendSoapMessage(soapCmd);
+                        if (null != dataContainer && dataContainer.Status == 1)
+                        {
+                            pageContent = dataContainer.Result;
+                        }
+                        else
+                        {
+                            StringBuilder errMsg = new StringBuilder("抓取网页请求失败！参数：");
+                            errMsg.Append(soapCmd.Body);
+                            if (null != dataContainer && !string.IsNullOrEmpty(dataContainer.ErrorMsg))
+                            {
+                                errMsg.Append("；服务端错误消息：")
+                                    .Append(dataContainer.ErrorMsg);
+                            }
+                            throw new Exception(errMsg.ToString());
+                        }
                     }
                 }
-
                 //开始解析内容字符串
-                if (!string.IsNullOrEmpty(pageContent))
+                //*******注意：针对可以直接进行内容解析的连接，交给内容解析函数进行地址的内容请求和解析*********
+                if (!string.IsNullOrEmpty(pageContent)||!searchUrl.IsNeedPreRequest)
                 {
-                 
-                    dataModel = resolver.ResolvePageContent(webArgs,pageContent);
-                    if (null!=dataModel)
+
+                    dataModel = resolver.ResolvePageContent(webArgs, pageContent);
+                    if (null != dataModel)
                     {
                         dataModel.KeyWord = webArgs.KeyWord;
                     }

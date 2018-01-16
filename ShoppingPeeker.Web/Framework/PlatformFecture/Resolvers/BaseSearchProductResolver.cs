@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Reflection;
 using NTCPMessage.EntityPackage;
 using NTCPMessage.EntityPackage.Arguments;
 using ShoppingPeeker.Web.ViewModels;
 using ShoppingPeeker.Utilities.Plugins;
 using ShoppingPeeker.Plugins;
+
 
 namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
 {
@@ -17,6 +19,32 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
         /// </summary>
         protected abstract string NeedPluginName { get; }
 
+        /// <summary>
+        /// 尝试获取插件中的方法
+        /// </summary>
+        /// <param name="methodName"></param>
+        /// <returns></returns>
+        public MethodInfo GetPluginMethodInfo(string methodName,out IPlugin pluginInstance)
+        {
+            MethodInfo m = null;
+             pluginInstance = this.GetNeedPluginInstance();
+
+            if (null!=pluginInstance)
+            {
+                //优先从缓存对象表查询
+                if (pluginInstance.NativeMethodDeletegateDictionary.ContainsKey(methodName))
+                {
+                    pluginInstance.NativeMethodDeletegateDictionary.TryGetValue(methodName, out object method);
+                    m = method as MethodInfo;
+                }
+                m = pluginInstance.GetType().GetMethod(methodName);
+                if (null!=m)
+                {
+                    pluginInstance.NativeMethodDeletegateDictionary.TryAdd(methodName, m);
+                }
+            }
+            return m;
+        }
         /// <summary>
         /// get depended plugin
         /// </summary>

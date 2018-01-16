@@ -38,6 +38,7 @@ namespace ShoppingPeeker.Plugins
         where T: PluginBase<T>,new ()
     {
 
+   
         /// <summary>
         /// 创建插件的实例
         /// 插件必须有这个方法；否则使用反射的方式 会极大降低性能
@@ -55,6 +56,11 @@ namespace ShoppingPeeker.Plugins
         /// </summary>
         public abstract string PluginDirectory { get; }
 
+
+        /// <summary>
+        /// 实例的方法，对外暴露执行委托
+        /// </summary>
+        public Dictionary<string, object> NativeMethodDeletegateDictionary { get;  private set; }
 
         /// <summary>
         /// 自我创建新实例
@@ -97,7 +103,12 @@ namespace ShoppingPeeker.Plugins
 
         public PluginBase()
         {
+
+
+            this.NativeMethodDeletegateDictionary = new Dictionary<string, object>();
+
             this.Initialize();
+
 
             this._MetaManifest = new PluginMeta();
             if (string.IsNullOrEmpty(this.PluginDirectory))

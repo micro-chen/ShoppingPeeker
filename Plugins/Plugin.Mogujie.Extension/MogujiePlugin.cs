@@ -59,7 +59,7 @@ namespace Plugin.Mogujie.Extension
             if (null != webArgs.TagGroup)
             {
                 //1 当前平台的
-                var currentPlatformTag = webArgs.TagGroup.Tags.Where(x => x.Platform == SupportPlatformEnum.Meilishuo);
+                var currentPlatformTag = webArgs.TagGroup.Tags.Where(x => x.Platform == SupportPlatformEnum.Mogujie);
                 if (null != currentPlatformTag)
                 {
                     var dicPara = new Dictionary<string, string>();
@@ -72,7 +72,7 @@ namespace Plugin.Mogujie.Extension
                 }
 
                 //2 其他平台的tag 作为关键词的一部分
-                var otherPlatformTag = webArgs.TagGroup.Tags.FirstOrDefault(x => x.Platform != SupportPlatformEnum.Meilishuo);
+                var otherPlatformTag = webArgs.TagGroup.Tags.FirstOrDefault(x => x.Platform != SupportPlatformEnum.Mogujie);
                 if (null != otherPlatformTag)
                 {
                     webArgs.KeyWord += " " + otherPlatformTag.TagName;

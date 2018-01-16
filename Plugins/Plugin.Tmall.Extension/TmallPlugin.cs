@@ -199,6 +199,7 @@ namespace Plugin.Tmall.Extension
                                     model.BrandId = regex_MatchBrandId.Match(urlBrand).Groups[1].Value;//new//品牌id   href="?brand=110910&amp;q=%B4%F3%C3%D7&amp;sort=s&amp;style=g&amp;from=sn_1_brand-qp&amp;spm=a220m.1000858.1000720.1.348abe64rj5JVg#J_crumbs
                                 }
                                 model.BrandName = itemADom.GetAttribute("title");
+                                model.CharIndex = PinYin.GetFirstLetter(model.BrandName);
                                 lstBrands.Add(model);
                             }
                         }

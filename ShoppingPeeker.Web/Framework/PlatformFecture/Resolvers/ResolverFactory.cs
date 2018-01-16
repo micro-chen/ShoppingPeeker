@@ -55,10 +55,10 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
                     resolver = new YhdSearchProductResolver();
 
                     break;
-                case SupportPlatformEnum.Meilishuo:
-                    resolver = new MeilishuoSearchProductResolver();
+                //case SupportPlatformEnum.Meilishuo:
+                //    resolver = new MeilishuoSearchProductResolver();
 
-                    break;
+                //    break;
                 case SupportPlatformEnum.Mogujie:
                     resolver = new MogujieSearchProductResolver();
 
