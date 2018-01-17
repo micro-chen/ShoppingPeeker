@@ -319,7 +319,7 @@ namespace Plugin.Guomei.Extension
                             }
                             else
                             {
-                                StringBuilder errMsg = new StringBuilder("抓取网页请求失败！参数：");
+                                StringBuilder errMsg = new StringBuilder("抓取【国美】网页请求失败！参数：");
                                 errMsg.Append(soapCmd.Body);
                                 if (null != dataContainer && !string.IsNullOrEmpty(dataContainer.ErrorMsg))
                                 {
@@ -367,7 +367,15 @@ namespace Plugin.Guomei.Extension
                                         model.BrandId = itemADom.GetAttribute("facetsid");
 
                                         model.BrandName = itemADom.TextContent.Replace("\n", "").Replace("\t", "");
+
                                         model.CharIndex = itemLiDom.GetAttribute("brand-value");//定位字符
+                                        var imgDom = itemADom.GetAttribute("style");
+                                        if (null != imgDom&&imgDom.Contains("background-image")&& imgDom.Contains("//"))
+                                        {
+                                            int startPos = imgDom.IndexOf("//");
+                                            int endPos = imgDom.Length - startPos - 1;
+                                            model.IconUrl = imgDom.Substring(startPos, endPos).GetHttpsUrl();
+                                        }
 
                                         lstBrands.Add(model);
                                     }
@@ -398,13 +406,13 @@ namespace Plugin.Guomei.Extension
                                 for (int i = 0; i < div_AttrsDom_Category_CommonList.Length; i++)
                                 {
 
-                                    var itemCategory = div_AttrsDom_Category_CommonList[i];
-                                    var taskResolveAEmelems = Task.Factory.StartNew(() =>
+                                    var itemCate = div_AttrsDom_Category_CommonList[i];
+                                    var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
                                     {
 
-
-                                            //找到归属的组
-                                            string groupName = itemCategory.QuerySelector("span.fc-key").TextContent;
+                                        var itemCategory = paraItem as IElement;
+                                        //找到归属的组
+                                        string groupName = itemCategory.QuerySelector("span.fc-key").TextContent;
 
                                         var childLiADomArray = itemCategory.QuerySelectorAll("div.category-normal>ul>li>a");
                                         foreach (var itemADom in childLiADomArray)
@@ -421,7 +429,7 @@ namespace Plugin.Guomei.Extension
 
                                         }
 
-                                    });
+                                    }, itemCate, TaskCreationOptions.None);
                                     //将并行任务放到数组
                                     taskArray.Add(taskResolveAEmelems);
 
@@ -436,14 +444,14 @@ namespace Plugin.Guomei.Extension
                                 {
 
                                     var itemSline = div_AttrsDom_AdvancedList[i];
-                                    var taskResolveAEmelems = Task.Factory.StartNew(() =>
+                                    var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
                                     {
 
+                                        var itemAdvancedCategory = paraItem as IElement;
+                                        //找到归属的组
+                                        string groupName = itemAdvancedCategory.QuerySelector("span.fc-key").TextContent;
 
-                                            //找到归属的组
-                                            string groupName = itemSline.QuerySelector("span.fc-key").TextContent;
-
-                                        var childLiADomArray = itemSline.QuerySelectorAll("ul.category-syn-list>li>a");
+                                        var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("ul.category-syn-list>li>a");
                                         foreach (var itemADom in childLiADomArray)
                                         {
                                             var modelTag = new KeyWordTag();
@@ -456,11 +464,11 @@ namespace Plugin.Guomei.Extension
 
 
                                                 //----解析 a标签完毕-------
-                                                blockList.Add(modelTag);
+                                          blockList.Add(modelTag);
 
                                         }
 
-                                    });
+                                    },itemSline, TaskCreationOptions.None);
                                     //将并行任务放到数组
                                     taskArray.Add(taskResolveAEmelems);
 

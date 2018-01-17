@@ -355,6 +355,14 @@ namespace Plugin.Jingdong.Extension
                                         model.BrandId = model.BrandId.Substring(model.BrandId.IndexOf('-') + 1);
                                     }
                                     model.CharIndex = itemLiDom.GetAttribute("data-initial");//定位字符
+
+                                    var imgDom = itemADom.QuerySelector("img");
+                                    if (null != imgDom)
+                                    {
+                                        model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
+                                    }
+
+
                                     lstBrands.Add(model);
                                 }
                             }
@@ -387,13 +395,14 @@ namespace Plugin.Jingdong.Extension
                             for (int i = 0; i < div_AttrsDom_CategoryList.Length; i++)
                             {
 
-                                var itemCategory = div_AttrsDom_CategoryList[i];
-                                var taskResolveAEmelems = Task.Factory.StartNew(() =>
+                                var itemCate= div_AttrsDom_CategoryList[i];
+                                var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
                                 {
 
+                                    var itemCategory = paraItem as IElement;
 
-                                //找到归属的组
-                                string groupName = itemCategory.QuerySelector("div.sl-key").Children[0].TextContent;
+                                    //找到归属的组
+                                    string groupName = itemCategory.QuerySelector("div.sl-key").Children[0].TextContent;
 
                                     var childLiADomArray = itemCategory.QuerySelectorAll("ul.J_valueList>li>a");
                                     foreach (var itemADom in childLiADomArray)
@@ -426,7 +435,7 @@ namespace Plugin.Jingdong.Extension
 
                                     }
 
-                                });
+                                }, itemCate, TaskCreationOptions.None);
                                 //将并行任务放到数组
                                 taskArray.Add(taskResolveAEmelems);
 
@@ -441,17 +450,17 @@ namespace Plugin.Jingdong.Extension
                             {
 
                                 var itemSline = div_AttrsDom_SlineList[i];
-                                var taskResolveAEmelems = Task.Factory.StartNew(() =>
+                                var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
                                 {
+                                    var itemAdvancedCategory = paraItem as IElement;
 
-
-                                //找到归属的组
-                                string groupName = itemSline.QuerySelector("div.sl-key").Children[0].TextContent;
+                                    //找到归属的组
+                                    string groupName = itemAdvancedCategory.QuerySelector("div.sl-key").Children[0].TextContent;
                                     if (groupName.Contains("高级选项"))
                                     {
                                         return;//高级筛选不再这处理
                                 }
-                                    var childLiADomArray = itemSline.QuerySelectorAll("ul.J_valueList>li>a");
+                                    var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("ul.J_valueList>li>a");
                                     foreach (var itemADom in childLiADomArray)
                                     {
                                         var modelTag = new KeyWordTag();
@@ -483,7 +492,7 @@ namespace Plugin.Jingdong.Extension
 
                                     }
 
-                                });
+                                },itemSline, TaskCreationOptions.None);
                                 //将并行任务放到数组
                                 taskArray.Add(taskResolveAEmelems);
 
@@ -502,12 +511,13 @@ namespace Plugin.Jingdong.Extension
                                 {
                                     int cursor = i;//执行并行计算的时候 变量游标不要传递到task中，延迟运行的task，变量i 会被在外面循环更改！！导致溢出index
                                     var itemAdv = lstAdvDoms[i];
-                                    var taskResolveAEmelems = Task.Factory.StartNew(() =>
+
+                                    var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
                                     {
 
-
-                                    //找到归属的组
-                                    string groupName = itemAdv.Children[0].TextContent;
+                                        var itemAdvanced2Category = paraItem as IElement;
+                                        //找到归属的组
+                                        string groupName = itemAdvanced2Category.Children[0].TextContent;
 
                                         if (groupName.Equals("其他分类"))
                                         {
@@ -549,7 +559,7 @@ namespace Plugin.Jingdong.Extension
                                         }
 
 
-                                    });
+                                    }, itemAdv, TaskCreationOptions.None);
                                     //将并行任务放到数组
                                     taskArray.Add(taskResolveAEmelems);
 
