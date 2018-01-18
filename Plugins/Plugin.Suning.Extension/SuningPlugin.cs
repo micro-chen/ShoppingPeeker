@@ -20,6 +20,7 @@ using NTCPMessage.EntityPackage.Products;
 using NTCPMessage.EntityPackage.Arguments;
 using NTCPMessage.EntityPackage;
 using ShoppingPeeker.Plugins;
+using AngleSharp.Dom.Html;
 
 namespace Plugin.Suning.Extension
 {
@@ -236,14 +237,17 @@ namespace Plugin.Suning.Extension
             try
             {
                 //开启查询头部筛选
+                string searchHtmlContent = "";
+                //创建html 文档对象
+                HtmlParser htmlParser = new HtmlParser();
+                //创建html 文档
+                IHtmlDocument htmlDoc = null;
 
-                if (webArgs.IsNeedResolveHeaderTags == true)
+                if (webArgs.IsNeedResolveHeaderTags == true||webArgs.PageIndex==0)
                 {
 
-                    //创建html 文档对象
-                    HtmlParser htmlParser = new HtmlParser();
+                 
 
-                    string searchHtmlContent = "";
                     ////1 打开tcp 链接 
                     ////2 发送参数
                     ////3 解析结果
@@ -285,200 +289,22 @@ namespace Plugin.Suning.Extension
 
                     if (!string.IsNullOrEmpty(searchHtmlContent) && !searchHtmlContent.Contains("no-result-tips"))
                     {
-                        //创建html 文档
-                        var htmlDoc = htmlParser.Parse(searchHtmlContent);
-                        var div_filterDoms = htmlDoc.QuerySelector("div#search-opt");
+                        //文档转换
+                        htmlDoc = htmlParser.Parse(searchHtmlContent);
 
-                        if (null != div_filterDoms)
+                        if (searchHtmlContent.Contains("search-opt"))
                         {
-
-
-                            var div_BrandsDom = div_filterDoms.QuerySelector("dl#brand_Name_FacetAll");
-
-                            #region 品牌解析
-                            var lstBrands = new List<BrandTag>();
-                            if (null != div_BrandsDom)
-                            {
-                                //从属性区域解析dom-品牌内容
-                                var brandADomList = div_BrandsDom.QuerySelectorAll("div.brand-item>div.clearfix>a");
-
-                                if (null != brandADomList)
-                                {
-
-                                    foreach (var itemADom in brandADomList)
-                                    {
-
-
-                                        var model = new BrandTag();
-                                        model.Platform = SupportPlatformEnum.Suning;
-                                        model.FilterField = itemADom.GetAttribute("filter_id"); //使用的过滤字段参数
-                                        model.BrandId = itemADom.GetAttribute("filter_value");
-
-                                        model.BrandName = itemADom.GetAttribute("title").Replace("\n", "").Replace("\t", "");
-                                        model.CharIndex = itemADom.GetAttribute("class"); ;//定位字符
-                                        var imgDom = itemADom.QuerySelector("img");
-                                        if (null != imgDom)
-                                        {
-                                            model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
-                                        }
-
-                                        lstBrands.Add(model);
-                                    }
-                                }
-                            }
-                            resultBag.Add("Brands", lstBrands);
-
-                            #endregion
-
-
-                            //category 解析  
-                            //相关分类
-                            var div_AttrsDom_Category_CommonList = div_filterDoms
-                                .QuerySelector("dl.dir-section")
-                                .QuerySelectorAll("div.item>a");
-                            //指定的类目
-                            var div_AttrsDom_Category_SpecialList = div_filterDoms.QuerySelectorAll("dl.model-section");
-
-                            //高级分类
-                            var div_AttrsDom_AdvancedList = div_filterDoms.QuerySelectorAll("dl#other-section>dd>ul>li");
-
-                            var lstTags = new List<KeyWordTag>();
-                            var blockList = new BlockingCollection<KeyWordTag>();
-                            var taskArray = new List<Task>();
-
-                            //相关分类tag 解析
-                            if (null != div_AttrsDom_Category_CommonList)
-                            {
-
-                                // PLINQ 的操作 
-                                //div_AttrsDom_CategoryList.AsParallel().ForAll((x) => { })
-
-                                for (int i = 0; i < div_AttrsDom_Category_CommonList.Length; i++)
-                                {
-
-                                    var itemCate = div_AttrsDom_Category_CommonList[i];
-                                    var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
-                                    {
-                                        var itemCategory = paraItem as IElement;
-
-                                        //找到归属的组
-                                        string groupName = "相关分类";//itemCategory.QuerySelector("span.fc-key").TextContent;
-
-                                        //var childLiADomArray = itemCategory.QuerySelectorAll("div.category-normal>ul>li>a");
-                                        foreach (var itemADom in div_AttrsDom_Category_CommonList)
-                                        {
-                                            var modelTag = new KeyWordTag();
-                                            modelTag.Platform = SupportPlatformEnum.Suning;
-                                            modelTag.TagName = itemADom.TextContent;//标签名称
-                                            modelTag.GroupShowName = groupName;
-
-                                            modelTag.FilterFiled = "ci";
-                                            modelTag.Value = itemADom.GetAttribute("id");
-                                            //----解析 a标签完毕-------
-                                            blockList.Add(modelTag);
-
-                                        }
-
-                                    }, itemCate, TaskCreationOptions.None);
-                                    //将并行任务放到数组
-                                    taskArray.Add(taskResolveAEmelems);
-
-                                }
-
-                            }
-
-                            //指定分类tag 解析
-                            if (null != div_AttrsDom_Category_SpecialList)
-                            {
-
-                                // PLINQ 的操作 
-                                //div_AttrsDom_CategoryList.AsParallel().ForAll((x) => { })
-
-                                for (int i = 0; i < div_AttrsDom_Category_SpecialList.Length; i++)
-                                {
-
-                                    var itemCategory = div_AttrsDom_Category_SpecialList[i];
-                                    var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
-                                    {
-
-                                        var itemSpceialCategory = paraItem as IElement;
-                                        //找到归属的组
-                                        string groupName = itemSpceialCategory.QuerySelector("dt").TextContent;
-
-                                        var childLiADomArray = itemSpceialCategory.QuerySelectorAll("div.clearfix>a");
-                                        foreach (var itemADom in childLiADomArray)
-                                        {
-                                            var modelTag = new KeyWordTag();
-                                            modelTag.Platform = SupportPlatformEnum.Suning;
-                                            modelTag.TagName = itemADom.GetAttribute("title");//标签名称
-                                            modelTag.GroupShowName = groupName;
-
-                                            modelTag.FilterFiled = itemSpceialCategory.GetAttribute("id");//根节点的筛选属性
-
-                                            modelTag.Value = itemADom.GetAttribute("id");
-                                            //----解析 a标签完毕-------
-                                            blockList.Add(modelTag);
-
-                                        }
-
-                                    }, itemCategory, TaskCreationOptions.None);
-                                    //将并行任务放到数组
-                                    taskArray.Add(taskResolveAEmelems);
-
-                                }
-
-                            }
-
-
-                            //高级筛选 的解析
-                            if (null != div_AttrsDom_AdvancedList)
-                            {
-                                for (int i = 0; i < div_AttrsDom_AdvancedList.Length; i++)
-                                {
-
-                                    var itemSline = div_AttrsDom_AdvancedList[i];
-                                    var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
-                                    {
-
-                                        var itemAdvancedCategory = paraItem as IElement;
-
-                                        //找到归属的组
-                                        string groupName = itemAdvancedCategory.QuerySelector("a.a-item>span").TextContent;
-                                        if (groupName.Equals("全部分类"))
-                                        {
-                                            return;
-                                        }
-                                        var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("div.list-item>div>a");
-                                        foreach (var itemADom in childLiADomArray)
-                                        {
-                                            var modelTag = new KeyWordTag();
-                                            modelTag.Platform = SupportPlatformEnum.Suning;
-                                            modelTag.TagName = itemADom.GetAttribute("title");//标签名称
-                                            modelTag.GroupShowName = groupName;
-
-                                            modelTag.FilterFiled = itemAdvancedCategory.GetAttribute("id");//根节点的筛选属性
-                                            modelTag.Value = itemADom.GetAttribute("id");
-
-
-                                            //----解析 a标签完毕-------
-                                            blockList.Add(modelTag);
-
-                                        }
-
-                                    }, itemSline, TaskCreationOptions.None);
-                                    //将并行任务放到数组
-                                    taskArray.Add(taskResolveAEmelems);
-
-                                }
-                            }
-
-
-                            var safeTaskArray = taskArray.Where(x => null != x).ToArray();
-                            Task.WaitAll(safeTaskArray);
-                            lstTags = blockList.ToList();
-                            resultBag.Add("Tags", lstTags);
-
-
+                            //普通的搜索列表页
+                            ViewFilterContent_CommonTheme(ref resultBag, htmlDoc, searchHtmlContent);
+                        }
+                        else if (searchHtmlContent.Contains("filter-container"))
+                        {
+                            //没有左侧活动的100条数据列表
+                            ViewFilterContent_Big100Theme(ref resultBag, htmlDoc, searchHtmlContent);
+                        }
+                        else
+                        {
+                            throw new Exception("未能识别的苏宁检索列表皮肤！");
                         }
                     }
 
@@ -487,91 +313,141 @@ namespace Plugin.Suning.Extension
 
 
                 #region products  解析
-                //解析苏宁的json 列表地址
-                string htmlData = "";
-                ////1 打开tcp 链接 
-                ////2 发送参数
-                ////3 解析结果
+                //解析苏宁的商品 列表
+                string htmlProductList = string.Empty;
 
-                if (webArgs.SystemAttachParas.ContainsKey("SoapTcpConnectionString"))
+                if (webArgs.PageIndex==0&&null!=htmlDoc)
                 {
 
-
-                    connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as ShoppingWebCrawlerSection.ConnectionStringConfig;
-
-                    //json地址
-                    string urlOfSlicedJson = this.ResolveSlicedSearchPageSilcedUrl(webArgs);
-
-                    webArgs.ResolvedUrl = new ResolvedSearchUrlWithParas { Url = urlOfSlicedJson };
-                    using (var conn = new SoapTcpConnection(connStrConfig))
-                    {
-                        if (conn.State == ConnectionState.Closed)
-                        {
-                            conn.Open();
-                        }
-
-                        //发送soap
-                        var soapCmd = new SoapMessage() { Head = CommandConstants.CMD_FetchPage };
-                        soapCmd.Body = JsonConvert.SerializeObject(webArgs);
-                        var dataContainer = conn.SendSoapMessage(soapCmd);
-                        if (null != dataContainer && dataContainer.Status == 1)
-                        {
-                            htmlData = dataContainer.Result;
-                        }
-                        else
-                        {
-                            StringBuilder errMsg = new StringBuilder("抓取网页请求失败！参数：");
-                            errMsg.Append(soapCmd.Body);
-                            if (null != dataContainer && !string.IsNullOrEmpty(dataContainer.ErrorMsg))
-                            {
-                                errMsg.Append("；服务端错误消息：")
-                                    .Append(dataContainer.ErrorMsg);
-                            }
-                            PluginContext.Logger.Error(errMsg.ToString());
-                        }
-                    }
-
+                    //首页的话，那么直接解析第一次请求的页面内容列表
+                    htmlProductList = htmlDoc.QuerySelector("div#filter-results").OuterHtml;
                 }
+                else
+                {
+                    //如果不是第一页，那么开启ajax 查询加载
 
+                    if (webArgs.SystemAttachParas.ContainsKey("SoapTcpConnectionString"))
+                    {
+
+
+                        connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as ShoppingWebCrawlerSection.ConnectionStringConfig;
+
+                        //json地址
+                        string urlOfSlicedJson = this.ResolveSlicedSearchPageSilcedUrl(webArgs);
+
+                        webArgs.ResolvedUrl = new ResolvedSearchUrlWithParas { Url = urlOfSlicedJson };
+                        using (var conn = new SoapTcpConnection(connStrConfig))
+                        {
+                            if (conn.State == ConnectionState.Closed)
+                            {
+                                conn.Open();
+                            }
+
+                            //发送soap
+                            var soapCmd = new SoapMessage() { Head = CommandConstants.CMD_FetchPage };
+                            soapCmd.Body = JsonConvert.SerializeObject(webArgs);
+                            var dataContainer = conn.SendSoapMessage(soapCmd);
+                            if (null != dataContainer && dataContainer.Status == 1)
+                            {
+                                htmlProductList = dataContainer.Result;
+                            }
+                            else
+                            {
+                                StringBuilder errMsg = new StringBuilder("抓取网页请求失败！参数：");
+                                errMsg.Append(soapCmd.Body);
+                                if (null != dataContainer && !string.IsNullOrEmpty(dataContainer.ErrorMsg))
+                                {
+                                    errMsg.Append("；服务端错误消息：")
+                                        .Append(dataContainer.ErrorMsg);
+                                }
+                                PluginContext.Logger.Error(errMsg.ToString());
+                            }
+                        }
+
+                    }
+                }
 
 
                 var lstProducts = new ProductBaseCollection();
 
                 //判断结果的有效性
-                if (string.IsNullOrEmpty(htmlData) )
+                if (string.IsNullOrEmpty(htmlProductList))
                 {
                     return null;
                 }
 
                 //多任务并行解析商品
-                ConcurrentDictionary<string, decimal> blockingList_ProductPrices = new ConcurrentDictionary<string, decimal>();
+                ConcurrentDictionary<string, SuningPriceJsonResult.PriceItem> blockingList_ProductPrices = new ConcurrentDictionary<string, SuningPriceJsonResult.PriceItem>();
                 List<Task> lstQueryPriceTask = new List<Task>();
 
-                //foreach (var itemProduct in pageJsonObj.content.prodInfo.products)
-                //{
+
+                //task1:通过正则 找出商品的id 集合，发送请求价格
+                string pattern_FindItemId = @"li.*class.*product.*(\d{10}-\d+).*?";
+                var matchs = Regex.Matches(htmlProductList, pattern_FindItemId, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                if (null!= matchs&& matchs.Count>0)
+                {
+                    List<string> lstItemIds = new List<string>();
+                    int counter = 0;
+                    StringBuilder sb_tempIds = new StringBuilder();
+                    foreach (Match item in matchs)
+                    {
+                        string id = item.Groups[1].Value;
+                        lstItemIds.Add(id);
+
+                        sb_tempIds.Append(id.Replace("-", "")).Append("_,");//000000000152709847_,000000000128866947_,000000000193392956_,
+                        counter += 1;
+
+                        if (counter>=10)
+                        {
+                            //构成一个新的请求m进行jsonp查询价格
+                            string priceUrl = string.Format("https://ds.suning.cn/ds/generalForTile/{0}-010-2-0000000000-1--ds0000000002295.jsonp?callback=ds0000000002295");
+                            var tsk_Price= this.QueryPriceAsync(priceUrl, connStrConfig, blockingList_ProductPrices);
+                            lstQueryPriceTask.Add(tsk_Price);
 
 
+                            //清除本次buffer
+                            sb_tempIds.Clear();
+                            counter = 0;
+                        }
+                    }
 
+                   
+                }
+                //task2:解析商品列表html
+                var domsOfPriceList = htmlParser.Parse(htmlProductList).QuerySelectorAll("li.product");
+                foreach (var itemProduct in domsOfPriceList)
+                {
+                    SuningProduct modelProduct = this.ResolverProductDom(itemProduct);
 
-                //    SuningProduct modelProduct = this.ResolverProductDom(itemProduct);
+                    if (null != modelProduct)
+                    {
+                        lstProducts.Add(modelProduct);
+                    }
+                }
 
-                //    if (null != modelProduct)
-                //    {
-                //        lstProducts.Add(modelProduct);
-                //    }
-                //}
+                //等待价格查询完毕
+                var safeTaskArray = lstQueryPriceTask.Where(x => null != x).ToArray();
+                Task.WaitAll(safeTaskArray);
+                
+                foreach (var itemProduct in lstProducts)
+                {
+                    SuningProduct modelProduct = itemProduct as SuningProduct;
+                    //业务+itemid
+                    string key = string.Concat(modelProduct.BizCode, modelProduct.ItemId);
+                    if (blockingList_ProductPrices.ContainsKey(key))
+                    {
+                        var priceInRemote = blockingList_ProductPrices[key];
+                        if (null!=priceInRemote)
+                        {
+                            modelProduct.Price = priceInRemote.price;
+                            modelProduct.BizCode = priceInRemote.bizCode;
+                            //modelProduct.ShopId= log priceInRemote.bizCode;
+                            modelProduct.ShopName = priceInRemote.vendorName;
+                        }
+                     
+                    }
 
-
-                //foreach (var itemProduct in lstProducts)
-                //{
-                //    string key = string.Concat(itemProduct.ItemId, "-", itemProduct.SkuList.First().SkuId);
-                //    if (blockingList_ProductPrices.ContainsKey(key))
-                //    {
-                //        decimal priceInRemote = blockingList_ProductPrices[key];
-                //        itemProduct.Price = priceInRemote;
-                //    }
-
-                //}
+                }
                 resultBag.Add("Products", lstProducts);
 
                 #endregion
@@ -585,6 +461,460 @@ namespace Plugin.Suning.Extension
             }
 
             return resultBag;// string.Concat("has process input :" + content);
+
+        }
+        /// <summary>
+        /// 异步查询价格
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="connStrConfig"></param>
+        /// <param name="dataContainer"></param>
+        /// <returns></returns>
+        private Task QueryPriceAsync(string url, ShoppingWebCrawlerSection.ConnectionStringConfig connStrConfig,  ConcurrentDictionary<string, SuningPriceJsonResult.PriceItem> priceContainer)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                //json地址
+
+                var webArgs = new BaseFetchWebPageArgument();
+                webArgs.ResolvedUrl = new ResolvedSearchUrlWithParas { Url = url };
+
+                string htmlPriceList = "";
+
+                using (var conn = new SoapTcpConnection(connStrConfig))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                    {
+                        conn.Open();
+                    }
+
+                    //发送soap
+                    var soapCmd = new SoapMessage() { Head = CommandConstants.CMD_FetchPage };
+                    soapCmd.Body = JsonConvert.SerializeObject(webArgs);
+                    var dataContainer = conn.SendSoapMessage(soapCmd);
+                    if (null != dataContainer && dataContainer.Status == 1)
+                    {
+                        htmlPriceList = dataContainer.Result;
+                    }
+                    else
+                    {
+                        StringBuilder errMsg = new StringBuilder("抓取网页请求失败！参数：");
+                        errMsg.Append(soapCmd.Body);
+                        if (null != dataContainer && !string.IsNullOrEmpty(dataContainer.ErrorMsg))
+                        {
+                            errMsg.Append("；服务端错误消息：")
+                                .Append(dataContainer.ErrorMsg);
+                        }
+                        PluginContext.Logger.Error(errMsg.ToString());
+                    }
+                }
+
+                if (string.IsNullOrEmpty(htmlPriceList))
+                {
+                    return;
+                }
+
+                int startPos = htmlPriceList.IndexOf('{');
+                int endPos = htmlPriceList.Length - startPos - 2;
+
+                string jsonData = htmlPriceList.Substring(startPos, endPos);
+                var dataJsonList = JsonConvert.DeserializeObject<SuningPriceJsonResult>(jsonData);
+                if (null!=dataJsonList&&dataJsonList.status==200)
+                {
+                    foreach (var item in dataJsonList.rs)
+                    {
+                        priceContainer.TryAdd(item.cmmdtyCode, item);
+                    }
+                }
+            });
+        }
+        /// <summary>
+        /// 对苏宁普通皮肤的头部筛选区域的解析
+        /// 普通搜索列表-是有左侧的推广的-60个商品的搜索列表页面
+        /// </summary>
+        /// <param name="resultBag"></param>
+        ///  <param name="htmlDoc"></param>
+        /// <param name="searchHtmlContent"></param>
+        private void ViewFilterContent_CommonTheme(ref Dictionary<string, object> resultBag, IHtmlDocument htmlDoc, string searchHtmlContent)
+        {
+
+
+            var div_filterDoms = htmlDoc.QuerySelector("div#search-opt");
+
+            if (null != div_filterDoms)
+            {
+
+
+                var div_BrandsDom = div_filterDoms.QuerySelector("dl#brand_Name_FacetAll");
+
+                #region 品牌解析
+                var lstBrands = new List<BrandTag>();
+                if (null != div_BrandsDom)
+                {
+                    //从属性区域解析dom-品牌内容
+                    var brandADomList = div_BrandsDom.QuerySelectorAll("div.brand-item>div.clearfix>a");
+
+                    if (null != brandADomList)
+                    {
+
+                        foreach (var itemADom in brandADomList)
+                        {
+
+
+                            var model = new BrandTag();
+                            model.Platform = SupportPlatformEnum.Suning;
+                            model.FilterField = itemADom.GetAttribute("filter_id"); //使用的过滤字段参数
+                            model.BrandId = itemADom.GetAttribute("filter_value");
+
+                            model.BrandName = itemADom.GetAttribute("title").Replace("\n", "").Replace("\t", "");
+                            model.CharIndex = itemADom.GetAttribute("class"); ;//定位字符
+                            var imgDom = itemADom.QuerySelector("img");
+                            if (null != imgDom)
+                            {
+                                model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
+                            }
+
+                            lstBrands.Add(model);
+                        }
+                    }
+                }
+                resultBag.Add("Brands", lstBrands);
+
+                #endregion
+
+
+                //category 解析  
+                //相关分类
+                var div_AttrsDom_Category_CommonList = div_filterDoms
+                    .QuerySelector("dl.dir-section")
+                    .QuerySelectorAll("div.item>a");
+                //指定的类目
+                var div_AttrsDom_Category_SpecialList = div_filterDoms.QuerySelectorAll("dl.model-section");
+
+                //高级分类
+                var div_AttrsDom_AdvancedList = div_filterDoms.QuerySelectorAll("dl#other-section>dd>ul>li");
+
+                var lstTags = new List<KeyWordTag>();
+                var blockList = new BlockingCollection<KeyWordTag>();
+                var taskArray = new List<Task>();
+
+                //相关分类tag 解析
+                if (null != div_AttrsDom_Category_CommonList)
+                {
+
+                    // PLINQ 的操作 
+                    //div_AttrsDom_CategoryList.AsParallel().ForAll((x) => { })
+
+                    for (int i = 0; i < div_AttrsDom_Category_CommonList.Length; i++)
+                    {
+
+                        var itemCate = div_AttrsDom_Category_CommonList[i];
+                        var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
+                        {
+                            var itemCategory = paraItem as IElement;
+
+                            //找到归属的组
+                            string groupName = "相关分类";//itemCategory.QuerySelector("span.fc-key").TextContent;
+
+                            //var childLiADomArray = itemCategory.QuerySelectorAll("div.category-normal>ul>li>a");
+                            foreach (var itemADom in div_AttrsDom_Category_CommonList)
+                            {
+                                var modelTag = new KeyWordTag();
+                                modelTag.Platform = SupportPlatformEnum.Suning;
+                                modelTag.TagName = itemADom.TextContent;//标签名称
+                                modelTag.GroupShowName = groupName;
+
+                                modelTag.FilterFiled = "ci";
+                                modelTag.Value = itemADom.GetAttribute("id");
+                                //----解析 a标签完毕-------
+                                blockList.Add(modelTag);
+
+                            }
+
+                        }, itemCate, TaskCreationOptions.None);
+                        //将并行任务放到数组
+                        taskArray.Add(taskResolveAEmelems);
+
+                    }
+
+                }
+
+                //指定分类tag 解析
+                if (null != div_AttrsDom_Category_SpecialList)
+                {
+
+                    // PLINQ 的操作 
+                    //div_AttrsDom_CategoryList.AsParallel().ForAll((x) => { })
+
+                    for (int i = 0; i < div_AttrsDom_Category_SpecialList.Length; i++)
+                    {
+
+                        var itemCategory = div_AttrsDom_Category_SpecialList[i];
+                        var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
+                        {
+
+                            var itemSpceialCategory = paraItem as IElement;
+                            //找到归属的组
+                            string groupName = itemSpceialCategory.QuerySelector("dt").TextContent;
+
+                            var childLiADomArray = itemSpceialCategory.QuerySelectorAll("div.clearfix>a");
+                            foreach (var itemADom in childLiADomArray)
+                            {
+                                var modelTag = new KeyWordTag();
+                                modelTag.Platform = SupportPlatformEnum.Suning;
+                                modelTag.TagName = itemADom.GetAttribute("title");//标签名称
+                                modelTag.GroupShowName = groupName;
+
+                                modelTag.FilterFiled = itemSpceialCategory.GetAttribute("id");//根节点的筛选属性
+
+                                modelTag.Value = itemADom.GetAttribute("id");
+                                //----解析 a标签完毕-------
+                                blockList.Add(modelTag);
+
+                            }
+
+                        }, itemCategory, TaskCreationOptions.None);
+                        //将并行任务放到数组
+                        taskArray.Add(taskResolveAEmelems);
+
+                    }
+
+                }
+
+
+                //高级筛选 的解析
+                if (null != div_AttrsDom_AdvancedList)
+                {
+                    for (int i = 0; i < div_AttrsDom_AdvancedList.Length; i++)
+                    {
+
+                        var itemSline = div_AttrsDom_AdvancedList[i];
+                        var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
+                        {
+
+                            var itemAdvancedCategory = paraItem as IElement;
+
+                            //找到归属的组
+                            string groupName = itemAdvancedCategory.QuerySelector("a.a-item>span").TextContent;
+                            if (groupName.Equals("全部分类"))
+                            {
+                                return;
+                            }
+                            var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("div.list-item>div>a");
+                            foreach (var itemADom in childLiADomArray)
+                            {
+                                var modelTag = new KeyWordTag();
+                                modelTag.Platform = SupportPlatformEnum.Suning;
+                                modelTag.TagName = itemADom.GetAttribute("title");//标签名称
+                                modelTag.GroupShowName = groupName;
+
+                                modelTag.FilterFiled = itemAdvancedCategory.GetAttribute("id");//根节点的筛选属性
+                                modelTag.Value = itemADom.GetAttribute("id");
+
+
+                                //----解析 a标签完毕-------
+                                blockList.Add(modelTag);
+
+                            }
+
+                        }, itemSline, TaskCreationOptions.None);
+                        //将并行任务放到数组
+                        taskArray.Add(taskResolveAEmelems);
+
+                    }
+                }
+
+
+                var safeTaskArray = taskArray.Where(x => null != x).ToArray();
+                Task.WaitAll(safeTaskArray);
+                lstTags = blockList.ToList();
+                resultBag.Add("Tags", lstTags);
+
+
+            }
+
+        }
+
+        /// <summary>
+        /// 没有左侧推广的列表，100条商品数据
+        /// </summary>
+        /// <param name="resultBag"></param>
+        ///  <param name="htmlDoc"></param>
+        /// <param name="searchHtmlContent"></param>
+        private void ViewFilterContent_Big100Theme(ref Dictionary<string, object> resultBag, IHtmlDocument htmlDoc, string searchHtmlContent)
+        {
+
+          
+         
+            var div_filterDoms = htmlDoc.QuerySelector("div.advanced-filter.filter-precise");
+
+            if (null != div_filterDoms)
+            {
+
+
+                var div_BrandsDom = div_filterDoms.QuerySelector("div#brand_Name_FacetAll");
+
+                #region 品牌解析
+                var lstBrands = new List<BrandTag>();
+                if (null != div_BrandsDom)
+                {
+                    //从属性区域解析dom-品牌内容
+                    var brandADomList = div_BrandsDom.QuerySelectorAll("ul.brands>li");
+
+                    if (null != brandADomList)
+                    {
+
+                        foreach (var itemADom in brandADomList)
+                        {
+
+
+                            var model = new BrandTag();
+                            model.Platform = SupportPlatformEnum.Suning;
+                            model.FilterField = itemADom.GetAttribute("filter_id"); //使用的过滤字段参数
+                            model.BrandId = itemADom.GetAttribute("filter_value");
+
+                            model.BrandName = itemADom.GetAttribute("title").Replace("\n", "").Replace("\t", "");
+                            string idxString = itemADom.GetAttribute("class");//定位字符
+                            if (!string.IsNullOrEmpty(idxString))
+                            {
+                                model.CharIndex = idxString.Last().ToString();//最后一个字符 ：s-brand.choose.P
+                            }
+                            var imgDom = itemADom.QuerySelector("a>img");
+                            if (null != imgDom)
+                            {
+                                model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
+                            }
+
+                            lstBrands.Add(model);
+                        }
+                    }
+                }
+                resultBag.Add("Brands", lstBrands);
+
+                #endregion
+
+
+                //category 解析  
+
+                //指定的类目
+                var div_AttrsDom_Category_SpecialList = div_filterDoms.QuerySelectorAll("div.filter-section")
+                    .Where(
+                    (x) =>
+                    {
+                        //id 不为空 并且不是第一个品牌元素的节点
+                        string id = x.GetAttribute("id");
+                        if (string.IsNullOrEmpty(id))
+                        {
+                            return false;
+                        }
+                        if (id != "brand_Name_FacetAll")
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                    ).ToArray();
+
+                //高级分类
+                var div_AttrsDom_AdvancedList = div_filterDoms.QuerySelectorAll("div.filter-section.b-solid.f-other>div.s-right>div.other-opts");
+
+                var lstTags = new List<KeyWordTag>();
+                var blockList = new BlockingCollection<KeyWordTag>();
+                var taskArray = new List<Task>();
+
+                //指定分类tag 解析
+                if (null != div_AttrsDom_Category_SpecialList)
+                {
+
+                    // PLINQ 的操作 
+                    //div_AttrsDom_CategoryList.AsParallel().ForAll((x) => { })
+
+                    for (int i = 0; i < div_AttrsDom_Category_SpecialList.Length; i++)
+                    {
+
+                        var itemCategory = div_AttrsDom_Category_SpecialList[i];
+                        var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
+                        {
+
+                            var itemSpceialCategory = paraItem as IElement;
+                            //找到归属的组
+                            string groupName = itemSpceialCategory.QuerySelector("div.s-left>label").TextContent;
+
+                            var childLiADomArray = itemSpceialCategory.QuerySelectorAll("div.item-container>a");
+                            foreach (var itemADom in childLiADomArray)
+                            {
+                                var modelTag = new KeyWordTag();
+                                modelTag.Platform = SupportPlatformEnum.Suning;
+                                modelTag.TagName = itemADom.GetAttribute("title");//标签名称
+                                modelTag.GroupShowName = groupName;
+
+                                modelTag.FilterFiled = itemSpceialCategory.GetAttribute("id");//根节点的筛选属性
+
+                                modelTag.Value = itemADom.GetAttribute("id");
+                                //----解析 a标签完毕-------
+                                blockList.Add(modelTag);
+
+                            }
+
+                        }, itemCategory, TaskCreationOptions.None);
+                        //将并行任务放到数组
+                        taskArray.Add(taskResolveAEmelems);
+
+                    }
+
+                }
+
+
+                //高级筛选 的解析
+                if (null != div_AttrsDom_AdvancedList)
+                {
+                    for (int i = 0; i < div_AttrsDom_AdvancedList.Length; i++)
+                    {
+
+                        var itemSline = div_AttrsDom_AdvancedList[i];
+                        var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
+                        {
+
+                            var itemAdvancedCategory = paraItem as IElement;
+
+                            //找到归属的组
+                            string groupName = itemAdvancedCategory.QuerySelector("a.o-text>span").TextContent;
+                            if (groupName.Equals("全部分类"))
+                            {
+                                return;
+                            }
+                            var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("div.o-details>div.d-container>a");
+                            foreach (var itemADom in childLiADomArray)
+                            {
+                                var modelTag = new KeyWordTag();
+                                modelTag.Platform = SupportPlatformEnum.Suning;
+                                modelTag.TagName = itemADom.GetAttribute("title");//标签名称
+                                modelTag.GroupShowName = groupName;
+
+                                modelTag.FilterFiled = itemAdvancedCategory.GetAttribute("id");//根节点的筛选属性
+                                modelTag.Value = itemADom.GetAttribute("id");
+
+
+                                //----解析 a标签完毕-------
+                                blockList.Add(modelTag);
+
+                            }
+
+                        }, itemSline, TaskCreationOptions.None);
+                        //将并行任务放到数组
+                        taskArray.Add(taskResolveAEmelems);
+
+                    }
+                }
+
+
+                var safeTaskArray = taskArray.Where(x => null != x).ToArray();
+                Task.WaitAll(safeTaskArray);
+                lstTags = blockList.ToList();
+                resultBag.Add("Tags", lstTags);
+
+
+            }
 
         }
 
@@ -602,58 +932,85 @@ namespace Plugin.Suning.Extension
             modelProduct = new SuningProduct();
             try
             {
-            //    //id
-            //    string itemId = productDom.pId;
-            //    if (string.IsNullOrEmpty(itemId))
-            //    {
-            //        return modelProduct;//凡是没有id 的商品，要么是广告 要么是其他非正常的商品
-            //    }
-            //    long.TryParse(itemId, out long _ItemId);
-            //    modelProduct.ItemId = _ItemId;
+                //id <li  isHwg=""  id="" name="" class="product      basic 617087532    0000000000-617087532  " lazy="true">
+                string pattern_itemid = @"li.*class.*product.*(\d{10}-\d+).*?";
+                var match = Regex.Match(productDom.OuterHtml, pattern_itemid, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                if (match==null)
+                {
+                    return modelProduct;//凡是没有id 的商品，要么是广告 要么是其他非正常的商品
+                }
+                string itemId = match.Groups[1].Value;
+                if (!string.IsNullOrEmpty(itemId))
+                {
+                    string[] arry_id = itemId.Split('-');
+                    modelProduct.BizCode = arry_id[0];
 
-            //    //title
-            //    modelProduct.Title = productDom.alt;
-            //    modelProduct.ItemUrl = string.Concat(productDom.sUrl.GetHttpsUrl(), "?intcmp=search-9000000700-1_1_2");
-
-            //    //price
-            //    //var priceDom = productDom.view_price;
-            //    //if (null != priceDom)
-            //    //{
-            //    //    decimal.TryParse(priceDom, out decimal _price);
-            //    //    modelProduct.Price = _price;
-            //    //}
-            //    //pic
-            //    modelProduct.PicUrl = productDom.sImg.GetHttpsUrl();
-            //    //shop
-            //    string shopId = productDom.shopId;
-            //    long.TryParse(shopId, out long _shopId);
-            //    modelProduct.SellerId = _shopId;
-            //    modelProduct.ShopUrl = productDom.mUrl.GetHttpsUrl();
-            //    modelProduct.ShopName = productDom.sName;
+                    long.TryParse(arry_id[1], out long _ItemId);
+                    modelProduct.ItemId = _ItemId;
+                }
 
 
-            //    //status
-            //    //成交量
+              
 
-            //    //modelProduct.Biz30Day = productDom.evaluateCount.ToString();
+                //price
+                //var priceDom = productDom.view_price;
+                //if (null != priceDom)
+                //{
+                //    decimal.TryParse(priceDom, out decimal _price);
+                //    modelProduct.Price = _price;
+                //}
+                //pic
+                var domImage = productDom.QuerySelector("img.search-loading");
+                modelProduct.PicUrl = domImage.GetAttribute("src2").GetHttpsUrl();
 
-            //    //评论量
-            //    modelProduct.TotalBizRemarkCount = productDom.evaluateCount.ToString();
-            //    modelProduct.RemarkUrl = string.Concat(modelProduct.ItemUrl, "#gm-other-info");
+
+                //title
+                var domTitle = domImage.ParentElement;
+                modelProduct.Title = domTitle.GetAttribute("title");
+                modelProduct.ItemUrl = domTitle.GetAttribute("href").GetHttpsUrl();
 
 
-            //    //卖家地址
-            //    //modelProduct.SellerAddress = productDom.item_loc;
+                //shop
+                var domVendor = productDom.QuerySelector("input.hidenInfo");
+                string vendorType = domVendor.GetAttribute("vendorType");
+                string shopId = domVendor.GetAttribute("vendor");
+                if (!string.IsNullOrEmpty(shopId)&&shopId!= "0000000000"&& vendorType!="0")
+                {
+                    long.TryParse(shopId, out long _shopId);
+                    modelProduct.SellerId = _shopId;
+                    modelProduct.ShopUrl = string.Format("https://shop.suning.com/{0}/index.html",shopId);
+                    //modelProduct.ShopName = productDom.sName;---在请求价格的结果中，将经销商赋值
+                }
 
-            //    //是否自营
-            //    if (productDom.thirdProduct == false)
-            //    {
-            //        modelProduct.IsSelfSale = true;
-            //    }
 
-            //    //规格
-            //    modelProduct.SkuList = new List<SkuItem>();
-            //    modelProduct.SkuList.Add(new SkuItem { SkuId = productDom.skuId });
+
+                //status
+                //成交量
+
+                //modelProduct.Biz30Day = productDom.evaluateCount.ToString();
+
+                //评论量
+                var domRemark = productDom.QuerySelector("a.num");
+                if (null!= domRemark)
+                {
+                    modelProduct.TotalBizRemarkCount = domRemark.TextContent;
+                    modelProduct.RemarkUrl = domRemark.GetAttribute("href");
+                }
+             
+
+
+                //卖家地址
+                //modelProduct.SellerAddress = productDom.item_loc;
+
+                //是否自营
+                if (shopId == "0000000000" || vendorType == "0")
+                {
+                    modelProduct.IsSelfSale = true;
+                }
+
+                //规格
+                //modelProduct.SkuList = new List<SkuItem>();
+                //modelProduct.SkuList.Add(new SkuItem { SkuId = productDom.skuId });
 
 
             }
