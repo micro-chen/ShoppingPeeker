@@ -25,7 +25,7 @@ namespace Plugin.Suning.Extension
         public class PriceItem
         {
             public string cmmdtyCode { get; set; }
-            public decimal price { get; set; }
+            public decimal? price { get; set; }
             //public string priceType { get; set; }
             //public decimal vipPrice { get; set; }
             public string bizCode { get; set; }

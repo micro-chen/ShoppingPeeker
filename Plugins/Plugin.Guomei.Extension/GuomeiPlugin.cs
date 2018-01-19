@@ -29,7 +29,7 @@ namespace Plugin.Guomei.Extension
 
         public GuomeiPlugin()
         {
-         
+
         }
 
         /// <summary>
@@ -65,10 +65,9 @@ namespace Plugin.Guomei.Extension
         public override ResolvedSearchUrlWithParas ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
         {
             ResolvedSearchUrlWithParas resultUrl = new ResolvedSearchUrlWithParas();
-            if (webArgs.IsNeedResolveHeaderTags == false)
-            {
-                resultUrl.IsNeedPreRequest = false;//国美的搜索页面和数据列表是分离的，如果需要加载标签，那么设置为true;否则直接请求json
-            }
+
+            resultUrl.IsNeedPreRequest = false;//国美的搜索页面和数据列表是分离的，不需要预先请求html
+
 
             StringBuilder sbSearchUrl = new StringBuilder("https://search.gome.com.cn/search?question=@###@");
 
@@ -197,8 +196,8 @@ namespace Plugin.Guomei.Extension
 
             GuomeiPriceJsonResult jsonResult = null;
             //产生价格查询任务   
-            if (null==webArgs.AttachParas
-                ||!webArgs.AttachParas.ContainsKey("pid")
+            if (null == webArgs.AttachParas
+                || !webArgs.AttachParas.ContainsKey("pid")
                  || !webArgs.AttachParas.ContainsKey("skuid")
                 )
             {
@@ -215,7 +214,7 @@ namespace Plugin.Guomei.Extension
             {
                 throw new Exception("参数缺少连接字符串设置！");
             }
-            var connStrConfig =  webArgs.SystemAttachParas["SoapTcpConnectionString"] as ShoppingWebCrawlerSection.ConnectionStringConfig;
+            var connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as ShoppingWebCrawlerSection.ConnectionStringConfig;
             //json地址
             string urlOfPriceJson = string.Format("https://ss.gome.com.cn/search/v1/price/single/{0}/{1}/11010000/flag/item/fn1?callback=fn1&_={2}",
                 pId,
@@ -245,8 +244,8 @@ namespace Plugin.Guomei.Extension
                         //GuomeiPriceJsonResult
                         int startPos = "fn1(".Length;
                         int endPos = jsonpDataPrice.Length - startPos - 1;
-                         string jsonPrice= jsonpDataPrice.Substring(startPos, endPos);
-                         jsonResult = JsonConvert.DeserializeObject<GuomeiPriceJsonResult>(jsonPrice);
+                        string jsonPrice = jsonpDataPrice.Substring(startPos, endPos);
+                        jsonResult = JsonConvert.DeserializeObject<GuomeiPriceJsonResult>(jsonPrice);
 
                     }
                 }
@@ -370,7 +369,7 @@ namespace Plugin.Guomei.Extension
 
                                         model.CharIndex = itemLiDom.GetAttribute("brand-value");//定位字符
                                         var imgDom = itemADom.GetAttribute("style");
-                                        if (null != imgDom&&imgDom.Contains("background-image")&& imgDom.Contains("//"))
+                                        if (null != imgDom && imgDom.Contains("background-image") && imgDom.Contains("//"))
                                         {
                                             int startPos = imgDom.IndexOf("//");
                                             int endPos = imgDom.Length - startPos - 1;
@@ -420,12 +419,12 @@ namespace Plugin.Guomei.Extension
                                             var modelTag = new KeyWordTag();
                                             modelTag.Platform = SupportPlatformEnum.Guomei;
                                             modelTag.TagName = itemADom.TextContent;//标签名称
-                                                modelTag.GroupShowName = groupName;
+                                            modelTag.GroupShowName = groupName;
 
                                             modelTag.FilterFiled = "facets";
                                             modelTag.Value = itemADom.GetAttribute("facetsid");
-                                                //----解析 a标签完毕-------
-                                                blockList.Add(modelTag);
+                                            //----解析 a标签完毕-------
+                                            blockList.Add(modelTag);
 
                                         }
 
@@ -457,18 +456,18 @@ namespace Plugin.Guomei.Extension
                                             var modelTag = new KeyWordTag();
                                             modelTag.Platform = SupportPlatformEnum.Guomei;
                                             modelTag.TagName = itemADom.TextContent;//标签名称
-                                                modelTag.GroupShowName = groupName;
+                                            modelTag.GroupShowName = groupName;
 
                                             modelTag.FilterFiled = "facets";
                                             modelTag.Value = itemADom.GetAttribute("facetsid");
 
 
-                                                //----解析 a标签完毕-------
-                                          blockList.Add(modelTag);
+                                            //----解析 a标签完毕-------
+                                            blockList.Add(modelTag);
 
                                         }
 
-                                    },itemSline, TaskCreationOptions.None);
+                                    }, itemSline, TaskCreationOptions.None);
                                     //将并行任务放到数组
                                     taskArray.Add(taskResolveAEmelems);
 

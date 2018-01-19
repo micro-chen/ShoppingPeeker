@@ -61,10 +61,9 @@ namespace Plugin.Suning.Extension
         public override ResolvedSearchUrlWithParas ResolveSearchUrl(BaseFetchWebPageArgument webArgs)
         {
             ResolvedSearchUrlWithParas resultUrl = new ResolvedSearchUrlWithParas();
-            if (webArgs.IsNeedResolveHeaderTags == false)
-            {
-                resultUrl.IsNeedPreRequest = false;//苏宁的搜索页面和数据列表是分离的，如果需要加载标签，那么设置为true;否则直接请求json
-            }
+
+            resultUrl.IsNeedPreRequest = false;//苏宁的搜索页面和数据列表是分离的，直接在解析中进行内容请求，不需要预先请求
+
 
             StringBuilder sbSearchUrl = new StringBuilder("https://search.suning.com/@###@/");
 
@@ -155,7 +154,7 @@ namespace Plugin.Suning.Extension
 
             #region  页码
 
-            sbSearchUrl.Append("&cp=").Append(webArgs.PageIndex + 1);
+            sbSearchUrl.Append("&cp=").Append(webArgs.PageIndex);
 
             #endregion
             # region 杂项
@@ -243,10 +242,10 @@ namespace Plugin.Suning.Extension
                 //创建html 文档
                 IHtmlDocument htmlDoc = null;
 
-                if (webArgs.IsNeedResolveHeaderTags == true||webArgs.PageIndex==0)
+                if (webArgs.IsNeedResolveHeaderTags == true || webArgs.PageIndex == 0)
                 {
 
-                 
+
 
                     ////1 打开tcp 链接 
                     ////2 发送参数
@@ -316,7 +315,7 @@ namespace Plugin.Suning.Extension
                 //解析苏宁的商品 列表
                 string htmlProductList = string.Empty;
 
-                if (webArgs.PageIndex==0&&null!=htmlDoc)
+                if (webArgs.PageIndex == 0 && null != htmlDoc)
                 {
 
                     //首页的话，那么直接解析第一次请求的页面内容列表
@@ -384,24 +383,48 @@ namespace Plugin.Suning.Extension
                 //task1:通过正则 找出商品的id 集合，发送请求价格
                 string pattern_FindItemId = @"li.*class.*product.*(\d{10}-\d+).*?";
                 var matchs = Regex.Matches(htmlProductList, pattern_FindItemId, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                if (null!= matchs&& matchs.Count>0)
+                if (null != matchs && matchs.Count > 0)
                 {
                     List<string> lstItemIds = new List<string>();
                     int counter = 0;
                     StringBuilder sb_tempIds = new StringBuilder();
                     foreach (Match item in matchs)
                     {
-                        string id = item.Groups[1].Value;
-                        lstItemIds.Add(id);
+                        string itemId = item.Groups[1].Value;
 
-                        sb_tempIds.Append(id.Replace("-", "")).Append("_,");//000000000152709847_,000000000128866947_,000000000193392956_,
+                        if (string.IsNullOrEmpty(itemId))
+                        {
+                            continue;
+                        }
+                        string[] arry_id = itemId.Split('-');
+                        string ventor = arry_id[0];
+                        string id = arry_id[1];
+                        lstItemIds.Add(id);
+                        /*补位前缀+商品id ；总长度为 18，：000000000152709847_,000000000128866947_,000000000193392956_,
+                        //自营和第三方的不同
+                        //第三方,需要这种格式：000000000744752274__2_0070062935, 也就是后面再跟上：_2_{经销商编码}
+                        */
+                        string idFullString = id.PadLeft(18, '0');//长度不18 用0补充左边的位
+                        sb_tempIds.Append(idFullString).Append("_");//
+                        if (!ventor.Equals("0000000000"))
+                        {
+                            sb_tempIds.Append("_2_").Append(ventor);
+                        }
+                        sb_tempIds.Append(",");//end
                         counter += 1;
 
-                        if (counter>=10)
+                        if (counter >= 10)
                         {
                             //构成一个新的请求m进行jsonp查询价格
-                            string priceUrl = string.Format("https://ds.suning.cn/ds/generalForTile/{0}-010-2-0000000000-1--ds0000000002295.jsonp?callback=ds0000000002295");
-                            var tsk_Price= this.QueryPriceAsync(priceUrl, connStrConfig, blockingList_ProductPrices);
+                            string priceUrl = string.Format(
+                                "https://ds.suning.cn/ds/generalForTile/{0}-010-2-0000000000-1--ds0000000002295.jsonp?callback=ds0000000002295",
+                                sb_tempIds.ToString()
+                                 );
+                            var tsk_Price = this.QueryPriceAsync(priceUrl,
+                                webArgs.KeyWord, 
+                                connStrConfig, 
+                                blockingList_ProductPrices);
+
                             lstQueryPriceTask.Add(tsk_Price);
 
 
@@ -411,7 +434,7 @@ namespace Plugin.Suning.Extension
                         }
                     }
 
-                   
+
                 }
                 //task2:解析商品列表html
                 var domsOfPriceList = htmlParser.Parse(htmlProductList).QuerySelectorAll("li.product");
@@ -428,23 +451,27 @@ namespace Plugin.Suning.Extension
                 //等待价格查询完毕
                 var safeTaskArray = lstQueryPriceTask.Where(x => null != x).ToArray();
                 Task.WaitAll(safeTaskArray);
-                
+
                 foreach (var itemProduct in lstProducts)
                 {
                     SuningProduct modelProduct = itemProduct as SuningProduct;
-                    //业务+itemid
-                    string key = string.Concat(modelProduct.BizCode, modelProduct.ItemId);
+                    
+                    string key = modelProduct.ItemId.ToString().PadLeft(18, '0');//长度不18 用0补充左边的位 string.Concat(modelProduct.BizCode, modelProduct.ItemId);
                     if (blockingList_ProductPrices.ContainsKey(key))
                     {
                         var priceInRemote = blockingList_ProductPrices[key];
-                        if (null!=priceInRemote)
+                        if (null != priceInRemote)
                         {
-                            modelProduct.Price = priceInRemote.price;
+                            modelProduct.Price = priceInRemote.price??0;
                             modelProduct.BizCode = priceInRemote.bizCode;
                             //modelProduct.ShopId= log priceInRemote.bizCode;
-                            modelProduct.ShopName = priceInRemote.vendorName;
+                            if (modelProduct.IsSelfSale==false)
+                            {
+                                modelProduct.ShopName = priceInRemote.vendorName;
+                            }
+                          
                         }
-                     
+
                     }
 
                 }
@@ -467,16 +494,24 @@ namespace Plugin.Suning.Extension
         /// 异步查询价格
         /// </summary>
         /// <param name="url"></param>
+        /// <param name="keyword"></param>
         /// <param name="connStrConfig"></param>
         /// <param name="dataContainer"></param>
         /// <returns></returns>
-        private Task QueryPriceAsync(string url, ShoppingWebCrawlerSection.ConnectionStringConfig connStrConfig,  ConcurrentDictionary<string, SuningPriceJsonResult.PriceItem> priceContainer)
+        private Task QueryPriceAsync(string url,string keyword, ShoppingWebCrawlerSection.ConnectionStringConfig connStrConfig, ConcurrentDictionary<string, SuningPriceJsonResult.PriceItem> priceContainer)
         {
+
+            if (string.IsNullOrEmpty(url)||string.IsNullOrEmpty(keyword))
+            {
+                throw new Exception("苏宁查询价格必须输入关键词和地址！");
+            }
             return Task.Factory.StartNew(() =>
             {
                 //json地址
 
-                var webArgs = new BaseFetchWebPageArgument();
+                var webArgs = new BaseFetchWebPageArgument( );
+                webArgs.Platform = SupportPlatformEnum.Suning;
+                webArgs.KeyWord = keyword;
                 webArgs.ResolvedUrl = new ResolvedSearchUrlWithParas { Url = url };
 
                 string htmlPriceList = "";
@@ -513,13 +548,18 @@ namespace Plugin.Suning.Extension
                 {
                     return;
                 }
+                //jsonp请求失败结果
+                if (!htmlPriceList.Contains("ds000000000"))
+                {
+                    PluginContext.Logger.Error("苏宁请求价格失败："+url);
+                }
 
                 int startPos = htmlPriceList.IndexOf('{');
                 int endPos = htmlPriceList.Length - startPos - 2;
 
                 string jsonData = htmlPriceList.Substring(startPos, endPos);
                 var dataJsonList = JsonConvert.DeserializeObject<SuningPriceJsonResult>(jsonData);
-                if (null!=dataJsonList&&dataJsonList.status==200)
+                if (null != dataJsonList && dataJsonList.status == 200)
                 {
                     foreach (var item in dataJsonList.rs)
                     {
@@ -744,8 +784,8 @@ namespace Plugin.Suning.Extension
         private void ViewFilterContent_Big100Theme(ref Dictionary<string, object> resultBag, IHtmlDocument htmlDoc, string searchHtmlContent)
         {
 
-          
-         
+
+
             var div_filterDoms = htmlDoc.QuerySelector("div.advanced-filter.filter-precise");
 
             if (null != div_filterDoms)
@@ -935,7 +975,7 @@ namespace Plugin.Suning.Extension
                 //id <li  isHwg=""  id="" name="" class="product      basic 617087532    0000000000-617087532  " lazy="true">
                 string pattern_itemid = @"li.*class.*product.*(\d{10}-\d+).*?";
                 var match = Regex.Match(productDom.OuterHtml, pattern_itemid, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                if (match==null)
+                if (match == null)
                 {
                     return modelProduct;//凡是没有id 的商品，要么是广告 要么是其他非正常的商品
                 }
@@ -949,8 +989,24 @@ namespace Plugin.Suning.Extension
                     modelProduct.ItemId = _ItemId;
                 }
 
+                //shop
 
-              
+                var domVendor = productDom.QuerySelector("input.hidenInfo");
+                if (null == domVendor)
+                {
+                    return null;//对于广告 众筹 等 不是有效的商品
+                }
+                string vendorType = domVendor.GetAttribute("vendorType");
+                string shopId = domVendor.GetAttribute("vendor");
+                if (!string.IsNullOrEmpty(shopId) && shopId != "0000000000" && vendorType != "0")
+                {
+                    long.TryParse(shopId, out long _shopId);
+                    modelProduct.SellerId = _shopId;
+                    modelProduct.ShopUrl = string.Format("https://shop.suning.com/{0}/index.html", shopId);
+                    //modelProduct.ShopName = productDom.sName;---在请求价格的结果中，将经销商赋值
+                }
+
+
 
                 //price
                 //var priceDom = productDom.view_price;
@@ -970,17 +1026,7 @@ namespace Plugin.Suning.Extension
                 modelProduct.ItemUrl = domTitle.GetAttribute("href").GetHttpsUrl();
 
 
-                //shop
-                var domVendor = productDom.QuerySelector("input.hidenInfo");
-                string vendorType = domVendor.GetAttribute("vendorType");
-                string shopId = domVendor.GetAttribute("vendor");
-                if (!string.IsNullOrEmpty(shopId)&&shopId!= "0000000000"&& vendorType!="0")
-                {
-                    long.TryParse(shopId, out long _shopId);
-                    modelProduct.SellerId = _shopId;
-                    modelProduct.ShopUrl = string.Format("https://shop.suning.com/{0}/index.html",shopId);
-                    //modelProduct.ShopName = productDom.sName;---在请求价格的结果中，将经销商赋值
-                }
+                
 
 
 
@@ -991,12 +1037,12 @@ namespace Plugin.Suning.Extension
 
                 //评论量
                 var domRemark = productDom.QuerySelector("a.num");
-                if (null!= domRemark)
+                if (null != domRemark)
                 {
                     modelProduct.TotalBizRemarkCount = domRemark.TextContent;
                     modelProduct.RemarkUrl = domRemark.GetAttribute("href");
                 }
-             
+
 
 
                 //卖家地址
@@ -1006,6 +1052,7 @@ namespace Plugin.Suning.Extension
                 if (shopId == "0000000000" || vendorType == "0")
                 {
                     modelProduct.IsSelfSale = true;
+                    modelProduct.ShopName = "苏宁自营";
                 }
 
                 //规格
