@@ -27,17 +27,20 @@ $(function () {
         api_search_pdd_products: "api/servicebus/search_pdd_products",//拼多多商品检索
         api_search_guomei_products: "api/servicebus/search_guomei_products",//国美商品检索
         api_search_guomei_price: "api/servicebus/search_guomei_price",//国美单个商品价格检索
-        
         api_search_suning_products: "api/servicebus/search_suning_products",//苏宁商品检索
         api_search_dangdang_products: "api/servicebus/search_dangdang_products",//当当商品检索
-        api_search_vip_products: "api/servicebus/search_vip_products",//唯品会商品检索
-        
-        api_search_yhd_products: "api/servicebus/search_yhd_products",//一号店商品检索
-        api_search_mls_products: "api/servicebus/search_mls_products",//美丽说商品检索
-        api_search_mgj_products: "api/servicebus/search_mgj_products",//蘑菇街商品检索
-     
-        api_search_etao_products: "api/servicebus/search_etao_products",//一淘商品检索
         api_search_taoquan: "api/servicebus/search_taoquan",//淘宝天猫优惠券检索
+
+        /*
+         二类电商平台
+         api_search_vip_products: "api/servicebus/search_vip_products",//唯品会商品检索
+        //api_search_yhd_products: "api/servicebus/search_yhd_products",//一号店商品检索
+        //api_search_mls_products: "api/servicebus/search_mls_products",//美丽说商品检索
+        //api_search_mgj_products: "api/servicebus/search_mgj_products",//蘑菇街商品检索
+        //api_search_etao_products: "api/servicebus/search_etao_products",//一淘商品检索
+
+        */
+    
 
 
         /*init page */

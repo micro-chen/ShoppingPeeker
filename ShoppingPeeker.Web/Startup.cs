@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +18,7 @@ using ShoppingPeeker.Utilities.Logging;
 using ShoppingPeeker.Utilities.Plugins;
 using ShoppingPeeker.Plugins;
 
+
 namespace ShoppingPeeker.Web
 {
 	public class Startup
@@ -28,8 +29,10 @@ namespace ShoppingPeeker.Web
 		/// <param name="configuration"></param>
 		public Startup(IConfiguration configuration)
 		{
-			//保证配置的全局
-			ConfigHelper.AppSettingsConfiguration = configuration;
+            //配置注册gb2312编码
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            //保证配置的全局
+            ConfigHelper.AppSettingsConfiguration = configuration;
             //配置蜘蛛程序连接池
             var crawlerConfigSection = ConfigHelper.ShoppingWebCrawlerSection;
             if (null != crawlerConfigSection)
