@@ -80,13 +80,13 @@ namespace Plugin.Vip.Extension
             if (null != webArgs.TagGroup)
             {
                 //分类
-                var category_id_1_5_show = webArgs.TagGroup.Tags.Where(x => x.FilterFiled == "category_id_1_5_showTags");
+                var category_id_1_5_show = webArgs.TagGroup.Tags.Where(x => x.FilterFiled == "category_id_1_5_show");
                 searchListParaModel.paramsDetails.category_id_1_5_show = string.Join(",", category_id_1_5_show.Select(x => x.Value));
-                var category_id_1_show = webArgs.TagGroup.Tags.Where(x => x.FilterFiled == "category_id_1_showTags");
+                var category_id_1_show = webArgs.TagGroup.Tags.Where(x => x.FilterFiled == "category_id_1_show");
                 searchListParaModel.paramsDetails.category_id_1_show = string.Join(",", category_id_1_show.Select(x => x.Value));
-                var category_id_2_show = webArgs.TagGroup.Tags.Where(x => x.FilterFiled == "category_id_2_showTags");
+                var category_id_2_show = webArgs.TagGroup.Tags.Where(x => x.FilterFiled == "category_id_2_show");
                 searchListParaModel.paramsDetails.category_id_2_show = string.Join(",", category_id_2_show.Select(x => x.Value));
-                var category_id_3_show = webArgs.TagGroup.Tags.Where(x => x.FilterFiled == "category_id_3_showTags");
+                var category_id_3_show = webArgs.TagGroup.Tags.Where(x => x.FilterFiled == "category_id_3_show");
                 searchListParaModel.paramsDetails.category_id_3_show = string.Join(",", category_id_3_show.Select(x => x.Value));
                 //规格
                 var props = webArgs.TagGroup.Tags.Where(x => x.FilterFiled == "props");
