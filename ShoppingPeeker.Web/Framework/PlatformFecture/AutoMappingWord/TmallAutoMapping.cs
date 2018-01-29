@@ -92,9 +92,9 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord
             try
             {
                 string tokenStartIndex = "[[";
-                string tokenEndIndex = "})";
+                string tokenEndIndex = "]]";
                 int startIndex = respText.IndexOf(tokenStartIndex);
-                int endIndex = respText.LastIndexOf(tokenEndIndex);
+                int endIndex = respText.LastIndexOf(tokenEndIndex) - startIndex + tokenEndIndex.Length;//
 
                 //jsonp16163({"result":[]}) 这种内容表示空白 忽略掉
                 if (startIndex<0)
@@ -103,8 +103,8 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord
                 }
 
                 //取出 内容部分
-                string content = respText.Substring(startIndex, respText.Length - startIndex - tokenEndIndex.Length);
-                content = this.FormatAndFilterString(content);
+                string content = respText.Substring(startIndex, endIndex);//respText.Length - startIndex - tokenEndIndex.Length
+               content = this.FormatAndFilterString(content);
                 result = JsonConvert.DeserializeObject<List<string[]>>(content);
                 if (null!=result)
                 {

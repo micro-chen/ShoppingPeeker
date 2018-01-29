@@ -89,40 +89,40 @@
     $.Autocomplete = Autocomplete;
 
     Autocomplete.defaults = {
-            ajaxSettings: {},
-            autoSelectFirst: false,
-            appendTo: 'body',
-            serviceUrl: null,
-            lookup: null,
-            onSelect: null,
-            width: 'auto',
-            minChars: 1,
-            maxHeight: 300,
-            deferRequestBy: 0,
-            params: {},
-            formatResult: _formatResult,
-            formatGroup: _formatGroup,
-            delimiter: null,
-            zIndex: 9999,
-            type: 'GET',
-            noCache: false,
-            onSearchStart: noop,
-            onSearchComplete: noop,
-            onSearchError: noop,
-            preserveInput: false,
-            containerClass: 'autocomplete-suggestions',
-            tabDisabled: false,
-            dataType: 'text',
-            currentRequest: null,
-            triggerSelectOnValidInput: true,
-            preventBadQueries: true,
-            lookupFilter: _lookupFilter,
-            paramName: 'query',
-            transformResult: _transformResult,
-            showNoSuggestionNotice: false,
-            noSuggestionNotice: 'No results',
-            orientation: 'bottom',
-            forceFixPosition: false
+        ajaxSettings: {},
+        autoSelectFirst: false,
+        appendTo: 'body',
+        serviceUrl: null,
+        lookup: null,
+        onSelect: null,
+        width: 'auto',
+        minChars: 1,
+        maxHeight: 300,
+        deferRequestBy: 0,
+        params: {},
+        formatResult: _formatResult,
+        formatGroup: _formatGroup,
+        delimiter: null,
+        zIndex: 9999,
+        type: 'GET',
+        noCache: false,
+        onSearchStart: noop,
+        onSearchComplete: noop,
+        onSearchError: noop,
+        preserveInput: false,
+        containerClass: 'autocomplete-suggestions',
+        tabDisabled: false,
+        dataType: 'text',
+        currentRequest: null,
+        triggerSelectOnValidInput: true,
+        preventBadQueries: true,
+        lookupFilter: _lookupFilter,
+        paramName: 'query',
+        transformResult: _transformResult,
+        showNoSuggestionNotice: false,
+        noSuggestionNotice: 'No results',
+        orientation: 'bottom',
+        forceFixPosition: false
     };
 
     function _lookupFilter(suggestion, originalQuery, queryLowerCase) {
@@ -138,7 +138,7 @@
         if (!currentValue) {
             return suggestion.value;
         }
-        
+
         var pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
 
         return suggestion.value
@@ -168,7 +168,7 @@
 
             // html() deals with many types: htmlString or Element or Array or jQuery
             that.noSuggestionsContainer = $('<div class="autocomplete-no-suggestion"></div>')
-                                          .html(this.options.noSuggestionNotice).get(0);
+                .html(this.options.noSuggestionNotice).get(0);
 
             that.suggestionsContainer = Autocomplete.utils.createNode(options.containerClass);
 
@@ -237,7 +237,7 @@
                 that.hide();
             }, 200);
         },
-        
+
         abortAjax: function () {
             var that = this;
             if (that.currentRequest) {
@@ -302,13 +302,16 @@
             if (containerParent !== document.body && !that.options.forceFixPosition) {
                 return;
             }
-
+           
             // Choose orientation
             var orientation = that.options.orientation,
                 containerHeight = $container.outerHeight(),
                 height = that.el.outerHeight(),
-                offset = that.el.offset(),
-                styles = { 'top': offset.top, 'left': offset.left };
+                offset = that.el.offset();
+            //---调整了样式----2018-0129
+            offset.top += 5;
+            offset.left -= 13;
+            var styles = { 'top': offset.top, 'left': offset.left };
 
             if (orientation === 'auto') {
                 var viewPortHeight = $(window).height(),
@@ -327,19 +330,19 @@
 
             // If container is not positioned to body,
             // correct its position using offset parent offset
-            if(containerParent !== document.body) {
+            if (containerParent !== document.body) {
                 var opacity = $container.css('opacity'),
                     parentOffsetDiff;
 
-                    if (!that.visible){
-                        $container.css('opacity', 0).show();
-                    }
+                if (!that.visible) {
+                    $container.css('opacity', 0).show();
+                }
 
                 parentOffsetDiff = $container.offsetParent().offset();
                 styles.top -= parentOffsetDiff.top;
-                styles.left -= parentOffsetDiff.left;
+                styles.left -= parentOffsetDiff.left - 20;
 
-                if (!that.visible){
+                if (!that.visible) {
                     $container.css('opacity', opacity).hide();
                 }
             }
@@ -539,7 +542,7 @@
 
             params = options.ignoreParams ? null : options.params;
 
-            if ($.isFunction(options.lookup)){
+            if ($.isFunction(options.lookup)) {
                 options.lookup(q, function (data) {
                     that.suggestions = data.suggestions;
                     that.suggest();
@@ -589,7 +592,7 @@
         },
 
         isBadQuery: function (q) {
-            if (!this.options.preventBadQueries){
+            if (!this.options.preventBadQueries) {
                 return false;
             }
 
@@ -643,16 +646,16 @@
                 html = '',
                 category,
                 formatGroup = function (suggestion, index) {
-                        var currentCategory = suggestion.data[groupBy];
+                    var currentCategory = suggestion.data[groupBy];
 
-                        if (category === currentCategory){
-                            return '';
-                        }
+                    if (category === currentCategory) {
+                        return '';
+                    }
 
-                        category = currentCategory;
+                    category = currentCategory;
 
-                        return options.formatGroup(suggestion, category);
-                    };
+                    return options.formatGroup(suggestion, category);
+                };
 
             if (options.triggerSelectOnValidInput && that.isExactMatch(value)) {
                 that.select(0);
@@ -661,7 +664,7 @@
 
             // Build suggestions inner HTML:
             $.each(that.suggestions, function (i, suggestion) {
-                if (groupBy){
+                if (groupBy) {
                     html += formatGroup(suggestion, value, i);
                 }
 
@@ -691,11 +694,11 @@
             that.findBestHint();
         },
 
-        noSuggestions: function() {
-             var that = this,
-                 beforeRender = that.options.beforeRender,
-                 container = $(that.suggestionsContainer),
-                 noSuggestionsContainer = $(that.noSuggestionsContainer);
+        noSuggestions: function () {
+            var that = this,
+                beforeRender = that.options.beforeRender,
+                container = $(that.suggestionsContainer),
+                noSuggestionsContainer = $(that.noSuggestionsContainer);
 
             this.adjustContainerWidth();
 
@@ -704,7 +707,7 @@
             noSuggestionsContainer.detach();
 
             // clean suggestions if any
-            container.empty(); 
+            container.empty();
             container.append(noSuggestionsContainer);
 
             if ($.isFunction(beforeRender)) {
@@ -717,7 +720,7 @@
             that.visible = true;
         },
 
-        adjustContainerWidth: function() {
+        adjustContainerWidth: function () {
             var that = this,
                 options = that.options,
                 width,
@@ -729,7 +732,7 @@
             if (options.width === 'auto') {
                 width = that.el.outerWidth();
                 container.css('width', width > 0 ? width : 300);
-            } else if(options.width === 'flex') {
+            } else if (options.width === 'flex') {
                 // Trust the source! Unset the width property so it will be the max length
                 // the containing elements.
                 container.css('width', '');
@@ -780,10 +783,10 @@
             return suggestions;
         },
 
-        validateOrientation: function(orientation, fallback) {
+        validateOrientation: function (orientation, fallback) {
             orientation = $.trim(orientation || '').toLowerCase();
 
-            if($.inArray(orientation, ['auto', 'bottom', 'top']) === -1){
+            if ($.inArray(orientation, ['auto', 'bottom', 'top']) === -1) {
                 orientation = fallback;
             }
 

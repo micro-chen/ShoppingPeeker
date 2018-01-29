@@ -52,9 +52,29 @@ $(function () {
             this.txt_search_keyword.autocomplete({
                 serviceUrl: this.api_auto_complete_suggest,
                 dataType: "json",
+                width:"640px",
                 deferRequestBy: 300,//不要立即请求 间隔一个缓冲
                 paramName: "key",
                 params: { "key": this.txt_search_keyword.val(), "sign": ShoppingPeeker.apiSignFunc() },
+                formatResult: function (suggestion, currentValue, idx) {
+
+                   
+                    console.log(idx);
+                    var backColor = "";
+                    //色彩差异
+                    if (idx == 0) {
+                        backColor = "#f58c85";
+                    } else if (idx == 1) {
+                        backColor = "#fcbc4b";
+                    }else if (idx == 2) {
+                        backColor = "#a1d958";
+                    }
+                    if (backColor!="") {
+                        return "<em class='hot' style='background-color:{2};'>{0}</em> <span class=''>{1}</span>".format(idx + 1, suggestion.value, backColor);
+                    }
+                    return "<em class='hot'>{0}</em> <span class=''>{1}</span>".format(idx + 1, suggestion.value);
+                 
+                },
                 onSelect: function (suggestion) {
                     console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
                     if (!isNullOrEmpty(suggestion.value)) {

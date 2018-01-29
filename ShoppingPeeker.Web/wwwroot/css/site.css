@@ -549,10 +549,44 @@ a:hover {
 }
 
 .autocomplete-suggestion {
-    padding: 2px 5px;
+    /*padding: 2px 5px;
     white-space: nowrap;
+    overflow: hidden;*/
+    cursor: pointer;
+    /* padding: 5px; */
+    padding-left: 13px;
+    color: black;
+    display: block;
+    font: menu;
+    font-size: 14px;
+    line-height: 26px;
     overflow: hidden;
+    font-weight: normal;
+    border: 1px solid transparent;
+    border-width: 1px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
+.autocomplete-suggestion em {
+        background: #7cbce4;
+        border-radius: 2px;
+        overflow: hidden;
+        margin: 6px 9px 0 0;
+        width: 15px;
+        height: 16px;
+        padding-right: 1px;
+        line-height: 15px;
+        font-size: 11px;
+        text-align: center;
+        color: white;
+        -webkit-text-size-adjust: none;
+    }
+
+.autocomplete-suggestion em, .autocomplete-suggestion span {
+        float: left;
+    }
+ 
 
 .autocomplete-no-suggestion {
     padding: 2px 5px;

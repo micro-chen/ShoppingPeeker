@@ -107,7 +107,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord
 
             //-------------------注册到缓存中--------------------
             var resultList = gps.Select(x => x.Key);
-            cacheManager.Set(cacheKey, resultList);
+            cacheManager.Set(cacheKey, resultList,15);
 
             return resultList;
             });
