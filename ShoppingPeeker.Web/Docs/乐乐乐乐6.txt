@@ -1,4 +1,218 @@
-首先-第一期，先做一个全网商品比价的搜索页面？ 价格不一定要最低 ，但是多方位的对比后，才能知道是不是坑
+首先-第一期，先做一个全网商品比价的搜索页面？ 价格不一定要最低 ，但是多方位的对比
+
+
+
+开始前端页面
+1 关键词发送
+2 获取json 
+3 渲染品牌 分类 tag ，分组聚合处理
+4 排序
+5 列表
+6 分页
+7 优惠券
+
+--------------完毕后--------
+用户注册
+收藏 关注 属性对比--汽车之家--属性维度的对比
+
+价格曲线
+评级信用
+
+------------游戏娱乐--------
+撒币...........
+
+
+淘鹊桥
+http://quan.meiquan8.com/
+http://www.qingtaoke.com/
+http://www.taokezhushou.com/
+
+
+查询指定的关键词后，会得到查询页面
+1 品牌
+2 高级选项，我们对这些高级选项进行合并匹配，能匹配的，合并到一个组，不能合并的，成为单一的tag组
+3 排序
+
+
+天猫空白页
+喵~没找到与“ 压瓦机设备 ”相关的 商品 哦，要不您换个关键词我帮您再找找看
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>SecurityMatrix</title>
+<link href="//g.alicdn.com/sd/user_sm/1.0.1/css/sm.css" rel="stylesheet" type="text/css">
+</head>
+<body><script>
+with(document)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("exparams","category=&userid=&aplus&yunid=&asid=AQAAAACZfUtawsaZQwAAAACE8LebqR0qlg==",id="tb-beacon-aplus",src=(location>"https"?"//s":"//a")+".tbcdn.cn/s/aplus_v2.js")
+</script>
+
+    <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td><div class="main">
+    <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td><img src="//g.alicdn.com/sd/user_sm/1.0.1/images/logo_sm.jpg"></td>
+            <td>
+                                <form name="queryForm" id="query" action="https://sec.taobao.com/query.htm" method="post">
+                    <input type="hidden" name="action" value="QueryAction"/>
+                    <input type="hidden" name="event_submit_do_query" value="ok">
+                    <input type="hidden" name="smPolicy" value="tmallsearch-product-anti_Spider-html-checkcode"/>
+                    <input type="hidden" name="smReturn" value="https://list.tmall.com/search_product.htm?spm=a220m.1000858.1000720.1.348abe64rj5JVg&amp;q=%E6%AF%9B%E8%A1%A3&amp;sort=s&amp;from=mallfp..pc_1_searchbutton&amp;type=pc&amp;style=g"/>
+                    <input type="hidden" name="smApp" value="tmallsearch"/>
+                    <input type="hidden" name="smCharset" value="GBK"/>
+                    <input type="hidden" name="smTag" value="MTgwLjc4LjI0My4xOTcsNjk4NzYwNjEyLDAyMjJhNWRmNjkwYjQwOGNhNDc4NTFhZTM5OGFhMWYx"/>
+                    <input type="hidden" name="smSign" value="bYPsuoiuEd9lLhmpnUuwfg=="/>
+                    <input type="hidden" name="identity" value="sm-tmallsearch"/>
+                    <input type="hidden" name="captcha" value=""/>
+                                                                        <div class="view">
+                                <p>发现您的网络环境有异常，为保证正常使用，请验证。</p>
+                                <p>
+                                    <img id="checkcodeImg" src="//pin.aliyun.com/get_img?sessionid=04778550aecf5d3aedcc528a276ad431&identity=sm-tmallsearch&type=number"/>
+                                    <span>看不清？<a href="#" onclick="refresh();">换一张</a></span>
+                                </p>
+                                <p>
+                                    <label for="checkcodeInput">验证码：</label>
+                                    <input id="checkcodeInput" type="text" name="checkcode"/>
+                                                                    </p>
+                                <script type="text/javascript">
+                                    <!--
+                                    function refresh(){
+                                    var img = document.getElementById("checkcodeImg");
+                                    img.src = "//pin.aliyun.com/get_img?sessionid=04778550aecf5d3aedcc528a276ad431&identity=sm-tmallsearch&type=number&r=" + Math.random();
+                                    }
+                                	-->
+                                </script>
+							</div>
+						                                                                        <script type="text/javascript">
+                                <!--
+                                var UA_Opt=new Object;
+                                UA_Opt.FormId="query";
+                                UA_Opt.MaxMCLog=6;
+                                UA_Opt.MaxMPLog=3;
+                                UA_Opt.MaxKSLog=3;
+                                UA_Opt.Token=new Date().getTime()+":" + Math.random();
+                                UA_Opt.SendMethod=1;
+                                UA_Opt.Flag=12430;
+                        		-->
+                            </script>
+                            <script type="text/javascript" src="//uaction.alicdn.com/js/ua.js"></script>
+                                                                <div class="submit">
+                        <input type="submit" value="确定"/>
+                    </div>
+				</form>
+			</td>
+		</tr>
+	</table>
+    <script src="https://core.cnzz.com/stats.js?s=29"></script>
+</div>
+</td>
+        </tr>
+        <tr>
+            <td><div align="center">
+                <p>
+                    <strong>网上贸易 尽在阿里巴巴： 
+      <a href="//www.alibaba.com">阿里巴巴国际站</a>
+      <b>|</b>
+      <a href="//www.1688.com">阿里巴巴中国站</a>
+      <b>|</b>
+      <a href="//www.taobao.com">淘宝网</a>
+      <b>|</b>
+      <a href="//www.tmall.com">天猫</a>
+      <b>|</b>
+      <a href="//ju.taobao.com">聚划算</a>
+      <b>|</b>
+      <a href="//www.etao.com">一淘</a>
+      <b>|</b>
+      <a href="//www.alimama.com">阿里妈妈</a>
+      <b>|</b>
+      <a href="//www.alipay.com">支付宝</a>
+                    </strong>
+                </p>
+                <p>
+                    Copyright &copy; 1999-2015 Alibaba.com Corporation and its licensors. All rights reserved.
+                </p>
+</div>
+</td>
+        </tr>
+    </table>
+</body>
+</html>
+		api_search_tmall_products: "api/servicebus/search_tmall_products",//天猫商品检索
+        api_search_taobao_products: "api/servicebus/search_taobao_products",//淘宝商品检索
+        api_search_jd_products: "api/servicebus/search_jd_products",//京东商品检索
+        api_search_pdd_products: "api/servicebus/search_pdd_products",//拼多多商品检索
+		api_search_guomei_products: "api/servicebus/search_guomei_products",//国美商品检索
+        api_search_suning_products: "api/servicebus/search_suning_products",//苏宁商品检索
+		api_search_dangdang_products: "api/servicebus/search_dangdang_products",//当当商品检索
+		
+		
+		api_search_etao_products: "api/servicebus/search_etao_products",//一淘商品检索
+        api_search_taoquan: "api/servicebus/search_taoquan",//淘宝天猫优惠券检索
+		
+        api_search_vip_products: "api/servicebus/search_vip_products",//唯品会商品检索--待定
+        api_search_yhd_products: "api/servicebus/search_yhd_products",//一号店商品检索--待定
+        api_search_mls_products: "api/servicebus/search_mls_products",//美丽说商品检索--不支持
+        api_search_mgj_products: "api/servicebus/search_mgj_products",//蘑菇街商品检索
+        api_search_zhe800_products: "api/servicebus/search_zhe800_products",//zhe800商品检索---废弃此平台
+     
+		
+前端数据绑定框架：MVVM
+angular.js
+vue.js ---推荐
+knockout.js
+way.js
+
+	
+libcef
+钉钉  桌面微信 饿了么商家版 有道字典桌面版 360浏览器 百度浏览器 金山浏览器
+
+
+京东的当前页面的半页的起始位置：25 <!--footer end--><script>
+seajs.use('product/search/1.0.7/js/main.js').config({alias:{'search_new':'./script/search_new.js?318.js'}}).use('search_new', function(s){
+	s.init(1,200,"79万+","0",1,0,25,1,0,2);
+});
+
+</script>
+
+SEARCH.page = function(F, C) {
+        F = parseInt(F, 10);
+        if (F < 1) {
+            F = 1
+        }
+        C && e();
+        var H, E = Math.min, B = this.enable_twice_loading ? 1 : 2, D = 30 * B, G = 4 * B, A = 2 * B;
+        if (F == 1) {
+            H = 1
+        } else {
+            if (F < this.current_page) {
+                H = this.prev_start - (this.current_page - F) * D + E(this.advware_count, (this.current_page - 1) * G) - E(this.advware_count, (F - 1) * G) + E(this.promotion_count, (this.current_page - 1) * A) - E(this.promotion_count, (F - 1) * A)
+            } else {
+                if (F == this.current_page) {
+                    H = this.prev_start
+                } else {
+                    H = this.next_start + (F - this.current_page - 1) * D - E(this.advware_count, (F - 1) * G) + E(this.advware_count, this.current_page * G) - E(this.promotion_count, (F - 1) * A) + E(this.promotion_count, this.current_page * A)
+                }
+            }
+        }
+        v(this.base_url + "&page=" + F + "&s=" + H + "&click=" + this.click);
+        searchlog(1, F, 0, 56)
+		
+s\.init\((.*?)\);
+
+
+SEARCH.init = function(H, J, G, D, I, B, E, C, F, A) {
+        B && this.get_diviner_ware(),
+        this.get_ware_info(),
+        this.page_html(H, J, G, I, E, C, F, A),
+        this.sort_html(D),
+        this.bind_events.init(),
+        this.sync_iframe_height(),
+        k()
+    }
+	
+***************
 
 查询指定的关键词后，会得到查询页面
 1 品牌
