@@ -27,7 +27,7 @@ namespace ShoppingPeeker.Utilities
 
         private static IConfiguration _hostingConfiguration;
         /// <summary>
-        /// 运行时host 配置
+        /// 运行时应用配置 host 配置
         /// </summary>
         public static IConfiguration HostingConfiguration
         {
@@ -39,6 +39,8 @@ namespace ShoppingPeeker.Utilities
 
         private static IConfiguration _appSettingsConfiguration;
         /// <summary>
+        /// 应用程序.net core 级别的配置
+        /// 应用配置请使用：HostingConfiguration
         /// 系统启动 appsetting配置 DI对象
         /// </summary>
         public static IConfiguration AppSettingsConfiguration
@@ -180,13 +182,13 @@ namespace ShoppingPeeker.Utilities
         //}
 
         /// <summary>
-        /// 得到AppSettings中的配置字符串信息
+        /// 数据库配置字符串信息
         /// </summary>
         /// <returns></returns>
         public static ConnectionStringSection GetConnectionStringSection()
         {
             var key = ConnectionStringSection.SectionName;
-            var section = AppSettingsConfiguration.GetSection(key);
+            var section = HostingConfiguration.GetSection(key);
             if (null == section)
             {
                 throw new Exception("GetConnectionStringSection failed,not set ConnectionStringSection. ");
@@ -198,13 +200,13 @@ namespace ShoppingPeeker.Utilities
         }
 
         /// <summary>
-        /// 得到AppSettings中的配置蜘蛛信息
+        /// 获取配置蜘蛛节点信息
         /// </summary>
         /// <returns></returns>
         public static ShoppingWebCrawlerSection GetShoppingWebCrawlerSection()
         {
             var key = ShoppingWebCrawlerSection.SectionName;
-            var section = AppSettingsConfiguration.GetSection(key);
+            var section = HostingConfiguration.GetSection(key);
             if (null == section)
             {
                 throw new Exception("GetShoppingWebCrawlerSection failed,not set ShoppingWebCrawlerSection. ");

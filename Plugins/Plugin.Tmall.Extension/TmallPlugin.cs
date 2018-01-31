@@ -18,7 +18,7 @@ using NTCPMessage.EntityPackage.Products;
 using NTCPMessage.EntityPackage.Arguments;
 using NTCPMessage.EntityPackage;
 using ShoppingPeeker.Plugins;
-
+using ShoppingPeeker.Plugins.NPinYin;
 
 namespace Plugin.Tmall.Extension
 {

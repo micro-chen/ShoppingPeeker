@@ -20,6 +20,7 @@ using NTCPMessage.EntityPackage;
 using ShoppingPeeker.Plugins;
 using NTCPMessage.Client;
 using NTCPMessage;
+using ShoppingPeeker.Plugins.NPinYin;
 
 namespace Plugin.Taobao.Extension
 {

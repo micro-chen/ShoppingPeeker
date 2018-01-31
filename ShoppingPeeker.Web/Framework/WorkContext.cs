@@ -33,16 +33,16 @@ namespace ShoppingPeeker.Web
             {
                 return;
             }
-            IConfiguration config = e.ResultOfChangedConfig;
-            //设置刷新站点名称
-            string siteName = config.GetConfig(Contanst.Config_Node_SiteName);
-            if (!string.IsNullOrEmpty(siteName))
-            {
-                SiteName = siteName;
-            }
-            //设置请求戳的过期验证时间
-            int signTimeOut = config.GetConfigInt(Contanst.Config_Node_SignTimeOut);
-            SignTimeOut = signTimeOut;
+            //IConfiguration config = e.ResultOfChangedConfig;
+            ////设置刷新站点名称
+            //string siteName = config.GetConfig(Contanst.Config_Node_SiteName);
+            //if (!string.IsNullOrEmpty(siteName))
+            //{
+            //    SiteName = siteName;
+            //}
+            ////设置请求戳的过期验证时间
+            //int signTimeOut = config.GetConfigInt(Contanst.Config_Node_SignTimeOut);
+            //SignTimeOut = signTimeOut;
         }
 
         #endregion
@@ -60,10 +60,7 @@ namespace ShoppingPeeker.Web
             get
             {
 
-                if (string.IsNullOrEmpty(_SiteName))
-                {
-                    _SiteName = ConfigHelper.HostingConfiguration.GetConfig(Contanst.Config_Node_SiteName);
-                }
+                _SiteName = ConfigHelper.HostingConfiguration.GetConfig(Contanst.Config_Node_SiteName);
                 if (string.IsNullOrEmpty(_SiteName))
                 {
                     _SiteName = Contanst.Default_Site_Domain_Name;
@@ -78,7 +75,7 @@ namespace ShoppingPeeker.Web
 
         }
 
-        private static int _signTimeOut = ConfigHelper.HostingConfiguration.GetConfigInt(Contanst.Config_Node_SignTimeOut);
+        private static int _signTimeOut;
         /// <summary>
         /// 请求标识的失效时间（秒）
         /// </summary>
@@ -86,6 +83,7 @@ namespace ShoppingPeeker.Web
         {
             get
             {
+                _signTimeOut = ConfigHelper.HostingConfiguration.GetConfigInt(Contanst.Config_Node_SignTimeOut);
                 if (_signTimeOut <= 0)
                 {
                     _signTimeOut = Contanst.Default_SignTimeOut;

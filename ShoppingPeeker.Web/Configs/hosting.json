@@ -4,5 +4,34 @@
     "siteName": "惠当搜",
     "signTimeOut": 20,
     "----是否开启抓取页面的缓存----": "",
-    "IsFetchPageCacheaAble": "false"
+    "IsFetchPageCacheaAble": "false",
+    "----数据库连接字符串----": "",
+    "ConnectionStringSection": {
+        "ConnectionString": "server=127.0.0.1;Initial Catalog=demodb;User Id=root;Password=admin888;Max Pool Size=30; Min Pool Size=5;",
+        "ProviderName": "Mysql"
+    },
+    "-----PC浏览器agent----": "",
+    "UserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36",
+    "-----移动端浏览器agent ipad mini----": "",
+    "MobileUserAgent": "Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1",
+    "-----是否输出日志---": "",
+    "IsOutPutLog": "true",
+    "AppName": "ShoppingPeeker.Web",
+    "-----蜘蛛集群设置---": "",
+    "ShoppingWebCrawler": {
+        "ConnectionStringCollection": [
+            {
+                "Name": "Crawler-Server1",
+                "Address": "127.0.0.1",
+                "Port": 10086,
+                "TimeOut": 30,
+                "PoolingMinSize": 5,
+                "PoolingMaxSize": 20
+            }
+        ]
+
+    },
+    "-----缓存设置---": "",
+    "CacheConfig": "Redis"
+
 }
