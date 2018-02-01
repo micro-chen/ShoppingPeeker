@@ -11,7 +11,7 @@ using NTCPMessage.EntityPackage;
 using System.Net;
 using System.Text;
 using ShoppingPeeker.Utilities;
-
+using NTCPMessage.EntityPackage.Arguments;
 
 /// <summary>
 /// 示范的 Web API 地址。
@@ -26,10 +26,19 @@ namespace ShoppingPeeker.Web.Controllers
     {
         // GET: api/values/get
         [HttpGet]
-        public IEnumerable<string> Get()
+        public BaseFetchWebPageArgument Get()
         {
-            return new string[] { "value1", "value2" };
+            var model =new BaseFetchWebPageArgument();
+            model.Platform = SupportPlatformEnum.Tmall;
+            model.AttachParas = new Dictionary<string, object>();
+            model.AttachParas.Add("key-1", 1);
+            model.Brands = new List<BrandTag>() { new BrandTag { BrandId = "", BrandName = "", CharIndex="", FilterField="", IconUrl="", Platform= SupportPlatformEnum.Tmall } };
+            model.TagGroup = new KeyWordTagGroup { Tags = new List<KeyWordTag> { new KeyWordTag { Platform = SupportPlatformEnum.Tmall, TagName = "", FilterFiled = "", GroupShowName = "", Value = "" } } };
+            model.OrderFiled = new OrderField { DisplayName = "", FieldValue = "",Rule= OrderRule.ASC };
+
+            return model;
         }
+
         [HttpGet]
         public string TestTcp()
         {

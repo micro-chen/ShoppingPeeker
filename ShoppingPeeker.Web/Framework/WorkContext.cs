@@ -60,7 +60,7 @@ namespace ShoppingPeeker.Web
             get
             {
 
-                _SiteName = ConfigHelper.HostingConfiguration.GetConfig(Contanst.Config_Node_SiteName);
+                _SiteName = ConfigHelper.AppSettingsConfiguration.GetConfig(Contanst.Config_Node_SiteName);
                 if (string.IsNullOrEmpty(_SiteName))
                 {
                     _SiteName = Contanst.Default_Site_Domain_Name;
@@ -83,7 +83,7 @@ namespace ShoppingPeeker.Web
         {
             get
             {
-                _signTimeOut = ConfigHelper.HostingConfiguration.GetConfigInt(Contanst.Config_Node_SignTimeOut);
+                _signTimeOut = ConfigHelper.AppSettingsConfiguration.GetConfigInt(Contanst.Config_Node_SignTimeOut);
                 if (_signTimeOut <= 0)
                 {
                     _signTimeOut = Contanst.Default_SignTimeOut;
@@ -102,7 +102,7 @@ namespace ShoppingPeeker.Web
         {
             get
             {
-                var isAble = ConfigHelper.HostingConfiguration.GetConfigBool(Contanst.Config_Node_IsFetchPageCacheaAble);
+                var isAble = ConfigHelper.AppSettingsConfiguration.GetConfigBool(Contanst.Config_Node_IsFetchPageCacheaAble);
                 return isAble;
             }
         }

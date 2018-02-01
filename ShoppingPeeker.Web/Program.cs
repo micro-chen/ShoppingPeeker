@@ -37,10 +37,15 @@ namespace ShoppingPeeker.Web
              */
 
             //获取配置   并注册配置的变更事件
-            var config = ConfigHelper.GetCustomConfiguration(Contanst.Global_Config_Hosting, args);
-            ConfigHelper.HostingConfiguration = config;
-            ConfigHelper.OnHostingConfigChangedEvent += WorkContext.ConfigHelper_OnHostingConfigChangedEvent;
+            //var config = ConfigHelper.GetCustomConfiguration(Contanst.Global_Config_Hosting, args);
+            //ConfigHelper.HostingConfiguration = config;
+            //ConfigHelper.OnHostingConfigChangedEvent += WorkContext.ConfigHelper_OnHostingConfigChangedEvent;
 
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json",false,true);
+
+            var config = builder.Build();
 
             var host = WebHost.CreateDefaultBuilder(args)
             .UseConfiguration(config)

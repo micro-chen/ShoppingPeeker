@@ -241,9 +241,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Configs\hosting.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Update="Configs\log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

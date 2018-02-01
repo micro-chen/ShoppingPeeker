@@ -31,22 +31,33 @@ namespace ShoppingPeeker.Utilities
         /// </summary>
         public static IConfiguration HostingConfiguration
         {
-            get => _hostingConfiguration;
-            set => _hostingConfiguration = value;
+            get
+            {
+                return _hostingConfiguration;
+            }
+            set
+            {
+                _hostingConfiguration = value;
+            }
         }
 
 
 
         private static IConfiguration _appSettingsConfiguration;
         /// <summary>
-        /// 应用程序.net core 级别的配置
-        /// 应用配置请使用：HostingConfiguration
+        /// 应用程序的配置
         /// 系统启动 appsetting配置 DI对象
         /// </summary>
         public static IConfiguration AppSettingsConfiguration
         {
-            get => _appSettingsConfiguration;
-            set => _appSettingsConfiguration = value;
+            get
+            {
+                return _appSettingsConfiguration;
+            }
+            set
+            {
+                _appSettingsConfiguration = value;
+            }
         }
 
 
@@ -142,7 +153,7 @@ namespace ShoppingPeeker.Utilities
                         MonitorConfingSnapshot.Set(snapshotKey, value, dependency, handler);
 
                         //通知订阅的事件触发
-                        if (configRoot == HostingConfiguration && null != OnHostingConfigChangedEvent)
+                        if (configRoot == AppSettingsConfiguration && null != OnHostingConfigChangedEvent)
                         {
                             OnHostingConfigChangedEvent.Invoke("ConfigHelper", new ConfigChangedEventArgs { ResultOfChangedConfig = configRoot });
                         }
@@ -188,7 +199,7 @@ namespace ShoppingPeeker.Utilities
         public static ConnectionStringSection GetConnectionStringSection()
         {
             var key = ConnectionStringSection.SectionName;
-            var section = HostingConfiguration.GetSection(key);
+            var section = AppSettingsConfiguration.GetSection(key);
             if (null == section)
             {
                 throw new Exception("GetConnectionStringSection failed,not set ConnectionStringSection. ");
@@ -206,7 +217,7 @@ namespace ShoppingPeeker.Utilities
         public static ShoppingWebCrawlerSection GetShoppingWebCrawlerSection()
         {
             var key = ShoppingWebCrawlerSection.SectionName;
-            var section = HostingConfiguration.GetSection(key);
+            var section = AppSettingsConfiguration.GetSection(key);
             if (null == section)
             {
                 throw new Exception("GetShoppingWebCrawlerSection failed,not set ShoppingWebCrawlerSection. ");

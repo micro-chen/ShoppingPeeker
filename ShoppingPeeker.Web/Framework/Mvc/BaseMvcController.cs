@@ -51,9 +51,9 @@ namespace ShoppingPeeker.Web.Mvc
                 string encodedSign = LZString.Compress(cookieWebbrowserSign, true);
                 //将加密后的cookie  写入到响应客户端 
                 string domain = null;
-                string webStatus = ConfigHelper.AppSettingsConfiguration.GetConfig("WebStatus");
+                //string webStatus = ConfigHelper.AppSettingsConfiguration.GetConfig("WebStatus");
                 //判断是否为正式环境
-                if (!string.IsNullOrEmpty(webStatus) && webStatus.Equals(EnvironmentName.Production.ToString()))
+                if (WorkContext.HostingEnvironment.IsProduction())
                 {
                     //正式环境cookie 过期为1天
                     domain = Contanst.Global_Site_Domain_Cookie;

@@ -81,16 +81,17 @@ namespace ShoppingPeeker.Web
             NativeIocContainer.ServiceProvider = svp;
 			WorkContext.HostingEnvironment = env;
 
-			#region 判断是否是线上
 
-			env.EnvironmentName = EnvironmentName.Development;
-			string webStatus = ConfigHelper.AppSettingsConfiguration.GetConfig("WebStatus");
-			if (!string.IsNullOrEmpty(webStatus) && webStatus.Equals(EnvironmentName.Production.ToString()))
-			{
-				env.EnvironmentName = EnvironmentName.Production;
-			}
+            //#region 判断是否是线上
+            //Environment.GetEnvironmentVariable("");--获取配置的环境变量
+			//env.EnvironmentName = EnvironmentName.Development;
+			//var webStatus = ConfigHelper.AppSettingsConfiguration.GetConfig("WebStatus");
+			//if (!string.IsNullOrEmpty(webStatus) && webStatus.Equals(EnvironmentName.Production.ToString()))
+			//{
+			//	env.EnvironmentName = EnvironmentName.Production;
+			//}
 
-			#endregion
+			//#endregion
 			var logger = loggerFactory as LoggerFactory;
             Logger.LogFactory = loggerFactory;
             PluginContext.Logger.LogFactory = loggerFactory;

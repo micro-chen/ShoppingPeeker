@@ -53,7 +53,7 @@ namespace ShoppingPeeker.Utilities.Logging
         {
             get
             {
-                var configValue = ConfigHelper.HostingConfiguration.GetConfigBool("IsOutPutLog");// ConfigHelper.GetConfigBool(ConfigHelper.HostingConfiguration,"IsOutPutLog");
+                var configValue = ConfigHelper.AppSettingsConfiguration.GetConfigBool("IsOutPutLog");// ConfigHelper.GetConfigBool(ConfigHelper.HostingConfiguration,"IsOutPutLog");
                 return configValue;
             }
         }

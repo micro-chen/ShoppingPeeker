@@ -6,28 +6,29 @@
 
 
 
-    <div  id="page-content" class="page-wrap skin-page-wrap">
-        <div id="main">
-            <section id="bd_logo">
-                <a href="javascript:;" class="skin-logo pngfix" data-linkid="logo" style="cursor:default" title="" data-title="" data-style="cursor:default" data-href="javascript:;" target="_blank"></a>
-            </section>
-            <section id="bd_search">
+<div id="page-content" class="page-wrap skin-page-wrap">
+    <div id="main">
+        <section id="bd_logo">
+            <a href="javascript:;" class="skin-logo pngfix" data-linkid="logo" style="cursor:default" title="" data-title="" data-style="cursor:default" data-href="javascript:;" target="_blank"></a>
+        </section>
+        <section id="bd_search">
 
-                    <fieldset id="input-container">
-                        <div id="suggest-align" class="skin-search-input hover">
-                            <input id="txt_search_keyword" type="text" class="placeholder input-search-keyword" suggestWidth="528px" autocomplete="off" placeholder="输入要搜索的商品名称关键词, 如: 宝宝奶粉、补水面膜">
-                        </div>
-                        <input  id="btn_search"  type="button"class="skin-search-button search-button" value="搜一下">
-                    </fieldset>
-            </section>
-        </div>
-
+            <fieldset id="input-container">
+                <div id="suggest-align" class="skin-search-input hover">
+                    <input id="txt_search_keyword" type="text" class="placeholder input-search-keyword" suggestWidth="528px" autocomplete="off" placeholder="输入要搜索的商品名称关键词, 如: 宝宝奶粉、补水面膜">
+                </div>
+                <input id="btn_search" type="button" class="skin-search-button search-button" value="搜一下">
+            </fieldset>
+        </section>
     </div>
 
-@*引入当前页面需要的js 支持 通过动态写入js脚本标记 实现版本控制*@
+</div>
 
-<script type="text/javascript">
-    
+
+@*引入当前页面需要的js 支持 通过动态写入js脚本标记 实现版本控制*@
+@section Scripts {
+
+    <script type="text/javascript">
     document.write("<script src='/js/Home/HomePage.js?v=" + js_lib_version + "'><\/script>");
     $(function() {
         /*when page is loaded,set server data to page js*/
@@ -35,6 +36,6 @@
         if (ShoppingPeeker && ShoppingPeeker.HomePage) {
             ShoppingPeeker.HomePage.init(initData);
         }
-
     })
-</script>
+    </script>
+}

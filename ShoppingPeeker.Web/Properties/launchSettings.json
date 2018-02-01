@@ -18,10 +18,10 @@
     "ShoppingPeeker.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:8002/"
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+      "applicationUrl": "http://*:8002/"
     }
   }
 }

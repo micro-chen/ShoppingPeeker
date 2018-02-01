@@ -83,10 +83,24 @@ namespace ShoppingPeeker.Utilities.Caching
         {
             try
             {
+                string redisHost = string.Empty;
+                string redisPort = string.Empty;
+                string redisPassword = string.Empty;
 
-                string redisHost = ConfigHelper.HostingConfiguration.GetConfig("redisHost");
-                string redisPort = ConfigHelper.HostingConfiguration.GetConfig("redisPort");
-                string redisPassword = ConfigHelper.HostingConfiguration.GetConfig("redisPwd");
+                var redisConfig = RedisConfig.LoadConfig();
+                if (null!=redisConfig)
+                {
+                    redisHost = redisConfig.IpAddress;
+                    redisPort = redisConfig.Port.ToString();
+                    redisPassword = redisConfig.Pwd;
+                }
+                else
+                {
+                    redisHost = ConfigHelper.AppSettingsConfiguration.GetConfig("redisHost");
+                    redisPort = ConfigHelper.AppSettingsConfiguration.GetConfig("redisPort");
+                    redisPassword = ConfigHelper.AppSettingsConfiguration.GetConfig("redisPwd");
+                }
+              
                 return GetConnectionString(redisHost, redisPort, redisPassword);
             }
             catch (Exception ex)
@@ -96,6 +110,10 @@ namespace ShoppingPeeker.Utilities.Caching
         }
         public static string GetConnectionString(string redisHost, string redisPort, string redisPassword)
         {
+            if (string.IsNullOrEmpty(redisHost))
+            {
+                throw new Exception("未指定redis 主机！");
+            }
             string RedisConnectionString = string.Format("{0}:{1},password={2}", redisHost, redisPort, redisPassword);
             return RedisConnectionString;
 

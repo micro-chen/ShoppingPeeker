@@ -20,9 +20,7 @@
     @*在头部将需要的样式 和全局js 引入过来*@
     <link rel="stylesheet" href="~/css/site.css" />
 
-    @*将需要的js 插件 lib 引入到模板全局*@
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/js/global.js"></script>
+
 </head>
 <body class="">
 
@@ -34,6 +32,12 @@
             ©2017 huidangso.com&nbsp;&nbsp;@WorkContext.SiteName-电商商品优惠搜索服务&nbsp;&nbsp;京ICP备8888888号
     </footer>
 
+
+
+    @*将需要的js 插件 lib 引入到模板全局*@
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/global.js"></script>
+    @*加载业务页面需要的js代码段*@
     @RenderSection("Scripts", required: false)
 </body>
 </html>

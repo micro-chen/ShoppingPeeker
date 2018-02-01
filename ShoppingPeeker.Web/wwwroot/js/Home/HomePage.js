@@ -58,7 +58,6 @@ $(function () {
                 params: { "key": this.txt_search_keyword.val(), "sign": ShoppingPeeker.apiSignFunc() },
                 formatResult: function (suggestion, currentValue, idx) {
 
-                   
                     console.log(idx);
                     var backColor = "";
                     //色彩差异
@@ -113,6 +112,7 @@ $(function () {
             if (isNullOrEmpty(keyWord)) {
                 var warnInfo = homePage.txt_search_keyword.attr("placeholder");
                 MessageBox.toast(warnInfo);
+                return;
             }
 
             //向api发送商品搜索
@@ -120,14 +120,10 @@ $(function () {
             //homePage.handler_api_search_taobao_products();
             //homePage.handler_api_search_jd_products();
             //homePage.handler_api_search_pdd_products();
-            //homePage.handler_api_search_vip_products();
             //homePage.handler_api_search_guomei_products();
             //homePage.handler_api_search_suning_products();
-            //homePage.handler_api_search_yhd_products();
-            //homePage.handler_api_search_mls_products();
-            //homePage.handler_api_search_mgj_products();
             //homePage.handler_api_search_dangdang_products();
-            //homePage.handler_api_search_etao_products();
+
         },
 
         //天猫商品检索

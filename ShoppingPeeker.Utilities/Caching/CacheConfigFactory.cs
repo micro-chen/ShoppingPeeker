@@ -48,7 +48,7 @@ namespace ShoppingPeeker.Utilities.Caching
 
             var managerType = CacheManagerType.Default;
 
-            var config = ConfigHelper.HostingConfiguration.GetConfig(ConfigNodeName);
+            var config = ConfigHelper.AppSettingsConfiguration.GetConfig(ConfigNodeName);
             if (!string.IsNullOrEmpty(config))
             {
                 try

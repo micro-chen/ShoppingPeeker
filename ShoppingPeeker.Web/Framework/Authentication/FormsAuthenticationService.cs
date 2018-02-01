@@ -41,7 +41,7 @@ namespace ShoppingPeeker.Web.Authentication
         public FormsAuthenticationService()
         {
             //初始化  登录超时设置
-            var authConfig = ConfigHelper.HostingConfiguration.GetConfig("AuthTimeout");// FormsAuthentication.Timeout;
+            var authConfig = ConfigHelper.AppSettingsConfiguration.GetConfig("AuthTimeout");// FormsAuthentication.Timeout;
             if (!authConfig.IsNullOrEmpty())
             {
                 double tim;

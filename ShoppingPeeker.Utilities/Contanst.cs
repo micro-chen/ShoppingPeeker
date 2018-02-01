@@ -23,10 +23,10 @@ namespace ShoppingPeeker.Utilities
         /// </summary>
         public const string Global_Site_Domain_Cookie= ".huidangso";
 
-        /// <summary>
-        /// 承载配置文件
-        /// </summary>
-        public const string Global_Config_Hosting = "hosting.json";
+        ///// <summary>
+        ///// 承载配置文件
+        ///// </summary>
+        //public const string Global_Config_Hosting = "hosting.json";
 
         /// <summary>
         /// 默认站点名称
