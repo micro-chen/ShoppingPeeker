@@ -3,6 +3,7 @@
 /// <reference path="../Extension/applicationCore.js" />
 /// <reference path="../Extension/httpClient.js" />
 /// <reference path="../Extension/autocomplete/autocomplete.js" />
+/// <reference path="../appobjects.js" />
 
 /*bind to home page
 注意：使用基于闭包的形式，防止 全局变量导致的变量冲突和引用问题
@@ -57,8 +58,31 @@ $(function () {
                 paramName: "key",
                 params: { "key": this.txt_search_keyword.val(), "sign": ShoppingPeeker.apiSignFunc() },
                 formatResult: function (suggestion, currentValue, idx) {
+                  
+                    
+                    var processorStrong = function () {
+                        // Do not replace anything if the current value is empty
+                        if (!currentValue) {
+                            return suggestion.value;
+                        }
+                        if (suggestion.value.indexOf(currentValue) < 0) {
+                            return suggestion.value;
+                        }
 
-                    console.log(idx);
+                        var pattern = '(' + $.Autocomplete.utils.escapeRegExChars(currentValue) + ')';
+
+                        var fullText = '<strong>' + suggestion.value + '<\/strong>';
+                        return fullText
+                            .replace(new RegExp(pattern, 'gi'), '<\/strong>$1<strong>');
+                            //.replace(/&/g, '&amp;')
+                            //.replace(/</g, '&lt;')
+                            //.replace(/>/g, '&gt;')
+                            //.replace(/"/g, '&quot;')
+                            //.replace(/&lt;(\/?strong)&gt;/g, '<$1>');
+
+                    }
+                    var displayText = processorStrong();
+                    //console.log(idx);
                     var backColor = "";
                     //色彩差异
                     if (idx == 0) {
@@ -69,15 +93,16 @@ $(function () {
                         backColor = "#a1d958";
                     }
                     if (backColor!="") {
-                        return "<em class='hot' style='background-color:{2};'>{0}</em> <span class=''>{1}</span>".format(idx + 1, suggestion.value, backColor);
+                        return "<em class='hot' style='background-color:{2};'>{0}</em> <span class=''>{1}</span>".format(idx + 1, displayText, backColor);
                     }
-                    return "<em class='hot'>{0}</em> <span class=''>{1}</span>".format(idx + 1, suggestion.value);
+                    return "<em class='hot'>{0}</em> <span class=''>{1}</span>".format(idx + 1, displayText);
                  
                 },
                 onSelect: function (suggestion) {
                     console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
                     if (!isNullOrEmpty(suggestion.value)) {
-                        homePage.txt_search_keyword.val(suggestion.value)
+                        homePage.txt_search_keyword.val(suggestion.value);
+                        homePage.btn_search.click();
                     }
 
                 }
@@ -116,20 +141,28 @@ $(function () {
             }
 
             //向api发送商品搜索
-            homePage.handler_api_search_tmall_products();
-            //homePage.handler_api_search_taobao_products();
-            //homePage.handler_api_search_jd_products();
-            //homePage.handler_api_search_pdd_products();
-            //homePage.handler_api_search_guomei_products();
-            //homePage.handler_api_search_suning_products();
-            //homePage.handler_api_search_dangdang_products();
+            var paras = new BaseFetchWebPageArgument();
+            paras.KeyWord = keyWord;
+
+            homePage.handler_api_search_tmall_products(paras);
+            //homePage.handler_api_search_taobao_products(paras);
+            //homePage.handler_api_search_jd_products(paras);
+            //homePage.handler_api_search_pdd_products(paras);
+            //homePage.handler_api_search_guomei_products(paras);
+            //homePage.handler_api_search_suning_products(paras);
+            //homePage.handler_api_search_dangdang_products(paras);
 
         },
 
         //天猫商品检索
-        handler_api_search_tmall_products: function () {
+        handler_api_search_tmall_products: function (paras) {
             var queryAddress = homePage.api_search_tmall_products;
-            var paras = {};
+            if (isNullOrUndefined(paras)) {
+                throw new Error("天猫参数不正确！");
+                return;
+            }
+            paras.Platform = SupportPlatformEnum.Tmall;
+            //1 天猫的区域显示加载图标
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_tmall_products);
         },
         //淘宝商品检索
@@ -161,12 +194,12 @@ $(function () {
             var paras = {};
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_suning_products);
         },
-        //唯品会商品检索
-        handler_api_search_vip_products: function () {
-            var queryAddress = homePage.api_search_vip_products;
-            var paras = {};
-            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_vip_products);
-        },
+        ////唯品会商品检索
+        //handler_api_search_vip_products: function () {
+        //    var queryAddress = homePage.api_search_vip_products;
+        //    var paras = {};
+        //    httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_vip_products);
+        //},
         //当当商品检索
         handler_api_search_dangdang_products: function () {
             var queryAddress = homePage.api_search_dangdang_products;
@@ -174,31 +207,7 @@ $(function () {
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_dangdang_products);
         },
 
-        //一号店商品检索
-        handler_api_search_yhd_products: function () {
-            var queryAddress = homePage.api_search_yhd_products;
-            var paras = {};
-            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_yhd_products);
-        },
-        ////美丽说商品检索
-        //handler_api_search_mls_products: function () {
-        //    var queryAddress = homePage.api_search_mls_products;
-        //    var paras = {};
-        //    httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_mls_products);
-        //},
-        //蘑菇街商品检索
-        handler_api_search_mgj_products: function () {
-            var queryAddress = homePage.api_search_mgj_products;
-            var paras = {};
-            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_mgj_products);
-        },
-     
-        //一淘商品检索
-        handler_api_search_etao_products: function () {
-            var queryAddress = homePage.api_search_etao_products;
-            var paras = {};
-            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_etao_products);
-        },
+
 
         //淘宝天猫优惠券检索
         handler_api_search_taoquan: function () {
@@ -208,7 +217,7 @@ $(function () {
         },  
 
 
-        callBackHandler_api_search_tmall_products: function (data) {
+        callBackHandler_api_search_tmall_products: function (data,callBackParas) {
             console.log('callBackHandler_api_search_tmall_products');
         },
         callBackHandler_api_search_taobao_products: function (data) {

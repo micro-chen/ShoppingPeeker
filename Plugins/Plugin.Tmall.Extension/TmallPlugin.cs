@@ -162,6 +162,11 @@ namespace Plugin.Tmall.Extension
 
             var resultBag = new Dictionary<string, object>();
 
+            if (!string.IsNullOrEmpty(content)&&content.Contains("member/login"))
+            {
+                PluginContext.Logger.Error("天猫查询结果页面被强制跳转到了登录页！");
+                return resultBag;
+            }
 
             try
             {
@@ -382,12 +387,12 @@ namespace Plugin.Tmall.Extension
                 modelProduct.ItemId = _ItemId;
 
                 //title
-                var titleDom = productDom.QuerySelector("p.productTitle>a");
+                var titleDom = productDom.QuerySelector(".productTitle>a");
                 modelProduct.Title = titleDom.TextContent.Replace("\n", "");
                 modelProduct.ItemUrl = titleDom.GetAttribute("href").GetHttpsUrl();
 
                 //price
-                var priceDom = productDom.QuerySelector("p.productPrice>em");
+                var priceDom = productDom.QuerySelector(".productPrice>em");
                 if (null != priceDom)
                 {
                     decimal.TryParse(priceDom.GetAttribute("title"), out decimal _price);
@@ -447,7 +452,7 @@ namespace Plugin.Tmall.Extension
 
                     //评论量
                     var remarkDomSpan = statusDom.Children[1];
-                    if (null != remarkDomSpan)
+                    if (null != remarkDomSpan&&remarkDomSpan.OuterHtml.Contains("评价"))
                     {
                         string remarkTotal = remarkDomSpan.Children[0].TextContent;
                         if (!string.IsNullOrEmpty(remarkTotal))

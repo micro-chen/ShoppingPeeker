@@ -1214,13 +1214,13 @@ if (!window.MessageBox) {
     MessageBox = {
 
         /*显示右边箭头的消息提示*/
-        "tips": function (whereSelector, msg) {
+        tips: function (whereSelector, msg) {
             layer.tips(msg, whereSelector, {
                 tips: [2, '#3595CC'],
                 time: 4000
             });
         },
-        "toast": function (msg, onCloseHandler) {
+        toast: function (msg, onCloseHandler) {
             //信息框-例2
             var showTime = 2000;
             var timer = new Timer(showTime);
@@ -1237,19 +1237,23 @@ if (!window.MessageBox) {
 
         },
         /*显示加载圈圈*/
-        "loading": function (config) {
-            var options = { shade: 0.3 }
-            if (config.icon == undefined) {
-                config.icon = 2;
+        loading: function (config) {
+            var options = { shade: 0.3, icon :2}
+            if (!isNullOrUndefined(config)) {
+              
+                if (!isNullOrUndefined(config.icon)) {
+                    options.icon = config.icon;
+                }
+                if (!isNullOrUndefined(config.time)) {
+                    options.time = config.time;
+                }
             }
-            if (config.time != undefined) {
-                options.time = config.time;
-            }
-            var index = layer.load(config.icon, options);
+          
+            var index = layer.load(options.icon, options);
             return index;
         },
         /*显示html 内容*/
-        "html": function (config) {
+        html: function (config) {
             if (config.area == undefined) {
                 config.area = ['500px', '300px'];
             }
@@ -1276,11 +1280,11 @@ if (!window.MessageBox) {
         },
 
         /*仅仅显示提示信息*/
-        "show": function (title, content) {
+        show: function (title, content) {
             layer.open({ title: msg, content: content })
         },
         /*弹出确认框*/
-        "confirm": function (msg, confirmHandler, cancelHandler) {
+        confirm: function (msg, confirmHandler, cancelHandler) {
             //询问框
             layer.confirm(msg, { icon: 3, title: '提示信息',btn: ['取消', '确定']  },
                 function () {
@@ -1295,13 +1299,13 @@ if (!window.MessageBox) {
  
         },
         /*弹出成功提示框*/
-        "success": function (msg, okHandler) {
+        success: function (msg, okHandler) {
 
             this.toast(msg, okHandler);
 
         },
         /*弹出错误提示*/
-        "error": function (msg, okHandler) {
+        error: function (msg, okHandler) {
             if (isNullOrEmpty(msg)) {
                 msg = "";
             }
