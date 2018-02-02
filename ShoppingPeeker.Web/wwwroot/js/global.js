@@ -10,7 +10,8 @@ document.write("<script src='/js/appObjects.js?v=" + js_lib_version + "'><\/scri
 document.write("<script src='/js/Extension/applicationCore.js?v=" + js_lib_version+"'><\/script>");
 document.write("<script src='/js/Extension/httpClient.js?v=" + js_lib_version +"'><\/script>");
 document.write("<script src='/js/Extension/compress/zlib-string.js?v=" + js_lib_version +"'><\/script>");
-document.write("<script src='/js/Extension/compress/base64-string.js?v=" + js_lib_version +"'><\/script>");
+document.write("<script src='/js/Extension/compress/base64-string.js?v=" + js_lib_version + "'><\/script>");
+document.write("<script src='/css/layui/layui.js?v=" + js_lib_version + "'><\/script>");
 document.write("<script src='/js/Extension/layer/layer.js?v=" + js_lib_version +"'><\/script>");
 document.write("<script src='/js/Extension/autocomplete/autocomplete.js?v=" + js_lib_version +"'><\/script>");
 

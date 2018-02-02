@@ -306,7 +306,7 @@ namespace ShoppingPeeker.Web
         /// </summary>
         /// <param name="webArgs"></param>
         /// <param name="reultModel"></param>
-        /// <param name="timeOut">默认为30秒</param>
+        /// <param name="timeOut(秒)">默认为30秒</param>
         public static void SetFetchPageResultFromCache(BaseFetchWebPageArgument webArgs, SearchProductViewModel reultModel, int timeOut = 30)
         {
             var key = webArgs.CacheKey;

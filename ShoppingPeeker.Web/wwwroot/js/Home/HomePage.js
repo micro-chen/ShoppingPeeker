@@ -16,6 +16,7 @@ $(function () {
         /*page controls begin*/
         //btn_save: $("#btn_save"),//保存按钮
         txt_search_keyword: $('#txt_search_keyword'),//搜索输入框
+        btn_search_clear: $('i.search-clear'),//搜索内容清空按钮
         btn_search: $('#btn_search'),//搜索按钮
         /*page controls end*/
 
@@ -110,20 +111,38 @@ $(function () {
 
             /*搜索输入框的回车事件*/
             this.txt_search_keyword.keyup(homePage.searchKeywordKeyupHandler);
+            /*清除内容按钮*/
+            this.btn_search_clear.mouseover(function () {
+                var sender = $(this);
+                sender.addClass("search-clear-highlight");
+            }).mouseout(function () {
+                var sender = $(this);
+                sender.removeClass("search-clear-highlight");
+                }).click(function () {
+                    var sender = $(this);
+                    homePage.txt_search_keyword.val("");
+                    sender.hide();
+                });
+
             /*搜索按钮点击事件*/
             this.btn_search.click(homePage.btnSearchHandler);
 
 
         },
-        /*save handler
-        saveDetails: function () {
-            console.log("has save");
-        },*/
+
         /*输入关键词的按键事件*/
         searchKeywordKeyupHandler: function (event) {
             var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
             if (keyCode == 13) {
+                homePage.btn_search.blur();
                 homePage.btnSearchHandler();
+            }
+            //如果内容不为空 显示清空按钮
+            var keyWord = homePage.txt_search_keyword.val();
+            if (isNullOrEmpty(keyWord)) {
+                homePage.btn_search_clear.hide();
+            } else {
+                homePage.btn_search_clear.show();
             }
         },
 
@@ -216,9 +235,10 @@ $(function () {
             httpClient.post(api_search_taoquan, paras, homePage.callBackHandler_api_search_taoquan);
         },  
 
-
+        /*处理接收天猫的数据*/
         callBackHandler_api_search_tmall_products: function (data,callBackParas) {
             console.log('callBackHandler_api_search_tmall_products');
+         
         },
         callBackHandler_api_search_taobao_products: function (data) {
             console.log('callBackHandler_api_search_taobao_products');

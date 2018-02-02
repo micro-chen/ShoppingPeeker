@@ -121,9 +121,12 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                 Logger.Error(ex);
             }
 
-            if (true == WorkContext.IsFetchPageCacheaAble)
+            //如果开启缓存页面结果
+            if (true == WorkContext.IsFetchPageCacheaAble
+                &&null!=dataModel
+                &&dataModel.Products.IsNotEmpty())
             {
-                WorkContext.SetFetchPageResultFromCache(webArgs, dataModel);
+                WorkContext.SetFetchPageResultFromCache(webArgs, dataModel,60*5);
             }
             return dataModel;
         }

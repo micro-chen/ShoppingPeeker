@@ -162,11 +162,21 @@ namespace Plugin.Tmall.Extension
 
             var resultBag = new Dictionary<string, object>();
 
-            if (!string.IsNullOrEmpty(content)&&content.Contains("member/login"))
+            if (!string.IsNullOrEmpty(content))
             {
-                PluginContext.Logger.Error("天猫查询结果页面被强制跳转到了登录页！");
-                return resultBag;
+                if (content.Contains("环境有异常"))
+                {
+                    PluginContext.Logger.Error("天猫查询被进行蜘蛛验证！关键词："+webArgs.KeyWord);
+                    return resultBag;
+                }
+                if (content.Contains("member/login"))
+                {
+                    PluginContext.Logger.Error("天猫查询结果页面被强制跳转到了登录页！关键词：" + webArgs.KeyWord);
+                    return resultBag;
+                }
+                
             }
+
 
             try
             {
@@ -175,12 +185,11 @@ namespace Plugin.Tmall.Extension
                 //创建html 文档对象
                 HtmlParser htmlParser = new HtmlParser();
                 var htmlDoc = htmlParser.Parse(content);
+                var div_AttrsDom = htmlDoc.QuerySelector("div.j_NavAttrs");
 
-                if (webArgs.IsNeedResolveHeaderTags == true)
+                if (webArgs.IsNeedResolveHeaderTags == true&&null!=div_AttrsDom)
                 {
 
-
-                    var div_AttrsDom = htmlDoc.QuerySelector("div.j_NavAttrs");
                     var ulDomArray = div_AttrsDom.QuerySelectorAll("div.attrValues>ul");
                     #region 品牌解析
                     var lstBrands = new List<BrandTag>();

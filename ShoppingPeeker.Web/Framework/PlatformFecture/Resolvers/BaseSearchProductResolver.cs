@@ -116,7 +116,11 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
 
             }
 
-            dataModel.Products = resultBag["Products"] as ProductBaseCollection;
+            if (resultBag.ContainsKey("Products"))
+            {
+                dataModel.Products = resultBag["Products"] as ProductBaseCollection;
+            }
+               
             return dataModel;
         }
 
