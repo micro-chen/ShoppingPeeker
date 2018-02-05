@@ -21,6 +21,22 @@
 ------------游戏娱乐--------
 撒币...........
 
+dnnode.com
+47.95.252.246
+
+nginx的配置文件在 /home/server-config/nginx/include  下的 。
+print.hw801.com
+刚才的那个地址。。 
+账号是 wanghengzhi 
+密码  Wanghengzhi123  xshell 登录。。
+
+chenwenguang  密码是 Chenwenguang  
+切成root的时候，也是 sudo su - 
+配置文件都在 /home/server_config 中。。
+其他的你自己玩就行 。。安装soft的时候，要用yum
+
+
+
 
 淘鹊桥
 http://quan.meiquan8.com/
