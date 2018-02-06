@@ -45,7 +45,7 @@ namespace ShoppingPeeker.Utilities
         /// <summary>
         /// 抓取页面是否开启结果缓存
         /// </summary>
-        public const string Config_Node_IsFetchPageCacheaAble = "IsFetchPageCacheaAble";
+        public const string Config_Node_IsFetchPageCacheaAble = "IsFetchPageCacheAble";
 
         /// <summary>
         /// 默认请求过期标识

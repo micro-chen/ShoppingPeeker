@@ -22,6 +22,8 @@
 撒币...........
 
 dnnode.com
+开源地址：https://github.com/micro-chen/WebPrinter
+
 47.95.252.246
 
 nginx的配置文件在 /home/server-config/nginx/include  下的 。

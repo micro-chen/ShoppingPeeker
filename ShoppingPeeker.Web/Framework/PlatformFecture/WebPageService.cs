@@ -126,7 +126,12 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                 &&null!=dataModel
                 &&dataModel.Products.IsNotEmpty())
             {
-                WorkContext.SetFetchPageResultFromCache(webArgs, dataModel,60*5);
+                int cacheTime = ConfigHelper.AppSettingsConfiguration.GetConfigInt("IsFetchPageCacheaAble");
+                if (cacheTime<=0)
+                {
+                    cacheTime = 60;//默认缓存页面结果60秒
+                }
+                WorkContext.SetFetchPageResultFromCache(webArgs, dataModel, cacheTime);
             }
             return dataModel;
         }
