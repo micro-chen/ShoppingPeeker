@@ -23,6 +23,7 @@
 
 dnnode.com
 开源地址：https://github.com/micro-chen/WebPrinter
+关键词分布：http://tool.chinaz.com/keywordsarea/
 
 47.95.252.246
 
@@ -50,6 +51,9 @@ http://www.taokezhushou.com/
 1 品牌
 2 高级选项，我们对这些高级选项进行合并匹配，能匹配的，合并到一个组，不能合并的，成为单一的tag组
 3 排序
+
+Dapper 的示范：
+https://www.codeproject.com/Articles/889668/SQL-Server-Dapper
 
 
 天猫空白页
