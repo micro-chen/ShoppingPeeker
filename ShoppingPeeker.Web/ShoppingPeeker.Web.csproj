@@ -17,31 +17,32 @@
   <ItemGroup>
     <PackageReference Include="anglesharp" Version="0.9.9" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.4.0" />
   </ItemGroup>
 
 
   <ItemGroup>
     <None Include="wwwroot\css\ionicons-2.0.1\fonts\ionicons.svg" />
-    <None Include="wwwroot\css\layui\font\iconfont.svg" />
-    <None Include="wwwroot\css\layui\layui.all.js" />
-    <None Include="wwwroot\css\layui\layui.js" />
-    <None Include="wwwroot\css\layui\lay\modules\carousel.js" />
-    <None Include="wwwroot\css\layui\lay\modules\code.js" />
-    <None Include="wwwroot\css\layui\lay\modules\element.js" />
-    <None Include="wwwroot\css\layui\lay\modules\flow.js" />
-    <None Include="wwwroot\css\layui\lay\modules\form.js" />
-    <None Include="wwwroot\css\layui\lay\modules\jquery.js" />
-    <None Include="wwwroot\css\layui\lay\modules\laydate.js" />
-    <None Include="wwwroot\css\layui\lay\modules\layedit.js" />
-    <None Include="wwwroot\css\layui\lay\modules\layer.js" />
-    <None Include="wwwroot\css\layui\lay\modules\laypage.js" />
-    <None Include="wwwroot\css\layui\lay\modules\laytpl.js" />
-    <None Include="wwwroot\css\layui\lay\modules\mobile.js" />
-    <None Include="wwwroot\css\layui\lay\modules\table.js" />
-    <None Include="wwwroot\css\layui\lay\modules\tree.js" />
-    <None Include="wwwroot\css\layui\lay\modules\upload.js" />
-    <None Include="wwwroot\css\layui\lay\modules\util.js" />
+    <None Include="wwwroot\js\layui\font\iconfont.svg" />
+    <None Include="wwwroot\js\layui\layui.all.js" />
+    <None Include="wwwroot\js\layui\layui.js" />
+    <None Include="wwwroot\js\layui\lay\modules\carousel.js" />
+    <None Include="wwwroot\js\layui\lay\modules\code.js" />
+    <None Include="wwwroot\js\layui\lay\modules\element.js" />
+    <None Include="wwwroot\js\layui\lay\modules\flow.js" />
+    <None Include="wwwroot\js\layui\lay\modules\form.js" />
+    <None Include="wwwroot\js\layui\lay\modules\jquery.js" />
+    <None Include="wwwroot\js\layui\lay\modules\laydate.js" />
+    <None Include="wwwroot\js\layui\lay\modules\layedit.js" />
+    <None Include="wwwroot\js\layui\lay\modules\layer.js" />
+    <None Include="wwwroot\js\layui\lay\modules\laypage.js" />
+    <None Include="wwwroot\js\layui\lay\modules\laytpl.js" />
+    <None Include="wwwroot\js\layui\lay\modules\mobile.js" />
+    <None Include="wwwroot\js\layui\lay\modules\table.js" />
+    <None Include="wwwroot\js\layui\lay\modules\tree.js" />
+    <None Include="wwwroot\js\layui\lay\modules\upload.js" />
+    <None Include="wwwroot\js\layui\lay\modules\util.js" />
     <None Include="wwwroot\js\Extension\jquery-1.10.2.intellisense.js" />
     <None Include="wwwroot\js\Extension\jquery-1.10.2.js" />
     <None Include="wwwroot\js\Extension\vue-2.5.13\dist\README.md" />

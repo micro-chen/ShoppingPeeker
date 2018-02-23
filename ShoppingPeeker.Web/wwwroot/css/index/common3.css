@@ -1,0 +1,306 @@
+* {
+  word-wrap: break-word;
+}
+@font-face {
+  font-family: 'iconfont';
+  src: url('//at.alicdn.com/t/font_1458636892_08712.eot');
+  /* IE9*/
+  src: url('//at.alicdn.com/t/font_1458636892_08712.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('//at.alicdn.com/t/font_1458636892_08712.woff') format('woff'), /* chrome、firefox */ url('//at.alicdn.com/t/font_1458636892_08712.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ url('//at.alicdn.com/t/font_1458636892_08712.svg#iconfont') format('svg');
+  /* iOS 4.1- */
+}
+.icon-font {
+  font-family: iconfont;
+}
+i.icon-font {
+  font-family: iconfont;
+  font-style: normal;
+  padding: 0 3px;
+}
+.l {
+  float: left;
+}
+.r {
+  float: right;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+* {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  outline: none;
+  font-family: 'Microsoft YaHei', '微软雅黑', Arial, Helvetica, Tahoma, Verdana, Sans-Serif;
+}
+.container {
+  padding: 0;
+  width: 1200px;
+  margin: 0 auto;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+body {
+  color: #333;
+  font-family: 'Microsoft YaHei', '微软雅黑', Arial, Helvetica, Tahoma, Verdana, Sans-Serif;
+  background: url("/images/common/bg.png");
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.fadein {
+  -moz-transition: all 0.2s linear 0s;
+  -webkit-transition: all 0.2s linear 0s;
+  -o-transition: all 0.2s linear 0s;
+  transition: all 0.2s linear 0s;
+}
+a {
+  color: #333;
+}
+a.link {
+  -moz-transition: all 0.2s linear 0s;
+  -webkit-transition: all 0.2s linear 0s;
+  -o-transition: all 0.2s linear 0s;
+  transition: all 0.2s linear 0s;
+}
+a.link:hover,
+a.link:focus {
+  color: #ff6600;
+}
+a.link-background {
+  -moz-transition: all 0.2s linear 0s;
+  -webkit-transition: all 0.2s linear 0s;
+  -o-transition: all 0.2s linear 0s;
+  transition: all 0.2s linear 0s;
+}
+a.link-background:hover,
+a.link-background:focus {
+  background-color: #ff6600;
+  color: #FFFFFF;
+}
+header .top-nav {
+  background: #f4f4f4;
+  height: 30px;
+  border-bottom: 1px solid #eee;
+  line-height: 30px;
+  font-size: 12px;
+}
+header .top-nav .r .login-register-split {
+  padding: 0 1px;
+  color: #999;
+}
+header .top-nav .r .split {
+  margin: 0 5px;
+  color: #CCC;
+}
+header .logo-bar {
+  padding: 10px 0;
+  background-color: #fff;
+}
+header .logo-bar .logo {
+  float: left;
+  width: 520px;
+}
+header .logo-bar .logo img {
+  border: 0;
+}
+header .logo-bar .search-bar {
+  float: left;
+}
+header .logo-bar .search-bar .search-container {
+  margin-top: 17px;
+  background-color: #ff6600;
+  padding: 2px 3px 3px 3px;
+}
+header .logo-bar .search-bar .search-container form {
+  line-height: 35px;
+  vertical-align: middle;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+header .logo-bar .search-bar .search-container form .text {
+  color: #666;
+  background-color: #f4f4f4;
+  width: 55px;
+  text-align: center;
+  font-size: 13px;
+  height: 35px;
+  display: inline-block;
+  font-weight: normal;
+}
+header .logo-bar .search-bar .search-container form .input-text {
+  width: 335px;
+  height: 35px;
+  border: 0;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 10px;
+}
+header .logo-bar .search-bar .search-container form .submit {
+  color: #FFFFFF;
+  height: 35px;
+  padding: 0 15px;
+  letter-spacing: 4px;
+  border: 0;
+  background-color: #ff6600;
+  font-size: 16px;
+  cursor: pointer;
+}
+header .logo-bar .pid-bar {
+  float: right;
+}
+header .logo-bar .pid-bar a {
+  text-align: center;
+  width: 120px;
+  height: 38px;
+  line-height: 38px;
+  border: 1px solid #dfdfdf;
+  background: #f4f4f4;
+  font-size: 14px;
+  cursor: pointer;
+  display: block;
+  margin-top: 18px;
+}
+header .logo-bar .pid-bar a:hover,
+header .logo-bar .pid-bar a:focus {
+  background: #dfdfdf;
+}
+header .nav-bar {
+  background-color: #ff6600;
+  height: 40px;
+  line-height: 40px;
+}
+header .nav-bar .main-nav {
+  float: left;
+  list-style: none;
+}
+header .nav-bar .second-nav {
+  float: right;
+  list-style: none;
+}
+header .nav-bar ul li {
+  position:relative;
+  float: left;
+}
+header .nav-bar ul li a {
+  -moz-transition: all 0.2s linear 0s;
+  -webkit-transition: all 0.2s linear 0s;
+  -o-transition: all 0.2s linear 0s;
+  transition: all 0.2s linear 0s;
+  display: inline-block;
+  font-size: 16px;
+  color: #FFFFFF;
+  padding: 0 25px;
+}
+header .nav-bar ul li a:hover,
+header .nav-bar ul li a:focus {
+  background-color: #e50;
+}
+header .nav-bar ul li .active {
+  background-color: #e50;
+}
+header .nav-bar ul li i.new-icon{
+  position:absolute;
+  top:5px;
+  right:0;
+  display:block;
+  width:27px;
+  height:11px;
+  background:url("/images/common/new-icon.gif") no-repeat;
+}
+footer {
+  text-align: center;
+  color: #666;
+  margin-top: 35px;
+}
+footer .footer-content {
+  background: #333;
+  padding: 25px 0 35px;
+}
+footer .footer-content .wrapper {
+  margin: 0 auto;
+  position: relative;
+}
+footer .footer-content .wrapper p {
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+footer .footer-content .wrapper a {
+  color: #aaaaaa;
+  margin: 0 10px;
+  font-size: 12px;
+}
+.dom-center {
+  margin: 0 auto;
+}
+.pager {
+  margin: 0 auto;
+  text-align: center;
+}
+.pager a {
+  background-color: #fff;
+}
+.pager .pre-page,
+.pager .next-page {
+  color: #4b4b4b;
+  font-family: 'Microsoft YaHei', '微软雅黑', Arial, Helvetica, Tahoma, Verdana, Sans-Serif;
+  font-size: 14px;
+  text-decoration: none;
+  width: 53px;
+  height: 28px;
+  border: 1px solid #d5d5d5;
+  line-height: 28px;
+  display: inline-block;
+}
+.pager .pre-page:hover,
+.pager .next-page:hover {
+  color: #32a5e7;
+  border-color: #32a5e7;
+}
+.pager .item {
+  height: 28px;
+  padding: 0 10px;
+  text-align: center;
+  line-height: 28px;
+  border: 1px solid #d5d5d5;
+  display: inline-block;
+  text-decoration: none;
+  color: #574a4a;
+  font-family: Arial, Helvetica, Tahoma, Verdana, Sans-Serif;
+  font-size: 15px;
+}
+.pager .item:hover {
+  color: #32a5e7;
+  border-color: #32a5e7;
+}
+.pager .disabled {
+  color: #a0a0a0;
+  cursor: default;
+}
+.pager .disabled:hover {
+  color: #a0a0a0;
+  border-color: #d5d5d5;
+}
+.pager .cur {
+  cursor: default;
+  color: #32a5e7;
+  border-color: #32a5e7;
+}
+.pager .more {
+  cursor: default;
+  color: #d5d5d5;
+  border-color: #d5d5d5;
+}
+.pager .more:hover {
+  color: #d5d5d5;
+  border-color: #d5d5d5;
+}

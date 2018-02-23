@@ -8,11 +8,12 @@ var js_lib_version = "1.1";
 /*使用此boots 启动文件 将需要的脚本库 添加到页面*/
 document.write("<script src='/js/appObjects.js?v=" + js_lib_version + "'><\/script>");
 document.write("<script src='/js/Extension/applicationCore.js?v=" + js_lib_version+"'><\/script>");
-document.write("<script src='/js/Extension/httpClient.js?v=" + js_lib_version +"'><\/script>");
+document.write("<script src='/js/Extension/httpClient.js?v=" + js_lib_version + "'><\/script>");
+document.write("<script src='/js/Extension/clipboard.js?v=" + js_lib_version + "'><\/script>");
 document.write("<script src='/js/Extension/compress/zlib-string.js?v=" + js_lib_version +"'><\/script>");
 document.write("<script src='/js/Extension/compress/base64-string.js?v=" + js_lib_version + "'><\/script>");
-document.write("<script src='/css/layui/layui.js?v=" + js_lib_version + "'><\/script>");
-document.write("<script src='/js/Extension/layer/layer.js?v=" + js_lib_version +"'><\/script>");
+//document.write("<script src='/css/layui/layui.js?v=" + js_lib_version + "'><\/script>");
+//document.write("<script src='/js/Extension/layer/layer.js?v=" + js_lib_version +"'><\/script>");
 document.write("<script src='/js/Extension/autocomplete/autocomplete.js?v=" + js_lib_version +"'><\/script>");
 
 

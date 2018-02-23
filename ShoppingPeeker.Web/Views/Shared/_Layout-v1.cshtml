@@ -9,44 +9,33 @@
 
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="keywords" content="@WorkContext.SiteName-商品优惠搜索,淘宝内部优惠券,天猫内部优惠券,内部优惠券,比价网,比价软件,价格历史查询,条形码查询,比价插件,自动比价工具,淘宝内部优惠券,内部搜索,优惠券搜索,淘宝优惠券查找,优惠券领取">
     <meta name="description" content="@WorkContext.SiteName-商品优惠搜索,站在云顶之上,俯瞰同名同店产品一览无余！比价拿优惠，同时看天猫淘宝京东商品！">
     <meta content="always" name="referrer">
-    <meta name="renderer" content="webkit">
 
     <title>@WorkContext.SiteName-@ViewData["Title"]</title>
     @*在头部将需要的样式 和全局js 引入过来*@
+    <link href="~/css/site.css" rel="stylesheet" />
     <link href="~/css/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" />
-
-    @*<link href="~/css/layui/css/layui.css" rel="stylesheet" />*@
+    <link href="~/css/layui/css/layui.css" rel="stylesheet" />
 </head>
 <body class="">
 
 
     @RenderBody()
 
-    <div id="v3-footer">
-        <ul>
-            <li><a href="/home/index">首页</a></li>
-            <li><a href="/home/about">关于我们</a></li>
-            <li><a href="/home/help">帮助中心</a></li>
-            <li><a href="javascript:;">商务合作</a></li>
-        </ul>
-        <div class="copy">
-            <div class="inner">  ©2018 huidangso.com&nbsp;&nbsp;@WorkContext.SiteName-电商商品优惠搜索服务&nbsp;&nbsp;京ICP备8888888号</div>
-        </div>
-        @*<div class="cnzz_protocol">
-                <a href="http://www.cnzz.com/stat/website.php?web_id=1258823063" target="_blank" rel="nofollow" style="display: block;"><img src="./index_files/pic.gif" alt=""></a>
-            </div>*@
-    </div>
+    <footer id="footer" class="skin-text skin-text-foot">
+        <p>
+            ©2017 huidangso.com&nbsp;&nbsp;@WorkContext.SiteName-电商商品优惠搜索服务&nbsp;&nbsp;京ICP备8888888号
+    </footer>
+
 
 
     @*将需要的js 插件 lib 引入到模板全局*@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/js/global.js"></script>
-    <script src="~/js/layui/layui.all.js"></script>
-
     @*加载业务页面需要的js代码段*@
     @RenderSection("Scripts", required: false)
 </body>

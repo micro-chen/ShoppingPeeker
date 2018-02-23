@@ -27,10 +27,16 @@ namespace ShoppingPeeker.Web.Controllers
 
             return View(dataContainer);
         }
+        public IActionResult Help()
+        {
+            ViewData["Message"] = "this is help page";
+
+            return View();
+        }
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "this is about page";
 
             return View();
         }

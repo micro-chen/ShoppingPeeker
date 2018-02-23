@@ -1,0 +1,292 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+@using ShoppingPeeker.Web.ViewModels
+@model BusinessViewModelContainer<HomePageViewModel>
+
+<link href="~/css/search.css" rel="stylesheet" />
+
+<div id="page_content" class="page-wrap skin-page-wrap">
+    <div id="page_header">
+        <section id="bd_logo">
+            <a href="javascript:;" class="skin-logo pngfix" data-linkid="logo" style="cursor:default" title="" data-title="" data-style="cursor:default" data-href="javascript:;" target="_blank"></a>
+        </section>
+        <section id="bd_search">
+
+            <fieldset id="input-container">
+                <div id="suggest-align" class="skin-search-input hover">
+                    <input id="txt_search_keyword" type="text" class="placeholder input-search-keyword" suggestWidth="528px" autocomplete="off" placeholder="输入要搜索的商品名称关键词, 如: 宝宝奶粉、补水面膜">
+                    <i class="icon ion-android-cancel search-clear"></i>
+                </div>
+                <input id="btn_search" type="button" class="skin-search-button search-button" value="搜一下">
+            </fieldset>
+        </section>
+    </div>
+
+    <hr class="layui-bg-green" style="height:2px;">
+
+    <div id="page_search_result" class="search-results-container">
+
+        <div id="search_filters" style="border:1px solid red;width:100%;height:200px">
+            @*<div id="filter_brands">
+                    品牌区域
+                </div>
+                <div id="filter_tags">
+                    标签区域
+                </div>*@
+            <div id="J_crumbsBar" class="crumbs-bar">
+                <div class="crumbs-nav">
+                    <div class="crumbs-nav-main clearfix">
+                        <div class="crumbs-nav-item">
+                            <div class="crumbs-first"><a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3">全部结果</a></div>
+                        </div>
+                        <i class="crumbs-arrow">&gt;</i>
+                        <div class="crumbs-nav-item">
+                            <strong class="search-key">"大衣"</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="J_selector" class="selector">
+                <div class="J_selectorLine s-brand">
+                    <div class="sl-wrap extend">
+                        <div class="sl-key"><strong>品牌：</strong></div>
+                        <div class="sl-value">
+                            <ul class="sl-b-letter J_brandLetter" onclick="searchlog(1,0,0,48)"><li data-initial="0" class="curr">所有品牌</li><li data-initial="A" class="">A</li><li data-initial="B" class="">B</li><li data-initial="C" class="">C</li><li data-initial="D" class="">D</li><li data-initial="E" class="">E</li><li data-initial="F" class="">F</li><li data-initial="G" class="">G</li><li data-initial="H" class="">H</li><li data-initial="I" class="">I</li><li data-initial="J" class="">J</li><li data-initial="K" class="">K</li><li data-initial="L" class="">L</li><li data-initial="M" class="">M</li><li data-initial="N" class="">N</li><li data-initial="O" class="">O</li><li data-initial="P" class="">P</li><li data-initial="Q" class="">Q</li><li data-initial="R" class="">R</li><li data-initial="S">S</li><li data-initial="T" class="">T</li><li data-initial="U">U</li><li data-initial="V" class="">V</li><li data-initial="W">W</li><li data-initial="X" class="">X</li><li data-initial="Y">Y</li><li data-initial="Z" class="">Z</li></ul>
+                            <div class="clr"></div>
+                            <div class="sl-v-list">
+                                <ul class="J_valueList v-fixed">
+                                    <li id="brand-7835" data-initial="H" style="display: block;">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E6%B5%B7%E6%BE%9C%E4%B9%8B%E5%AE%B6%EF%BC%88HLA%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,0,71,'品牌::海澜之家（HLA）')" title="海澜之家（HLA）">
+                                            <i></i>海澜之家（HLA）
+                                        </a>
+                                    </li>
+                                    <li id="brand-216904" data-initial="H" style="display: block;">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E8%8A%B1%E8%8A%B1%E5%85%AC%E5%AD%90%EF%BC%88PLAYBOY%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,1,71,'品牌::花花公子（PLAYBOY）')" title="花花公子（PLAYBOY）">
+                                            <i></i>花花公子（PLAYBOY）
+                                        </a>
+                                    </li>
+                                    <li id="brand-158120" data-initial="H" style="display: block;">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E6%81%92%E6%BA%90%E7%A5%A5%EF%BC%88hengyuanxiang%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,2,71,'品牌::恒源祥（hengyuanxiang）')" title="恒源祥（hengyuanxiang）">
+                                            <i></i>恒源祥（hengyuanxiang）
+                                        </a>
+                                    </li>
+                                    <li id="brand-14118" data-initial="Q" style="display: block;">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E4%B8%83%E5%8C%B9%E7%8B%BC%EF%BC%88SEPTWOLVES%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,3,71,'品牌::七匹狼（SEPTWOLVES）')" title="七匹狼（SEPTWOLVES）">
+                                            <i></i>七匹狼（SEPTWOLVES）
+                                        </a>
+                                    </li>
+                                    <li id="brand-8291" data-initial="H" style="display: block;">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E7%BA%A2%E8%B1%86%EF%BC%88Hodo%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,4,71,'品牌::红豆（Hodo）')" title="红豆（Hodo）">
+                                            <i></i>红豆（Hodo）
+                                        </a>
+                                    </li>
+                                    <li id="brand-47736" data-initial="B" style="display: block;">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E6%B3%A2%E5%8F%B8%E7%99%BB%EF%BC%88BOSIDENG%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,5,71,'品牌::波司登（BOSIDENG）')" title="波司登（BOSIDENG）">
+                                            <i></i>波司登（BOSIDENG）
+                                        </a>
+                                    </li>
+                                    <li id="brand-11838" data-initial="L" style="display: block;">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E7%BD%97%E8%92%99%EF%BC%88ROMON%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,6,71,'品牌::罗蒙（ROMON）')" title="罗蒙（ROMON）">
+                                            <i></i>罗蒙（ROMON）
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="sl-b-selected J_brandSelected"><span class="sl-b-key">已选条件：</span><ul class="sl-v-list brand-selected"></ul></div>
+                            <div class="sl-btns">
+                                <a class="btn btn-primary J_btnsConfirm disabled" href="javascript:;">确定</a>
+                                <a class="btn btn-default J_btnsCancel" href="javascript:;">取消</a>
+                            </div>
+                        </div>
+                        <div class="sl-ext">
+                            <a class="sl-e-more J_extMore opened" href="javascript:;" style="visibility: visible;">收起<i></i></a>
+                            <a class="sl-e-multiple J_extMultiple" href="javascript:;">多选<i></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="J_selectorLine s-category">
+                    <div class="sl-wrap">
+                        <div class="sl-key"><strong>男装：</strong></div>
+                        <div class="sl-value">
+                            <div class="sl-v-list">
+                                <ul class="J_valueList v-fixed">
+                                    <li>
+                                        <a title="毛呢大衣" data-v="9729" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9729#J_searchWrap" onclick="searchlog(1,9729,10000,51)"><i></i>毛呢大衣</a>
+                                    </li>
+                                    <li>
+                                        <a title="风衣" data-v="9728" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9728#J_searchWrap" onclick="searchlog(1,9728,10001,51)"><i></i>风衣</a>
+                                    </li>
+                                    <li>
+                                        <a title="棉服" data-v="9724" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9724#J_searchWrap" onclick="searchlog(1,9724,10002,51)"><i></i>棉服</a>
+                                    </li>
+                                    <li>
+                                        <a title="羽绒服" data-v="3982" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=3982#J_searchWrap" onclick="searchlog(1,3982,10003,51)"><i></i>羽绒服</a>
+                                    </li>
+                                    <li>
+                                        <a title="中老年男装" data-v="9740" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9740#J_searchWrap" onclick="searchlog(1,9740,10004,51)"><i></i>中老年男装</a>
+                                    </li>
+                                    <li>
+                                        <a title="真皮皮衣" data-v="12001" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=12001#J_searchWrap" onclick="searchlog(1,12001,10005,51)"><i></i>真皮皮衣</a>
+                                    </li>
+                                    <li>
+                                        <a title="工装" data-v="9742" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9742#J_searchWrap" onclick="searchlog(1,9742,10006,51)"><i></i>工装</a>
+                                    </li>
+                                    <li class="no-relate-cat">
+                                        <a title="夹克" data-v="9730" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9730#J_searchWrap" onclick="searchlog(1,9730,10007,51)"><i></i>夹克</a>
+                                    </li>
+                                    <li class="no-relate-cat">
+                                        <a title="西服" data-v="9731" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9731#J_searchWrap" onclick="searchlog(1,9731,10008,51)"><i></i>西服</a>
+                                    </li>
+                                    <li class="no-relate-cat">
+                                        <a title="卫衣" data-v="9732" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9732#J_searchWrap" onclick="searchlog(1,9732,10009,51)"><i></i>卫衣</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="sl-btns">
+                                <a class="btn btn-primary J_btnsConfirm disabled" href="javascript:;">确定</a>
+                                <a class="btn btn-default J_btnsCancel" href="javascript:;">取消</a>
+                            </div>
+                        </div>
+                        <div class="sl-ext">
+                            <a class="sl-e-more J_extMore" href="javascript:;" style="visibility: visible;">更多<i></i></a>
+                            <a class="sl-e-multiple J_extMultiple" href="javascript:;" style="visibility: hidden;">多选<i></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="J_selectorLine s-category">
+                    <div class="sl-wrap">
+                        <div class="sl-key"><strong>女装：</strong></div>
+                        <div class="sl-value">
+                            <div class="sl-v-list">
+                                <ul class="J_valueList v-fixed">
+                                    <li>
+                                        <a title="毛呢大衣" data-v="9706" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9706#J_searchWrap" onclick="searchlog(1,9706,20000,51)"><i></i>毛呢大衣</a>
+                                    </li>
+                                    <li>
+                                        <a title="中老年女装" data-v="9721" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9721#J_searchWrap" onclick="searchlog(1,9721,20001,51)"><i></i>中老年女装</a>
+                                    </li>
+                                    <li>
+                                        <a title="大码女装" data-v="9722" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9722#J_searchWrap" onclick="searchlog(1,9722,20002,51)"><i></i>大码女装</a>
+                                    </li>
+                                    <li>
+                                        <a title="羽绒服" data-v="3983" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=3983#J_searchWrap" onclick="searchlog(1,3983,20003,51)"><i></i>羽绒服</a>
+                                    </li>
+                                    <li>
+                                        <a title="皮草" data-v="11993" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=11993#J_searchWrap" onclick="searchlog(1,11993,20004,51)"><i></i>皮草</a>
+                                    </li>
+                                    <li>
+                                        <a title="风衣" data-v="9708" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9708#J_searchWrap" onclick="searchlog(1,9708,20005,51)"><i></i>风衣</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="sl-btns">
+                                <a class="btn btn-primary J_btnsConfirm disabled" href="javascript:;">确定</a>
+                                <a class="btn btn-default J_btnsCancel" href="javascript:;">取消</a>
+                            </div>
+                        </div>
+                        <div class="sl-ext">
+                            <a class="sl-e-more J_extMore" href="javascript:;" style="visibility: visible;">更多<i></i></a>
+                            <a class="sl-e-multiple J_extMultiple" href="javascript:;" style="visibility: hidden;">多选<i></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div id="J_selectorSize" class="J_selectorLine s-line">
+                    <div class="sl-wrap">
+                        <div class="sl-key"><span>尺码：</span></div>
+                        <div class="sl-value">
+                            <div class="sl-v-list">
+                                <ul class="J_valueList">
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_28%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30000,71,'尺码::28')"><i></i>28</a>
+                                    </li>
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_29%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30001,71,'尺码::29')"><i></i>29</a>
+                                    </li>
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_30%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30002,71,'尺码::30')"><i></i>30</a>
+                                    </li>
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_31%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30003,71,'尺码::31')"><i></i>31</a>
+                                    </li>
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_32%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30004,71,'尺码::32')"><i></i>32</a>
+                                    </li>
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_33%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30005,71,'尺码::33')"><i></i>33</a>
+                                    </li>
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_34%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30006,71,'尺码::34')"><i></i>34</a>
+                                    </li>
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_35%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30007,71,'尺码::35')"><i></i>35</a>
+                                    </li>
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_36%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30008,71,'尺码::36')"><i></i>36</a>
+                                    </li>
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_37%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30009,71,'尺码::37')"><i></i>37</a>
+                                    </li>
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_38%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30010,71,'尺码::38')"><i></i>38</a>
+                                    </li>
+                                    <li data-group="0">
+                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_40%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30011,71,'尺码::40')"><i></i>40</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="sl-btns">
+                                <a class="btn btn-primary J_btnsConfirm disabled" href="javascript:;">确定</a>
+                                <a class="btn btn-default J_btnsCancel" href="javascript:;">取消</a>
+                            </div>
+                        </div>
+                        <div class="sl-ext">
+                            <a class="sl-e-more J_extMore" href="javascript:;" style="visibility: visible;">更多<i></i></a>
+                            <a class="sl-e-multiple J_extMultiple" href="javascript:;">多选<i></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div id="platform_logos_container" style="border:1px solid red;width:100%;height:200px">
+            平台logo集合
+        </div>
+
+        <div id="page_products_result" style="border:1px solid red;width:100%;height:500px">
+
+            <div id="search_sorting_container">
+                排序
+            </div>
+
+            <div id="product_list_container">
+                商品列表
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+    @*引入当前页面需要的js 支持 通过动态写入js脚本标记 实现版本控制*@
+    @section Scripts {
+
+        <script type="text/javascript">
+    document.write("<script src='/js/Home/HomePage.js?v=" + js_lib_version + "'><\/script>");
+    $(function() {
+        /*when page is loaded,set server data to page js*/
+        var initData = @Html.Raw(@Model.Data.ToJson());
+        if (ShoppingPeeker && ShoppingPeeker.HomePage) {
+            ShoppingPeeker.HomePage.init(initData);
+        }
+    })
+        </script>
+    }

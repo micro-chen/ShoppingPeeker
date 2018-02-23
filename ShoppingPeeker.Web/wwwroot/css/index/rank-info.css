@@ -1,0 +1,661 @@
+/* var */
+/* share */
+.pointer {
+  cursor: pointer;
+}
+.breakTxt {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wordBreak {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+/*淘客大数据*/
+.qtk-info-nav {
+  height: auto;
+  overflow: hidden;
+  background-color: #FFF;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(40, 40, 40, 0.08) !important;
+}
+.qtk-info-nav div.common-wid {
+  padding: 30px;
+  overflow: hidden;
+}
+.qtk-info-nav ul li {
+  width: 20%;
+  float: left;
+  text-align: center;
+  overflow: hidden;
+}
+.qtk-info-nav ul li em,
+.qtk-info-nav ul li span {
+  width: 140px;
+  height: 140px;
+  display: inline-block;
+}
+.qtk-info-nav ul li em.icon1 {
+  background-position: -13px -630px;
+}
+.qtk-info-nav ul li em.icon2 {
+  background-position: -163px -630px;
+}
+.qtk-info-nav ul li em.icon3 {
+  background-position: -313px -630px;
+}
+.qtk-info-nav ul li em.icon4 {
+  background-position: -463px -630px;
+}
+.qtk-info-nav ul li em.icon5 {
+  background-position: -613px -630px;
+}
+.qtk-info-nav ul li a {
+  display: block;
+  position: relative;
+}
+.qtk-info-nav ul li a:hover em .icon1 {
+  background-position: -247px -1305px;
+}
+.qtk-info-nav ul li span {
+  position: absolute;
+  top: 0;
+  right: 50px;
+  bottom: auto;
+  left: auto;
+  z-index: 10;
+  display: none;
+}
+.qtk-info-nav ul li p {
+  font-size: 16px;
+  margin-top: 5px;
+  transition: color .3s;
+  text-align: left;
+}
+.qtk-info-nav ul li p.txt1 {
+  padding-left: 92px;
+}
+.qtk-info-nav ul li p.txt2 {
+  padding-left: 101px;
+}
+.qtk-info-nav ul li p.txt3 {
+  padding-left: 100px;
+}
+.qtk-info-nav ul li p.txt4 {
+  padding-left: 97px;
+}
+.qtk-info-nav ul li p.txt5 {
+  padding-left: 102px;
+}
+.qtk-info-nav ul li:hover span {
+  display: block;
+}
+.qtk-info-nav ul li:hover p {
+  color: #fe5c5c;
+}
+.qtk-info-nav ul li:first-child:hover p {
+  color: #4a95db;
+}
+.qtk-info-nav ul li.active p {
+  color: #fe5c5c;
+}
+.qtk-info-nav ul li:first-child.active p {
+  color: #4a95db;
+}
+.everyday-coupon {
+  height: 815px;
+  text-align: center;
+  color: #eee;
+  background: url("../images/rank-info-bg.png") top center;
+  position: relative;
+  overflow: hidden;
+}
+.everyday-coupon-tit {
+  font-size: 26px;
+  color: #ccbcd2;
+}
+.everyday-coupon-from {
+  height: 60px;
+  line-height: 60px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  font-size: 18px;
+}
+.everyday-coupon-from .everyday-coupon-from-inner {
+  display: inline-block;
+}
+.everyday-coupon-from i {
+  width: 21px;
+  height: 20px;
+  display: inline-block;
+  margin: 20px 15px;
+  background-position: -210px -924px;
+  float: left;
+}
+.everyday-coupon-from a {
+  width: 84px;
+  height: 28px;
+  line-height: 28px;
+  background-color: rgba(255, 255, 255, 0.3);
+  display: inline-block;
+  font-size: 14px;
+  color: #FFF;
+  margin-left: 20px;
+  border-radius: 2px;
+}
+.everyday-coupon-subtext {
+  font-size: 18px;
+  color: #aa90b6;
+  margin-top: 15px;
+}
+.everyday-coupon-subtext a {
+  color: #FFF;
+  text-decoration: underline;
+}
+.everyday-coupon-chart-box,
+#everyday-coupon-chart {
+  width: 1116px;
+  height: 361px;
+  margin: 175px auto 50px;
+}
+#everyday-coupon-chart .highcharts-color-0 {
+  color: #000000 !important;
+  background-color: #000000 !important;
+}
+.ev-rank-time {
+  font-size: 18px;
+  width: 60px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  font-family: Arial;
+  font-weight: normal;
+  display: inline-block;
+  color: #FFF;
+  position: relative;
+  z-index: -1;
+}
+.ev-time-label {
+  font-size: 18px;
+  margin-top: 5px;
+  width: 64px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  color: #fff;
+  z-index: -1;
+  font-family: Arial;
+  position: relative;
+  font-weight: normal;
+  display: inline-block;
+}
+.ev-label1 {
+  bottom: 15px;
+  left: 25px;
+}
+.ev-label2 {
+  bottom: 15px;
+  left: 25px;
+}
+.ev-label3 {
+  bottom: 10px;
+  left: 40px;
+}
+.ev-label4 {
+  bottom: 34px;
+  left: 0;
+}
+.ev-label5 {
+  bottom: 15px;
+  left: 25px;
+}
+.ev-label6 {
+  bottom: 15px;
+  left: 25px;
+}
+.everyday-coupon-num {
+  padding-bottom: 73px;
+}
+.everyday-coupon-num p {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+.everyday-coupon-num span {
+  overflow: hidden;
+}
+.everyday-coupon-num span i {
+  width: 52px;
+  height: 61px;
+  display: inline-block;
+  background-position: -418px -247px;
+  margin-right: 10px;
+}
+.everyday-coupon-num span i:nth-child(2) {
+  margin-right: 30px;
+}
+.everyday-coupon-num span i:nth-child(5) {
+  margin-right: 30px;
+}
+.everyday-coupon-num span i em {
+  width: 52px;
+  height: 61px;
+  display: inline-block;
+  background-image: url("../images/numbers.png");
+  background-position: 0 0;
+}
+.rank-cus-price {
+  padding-bottom: 80px;
+}
+#everyday-coupon-chart .highcharts-data-label:nth-child(1) span {
+  /*left: 100px !important;*/
+}
+#everyday-coupon-chart .highcharts-data-label:nth-child(2) span {
+  left: 10px !important;
+  top: -40px !important;
+}
+/*今日趋势*/
+.rank-info-main-box {
+  width: 1006px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.rank-tab-box {
+  margin: 170px 0 50px;
+  overflow: hidden;
+}
+.rank-tab-box #today-trend-chart {
+  overflow: hidden;
+}
+.rank-tab-tit {
+  overflow: hidden;
+  padding-bottom: 60px;
+}
+.rank-tab-tit p.common-icons {
+  width: 74px;
+  height: 74px;
+  float: left;
+  margin-right: 20px;
+}
+.rank-tab-tit p.common-icons.trend {
+  background-position: -415px -445px;
+}
+.rank-tab-tit p.common-icons.zb {
+  background-position: -509px -445px;
+}
+.rank-tab-tit p.common-icons.price {
+  background-position: -602px -445px;
+}
+.rank-tab-tit div {
+  width: 903px;
+  float: left;
+}
+.rank-tab-tit div p {
+  font-size: 34px;
+  padding-bottom: 5px;
+}
+.rank-tab-tit div span {
+  font-size: 20px;
+  color: #bfbfbf;
+  font-weight: lighter;
+}
+.rank-tab-nav {
+  width: 997px;
+  overflow: hidden;
+  text-align: right;
+  padding-bottom: 20px;
+}
+.rank-tab-nav ul {
+  float: right;
+}
+.rank-tab-nav ul li {
+  float: left;
+  overflow: hidden;
+  border: 1px solid #DCE6EB;
+  border-left: none;
+}
+.rank-tab-nav ul li a {
+  width: 92px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  display: inline-block;
+}
+.rank-tab-nav ul li:first-child {
+  border-left: 1px solid #DCE6EB;
+}
+.rank-tab-nav ul li.active {
+  background-color: #E96868;
+  border-color: #E96868;
+}
+.rank-tab-nav ul li.active a {
+  color: #fff;
+}
+.coupon-tab-box {
+  height: 350px;
+}
+.coupon-tab-box .coupon-tab-item {
+  width: 1200px;
+  height: 350px;
+  display: none;
+}
+.common-rank-tit {
+  font-size: 26px;
+  text-align: center;
+}
+.common-rank-subtext {
+  line-height: 2;
+  font-size: 18px;
+  text-align: center;
+  color: #bfbfbf;
+}
+/*搜索排行*/
+.search-rank-list {
+  margin-top: 130px;
+}
+.search-rank-list .rank-tab-nav {
+  margin-top: 40px;
+}
+.search-rank-list .rank-tab-nav ul {
+  float: left;
+}
+.search-rank-list .common-rank-tit {
+  padding-bottom: 10px;
+}
+.search-rank-list .list-item {
+  border: 1px solid #DCE6EB;
+  border-bottom: none;
+  width: 257px;
+  overflow: hidden;
+  float: left;
+  margin-right: 54px;
+}
+.search-rank-list .list-item:last-child {
+  margin-right: 0;
+}
+.search-rank-list .list-item li {
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  border-bottom: 1px solid #DCE6EB;
+  position: relative;
+  transition: background-color 0.3s;
+}
+.search-rank-list .list-item li.tit {
+  height: 40px;
+  line-height: 40px;
+  background-color: #eee;
+}
+.search-rank-list .list-item li span {
+  position: absolute;
+  top: -1px;
+  right: auto;
+  bottom: auto;
+  left: -1px;
+  width: 21px;
+  height: 9px;
+  background-position: -382px -151px;
+}
+.search-rank-list .list-item li p {
+  float: left;
+  border-right: 1px solid #DCE6EB;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.search-rank-list .list-item li p:last-child {
+  border-right: none;
+}
+.search-rank-list .list-item li p .float-num {
+  width: 83px;
+  text-align: center;
+  position: inherit;
+}
+.search-rank-list .list-item li p .float-num em {
+  width: 11px;
+  height: 15px;
+  display: inline-block;
+}
+.search-rank-list .list-item li p .float-num.float-down {
+  color: #75ce9b;
+}
+.search-rank-list .list-item li p .float-num.float-down em {
+  background-position: -588px -858px;
+}
+.search-rank-list .list-item li p .float-num.float-up {
+  color: #f18375;
+}
+.search-rank-list .list-item li p .float-num.float-up em {
+  background-position: -561px -858px;
+}
+.search-rank-list .list-item li p .float-num.float-normal {
+  color: #73aef5;
+}
+.search-rank-list .list-item li p .float-num.float-normal em {
+  background-position: -616px -857px;
+}
+.search-rank-list .list-item li .id {
+  width: 39px;
+}
+.search-rank-list .list-item li .kw {
+  width: 91px;
+}
+.search-rank-list .list-item li .num {
+  width: 74px;
+}
+.search-rank-list .list-item li .fl {
+  width: 50px;
+}
+.search-rank-list .list-item li:hover {
+  background-color: #fef2f3;
+}
+.customer-order-price {
+  background: url("../images/rank-info-cus-bg.png") top center;
+  height: 760px;
+}
+.customer-order-price .everyday-coupon-tit {
+  margin-top: 113px;
+  color: #fff;
+}
+.customer-order-price .everyday-coupon-subtext {
+  color: #fff;
+}
+.customer-order-price .common-wid {
+  overflow: hidden;
+  margin: 45px auto 68px;
+}
+.price-dis {
+  background-color: #FFF;
+  width: 184px;
+  height: 174px;
+  border-radius: 5px;
+  padding: 20px;
+  float: left;
+  overflow: hidden;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+.price-dis:nth-child(5n) {
+  margin-right: 0;
+}
+.price-dis .chart {
+  overflow: hidden;
+  position: relative;
+}
+.price-dis .chart i {
+  position: absolute;
+  top: auto;
+  right: 0;
+  bottom: 11px;
+  left: auto;
+  z-index: 1000000;
+  color: #666666;
+  cursor: default;
+  font-size: 12px;
+  font-family: simsun !important;
+  display: none;
+}
+.price-dis .chart .chat-box {
+  width: 185px;
+  height: 135px;
+  margin-top: 10px;
+}
+.price-dis-tit {
+  height: 34px;
+  line-height: 34px;
+  font-size: 20px;
+  overflow: hidden;
+  color: #2a2a2a;
+}
+.price-dis-tit i {
+  width: 34px;
+  height: 34px;
+  display: inline-block;
+  /*background-color: #B6C852;*/
+  float: left;
+  margin-right: 10px;
+}
+.price-dis-tit i.icon-nz {
+  background-position: -416px -329px;
+}
+.price-dis-tit i.icon-nanz {
+  background-position: -470px -329px;
+}
+.price-dis-tit i.icon-ny {
+  background-position: -524px -329px;
+}
+.price-dis-tit i.icon-my {
+  background-position: -578px -329px;
+}
+.price-dis-tit i.icon-mz {
+  background-position: -632px -329px;
+}
+.price-dis-tit i.icon-jj {
+  background-position: -416px -383px;
+}
+.price-dis-tit i.icon-xbps {
+  background-position: -470px -383px;
+}
+.price-dis-tit i.icon-ms {
+  background-position: -524px -383px;
+}
+.price-dis-tit i.icon-wt {
+  background-position: -578px -383px;
+}
+.price-dis-tit i.icon-jdsm {
+  background-position: -632px -383px;
+}
+.price-dis-tit span {
+  float: left;
+}
+.common-chart-hei {
+  height: 350px;
+}
+.highcharts-background {
+  fill: none;
+}
+#cus-order-price8 .highcharts-axis-labels.highcharts-xaxis-labels {
+  color: #e66e66;
+}
+#everyday-coupon-chart .highcharts-container {
+  overflow: inherit !important;
+}
+#everyday-coupon-chart .highcharts-tooltip {
+  z-index: 1000000000;
+}
+.rank-fixed-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: 0;
+  background-color: #FFF;
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  padding: 12px 0;
+  box-shadow: 0 2px 5px rgba(40, 40, 40, 0.08);
+  z-index: 1000005;
+  display: none;
+}
+.rank-fixed-top ul li {
+  float: left;
+  margin-right: 37px;
+}
+.rank-fixed-top ul li a {
+  display: block;
+  padding: 0 10px;
+  border-radius: 15px;
+  transition: color, background-color 0.3s;
+}
+.rank-fixed-top ul li i {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  float: left;
+  margin: 5px 9px auto 0;
+}
+.rank-fixed-top ul li .icon-data {
+  background-position: -461px -1986px;
+}
+.rank-fixed-top ul li .icon-coupon {
+  background-position: -500px -1987px;
+}
+.rank-fixed-top ul li .icon-sale {
+  background-position: -538px -1988px;
+}
+.rank-fixed-top ul li .icon-rate {
+  width: 22px;
+  height: 22px;
+  background-position: -576px -1986px;
+}
+.rank-fixed-top ul li .icon-spread {
+  background-position: -618px -1988px;
+}
+.rank-fixed-top ul li:hover a {
+  background-color: #f05761;
+  color: #FFF;
+}
+.rank-fixed-top ul li:hover .icon-data {
+  background-position: -461px -2011px;
+}
+.rank-fixed-top ul li:hover .icon-coupon {
+  background-position: -500px -2012px;
+}
+.rank-fixed-top ul li:hover .icon-sale {
+  background-position: -538px -2013px;
+}
+.rank-fixed-top ul li:hover .icon-rate {
+  background-position: -576px -2011px;
+}
+.rank-fixed-top ul li:hover .icon-spread {
+  background-position: -618px -2013px;
+}
+.rank-fixed-top ul li.active a {
+  background-color: #f05761;
+  color: #FFF;
+}
+.rank-fixed-top ul li.active a .icon-data {
+  background-position: -461px -2011px;
+}
+.rank-fixed-top ul li.active a .icon-coupon {
+  background-position: -500px -2012px;
+}
+.rank-fixed-top ul li.active a .icon-sale {
+  background-position: -538px -2013px;
+}
+.rank-fixed-top ul li.active a .icon-rate {
+  background-position: -576px -2011px;
+}
+.rank-fixed-top ul li.active a .icon-spread {
+  background-position: -618px -2013px;
+}

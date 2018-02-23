@@ -1,279 +1,324 @@
 ﻿@{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "首页";
 }
 @using ShoppingPeeker.Web.ViewModels
 @model BusinessViewModelContainer<HomePageViewModel>
 
-<link href="~/css/search.css" rel="stylesheet" />
+    <link href="~/css/index/reset.css" rel="stylesheet" />
+    <link href="~/css/index/animate.css" rel="stylesheet" />
+    <link href="~/css/index/base.css" rel="stylesheet" />
+    <link href="~/css/index/common.css" rel="stylesheet" />
+    <link href="~/css/index/common3.css" rel="stylesheet" />
+    <link href="~/css/index/index.css" rel="stylesheet" />
+    <link href="~/css/index/rank-info.css" rel="stylesheet" />
+    <style type="text/css">
+        /*<![CDATA[*/
+        body {
+            background-color: #f5f5f5 !important;
+        }
+        /*]]>*/
+    </style>
 
-<div id="page_content" class="page-wrap skin-page-wrap">
-    <div id="page_header">
-        <section id="bd_logo">
-            <a href="javascript:;" class="skin-logo pngfix" data-linkid="logo" style="cursor:default" title="" data-title="" data-style="cursor:default" data-href="javascript:;" target="_blank"></a>
-        </section>
-        <section id="bd_search">
+        <div id="huidangso-content-area">
 
-            <fieldset id="input-container">
-                <div id="suggest-align" class="skin-search-input hover">
-                    <input id="txt_search_keyword" type="text" class="placeholder input-search-keyword" suggestWidth="528px" autocomplete="off" placeholder="输入要搜索的商品名称关键词, 如: 宝宝奶粉、补水面膜">
-                    <i class="icon ion-android-cancel search-clear"></i>
-                </div>
-                <input id="btn_search" type="button" class="skin-search-button search-button" value="搜一下">
-            </fieldset>
-        </section>
-    </div>
-
-    <hr class="layui-bg-green" style="height:2px;">
-
-    <div id="page_search_result" class="search-results-container">
-
-        <div id="search_filters" style="border:1px solid red;width:100%;height:200px">
-            @*<div id="filter_brands">
-                    品牌区域
-                </div>
-                <div id="filter_tags">
-                    标签区域
-                </div>*@
-            <div id="J_crumbsBar" class="crumbs-bar">
-                <div class="crumbs-nav">
-                    <div class="crumbs-nav-main clearfix">
-                        <div class="crumbs-nav-item">
-                            <div class="crumbs-first"><a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3">全部结果</a></div>
-                        </div>
-                        <i class="crumbs-arrow">&gt;</i>
-                        <div class="crumbs-nav-item">
-                            <strong class="search-key">"大衣"</strong>
-                        </div>
+            <div id="container_fixed_top" style="">
+                <div class="common-wid">
+                    <div class="fl fixed-logo">
+                        <a href="/home/index"></a>
+                    </div>
+                    <div id="topSearch" class="fl f-search-box" >
+                        <input id="topSearchInput"class="fl ipt common-xCtJ-count" type="text" placeholder="商品关键词 / 链接 / 品牌 " maxlength="500" name="title" value="">
+                        <input type="hidden" name="f" value="1">
+                        <a id="headerSearchIpt"  class="fr btn common-xCtJ-count"  type="text" placeholder="商品关键词 / 链接 / 品牌 " maxlength="500" name="title" value="" href="javascript:;">搜索</a>
+                        <ul class="js_box" style="display: none;"></ul>
+                        <span class="v3-common-search-clear"></span>
                     </div>
                 </div>
             </div>
 
-            <div id="J_selector" class="selector">
-                <div class="J_selectorLine s-brand">
-                    <div class="sl-wrap extend">
-                        <div class="sl-key"><strong>品牌：</strong></div>
-                        <div class="sl-value">
-                            <ul class="sl-b-letter J_brandLetter" onclick="searchlog(1,0,0,48)"><li data-initial="0" class="curr">所有品牌</li><li data-initial="A" class="">A</li><li data-initial="B" class="">B</li><li data-initial="C" class="">C</li><li data-initial="D" class="">D</li><li data-initial="E" class="">E</li><li data-initial="F" class="">F</li><li data-initial="G" class="">G</li><li data-initial="H" class="">H</li><li data-initial="I" class="">I</li><li data-initial="J" class="">J</li><li data-initial="K" class="">K</li><li data-initial="L" class="">L</li><li data-initial="M" class="">M</li><li data-initial="N" class="">N</li><li data-initial="O" class="">O</li><li data-initial="P" class="">P</li><li data-initial="Q" class="">Q</li><li data-initial="R" class="">R</li><li data-initial="S">S</li><li data-initial="T" class="">T</li><li data-initial="U">U</li><li data-initial="V" class="">V</li><li data-initial="W">W</li><li data-initial="X" class="">X</li><li data-initial="Y">Y</li><li data-initial="Z" class="">Z</li></ul>
-                            <div class="clr"></div>
-                            <div class="sl-v-list">
-                                <ul class="J_valueList v-fixed">
-                                    <li id="brand-7835" data-initial="H" style="display: block;">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E6%B5%B7%E6%BE%9C%E4%B9%8B%E5%AE%B6%EF%BC%88HLA%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,0,71,'品牌::海澜之家（HLA）')" title="海澜之家（HLA）">
-                                            <i></i>海澜之家（HLA）
-                                        </a>
-                                    </li>
-                                    <li id="brand-216904" data-initial="H" style="display: block;">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E8%8A%B1%E8%8A%B1%E5%85%AC%E5%AD%90%EF%BC%88PLAYBOY%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,1,71,'品牌::花花公子（PLAYBOY）')" title="花花公子（PLAYBOY）">
-                                            <i></i>花花公子（PLAYBOY）
-                                        </a>
-                                    </li>
-                                    <li id="brand-158120" data-initial="H" style="display: block;">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E6%81%92%E6%BA%90%E7%A5%A5%EF%BC%88hengyuanxiang%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,2,71,'品牌::恒源祥（hengyuanxiang）')" title="恒源祥（hengyuanxiang）">
-                                            <i></i>恒源祥（hengyuanxiang）
-                                        </a>
-                                    </li>
-                                    <li id="brand-14118" data-initial="Q" style="display: block;">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E4%B8%83%E5%8C%B9%E7%8B%BC%EF%BC%88SEPTWOLVES%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,3,71,'品牌::七匹狼（SEPTWOLVES）')" title="七匹狼（SEPTWOLVES）">
-                                            <i></i>七匹狼（SEPTWOLVES）
-                                        </a>
-                                    </li>
-                                    <li id="brand-8291" data-initial="H" style="display: block;">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E7%BA%A2%E8%B1%86%EF%BC%88Hodo%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,4,71,'品牌::红豆（Hodo）')" title="红豆（Hodo）">
-                                            <i></i>红豆（Hodo）
-                                        </a>
-                                    </li>
-                                    <li id="brand-47736" data-initial="B" style="display: block;">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E6%B3%A2%E5%8F%B8%E7%99%BB%EF%BC%88BOSIDENG%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,5,71,'品牌::波司登（BOSIDENG）')" title="波司登（BOSIDENG）">
-                                            <i></i>波司登（BOSIDENG）
-                                        </a>
-                                    </li>
-                                    <li id="brand-11838" data-initial="L" style="display: block;">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exbrand_%E7%BD%97%E8%92%99%EF%BC%88ROMON%EF%BC%89%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,6,71,'品牌::罗蒙（ROMON）')" title="罗蒙（ROMON）">
-                                            <i></i>罗蒙（ROMON）
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="sl-b-selected J_brandSelected"><span class="sl-b-key">已选条件：</span><ul class="sl-v-list brand-selected"></ul></div>
-                            <div class="sl-btns">
-                                <a class="btn btn-primary J_btnsConfirm disabled" href="javascript:;">确定</a>
-                                <a class="btn btn-default J_btnsCancel" href="javascript:;">取消</a>
-                            </div>
+            <div class="now-new-year">
+                <div id="v3-header" class="" style="background-position-y: 0px;">
+                    <div class="head-nav">
+                        <div class="common-wid head-nav-box">
+                            @*<a href="http://www.qingtaoke.com/qingsou"><div class="fl common-head-logo"></div></a>*@
+                            <div class="fl nav-link">
+                                @* <ul>
+            <li><a href="http://www.qingtaoke.com/qingsou">首页</a></li>
+            <li class="solution">
+                <a href="javascript:;">解决方案 <em></em></a>
+                <!--下拉菜单-->
+                <div id="header-drop-down" class="header-drop-down pos-ab">
+                    <div class="common-wid main">
+                        <div class="fl goods">
+                            <a href="http://www.qingtaoke.com/solution/index">
+                                <div class="title"><em></em>精准选品</div>
+                                <div class="con">确保商品推广价值的同时提升选品效率，实时行业数据一览无余让选品更轻松</div>
+                            </a>
                         </div>
-                        <div class="sl-ext">
-                            <a class="sl-e-more J_extMore opened" href="javascript:;" style="visibility: visible;">收起<i></i></a>
-                            <a class="sl-e-multiple J_extMultiple" href="javascript:;">多选<i></i></a>
+                        <div class="fl link">
+                            <a href="http://www.qingtaoke.com/solution/transfer">
+                                <div class="title"><em></em>高效转链</div>
+                                <div class="con">轻功能、高效率、精打磨、匹配多种渠道、契合多种场景的一键式转链方案</div>
+                            </a>
+                        </div>
+                        <div class="fl spread">
+                            <a href="http://www.qingtaoke.com/solution/spread">
+                                <div class="title"><em></em>推广内容</div>
+                                <div class="con">
+                                    <ul class="sp-kw">
+                                        <li>内容 • 优质主图、优质文案</li>
+                                        <li>定义 • 设置话术模版</li>
+                                        <li>展示 • 所见即所得</li>
+                                    </ul>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="fl data">
+                            <a href="http://www.qingtaoke.com/solution/data">
+                                <div class="title data-tit">行业大数据</div>
+                                <div class="con">
+                                    <ul>
+                                        <li>商品采集大数据</li>
+                                        <li>大数据部分应用</li>
+                                        <li>大数据应用方向</li>
+                                    </ul>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
-                <div class="J_selectorLine s-category">
-                    <div class="sl-wrap">
-                        <div class="sl-key"><strong>男装：</strong></div>
-                        <div class="sl-value">
-                            <div class="sl-v-list">
-                                <ul class="J_valueList v-fixed">
-                                    <li>
-                                        <a title="毛呢大衣" data-v="9729" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9729#J_searchWrap" onclick="searchlog(1,9729,10000,51)"><i></i>毛呢大衣</a>
+            </li>
+            <li><a href="http://www.qingtaoke.com/chajian" target="_blank">旗舰版插件</a></li>
+            <li><a href="http://www.qingtaoke.com/openapi" target="_blank">开放 API</a></li>
+        </ul>
+                                *@
+                            </div>
+                            <div class="fr nav-user">
+                                <ul>
+                                    <!--<li><a href="#">联系我们</a></li>
+    <li><a href="#">联系客服</a></li>-->
+                                    <li><a href="/home/about" target="_blank">关于我们</a></li>
+                                    <li><a href="/home/help" target="_blank">帮助中心</a></li>
+                                    <li><a href="javascript:;" target="_blank" rel="nofollow">商务合作</a></li>
+                                    <li class="account js-login">
+                                        @*<a href="http://www.qingtaoke.com/?r=userMsg/index" class="name">15032646625</a><a class="num" href="http://www.qingtaoke.com/?r=userCenter/authlist">【个人中心】</a>*@
                                     </li>
-                                    <li>
-                                        <a title="风衣" data-v="9728" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9728#J_searchWrap" onclick="searchlog(1,9728,10001,51)"><i></i>风衣</a>
-                                    </li>
-                                    <li>
-                                        <a title="棉服" data-v="9724" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9724#J_searchWrap" onclick="searchlog(1,9724,10002,51)"><i></i>棉服</a>
-                                    </li>
-                                    <li>
-                                        <a title="羽绒服" data-v="3982" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=3982#J_searchWrap" onclick="searchlog(1,3982,10003,51)"><i></i>羽绒服</a>
-                                    </li>
-                                    <li>
-                                        <a title="中老年男装" data-v="9740" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9740#J_searchWrap" onclick="searchlog(1,9740,10004,51)"><i></i>中老年男装</a>
-                                    </li>
-                                    <li>
-                                        <a title="真皮皮衣" data-v="12001" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=12001#J_searchWrap" onclick="searchlog(1,12001,10005,51)"><i></i>真皮皮衣</a>
-                                    </li>
-                                    <li>
-                                        <a title="工装" data-v="9742" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9742#J_searchWrap" onclick="searchlog(1,9742,10006,51)"><i></i>工装</a>
-                                    </li>
-                                    <li class="no-relate-cat">
-                                        <a title="夹克" data-v="9730" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9730#J_searchWrap" onclick="searchlog(1,9730,10007,51)"><i></i>夹克</a>
-                                    </li>
-                                    <li class="no-relate-cat">
-                                        <a title="西服" data-v="9731" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9731#J_searchWrap" onclick="searchlog(1,9731,10008,51)"><i></i>西服</a>
-                                    </li>
-                                    <li class="no-relate-cat">
-                                        <a title="卫衣" data-v="9732" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9732#J_searchWrap" onclick="searchlog(1,9732,10009,51)"><i></i>卫衣</a>
-                                    </li>
-
                                 </ul>
                             </div>
-                            <div class="sl-btns">
-                                <a class="btn btn-primary J_btnsConfirm disabled" href="javascript:;">确定</a>
-                                <a class="btn btn-default J_btnsCancel" href="javascript:;">取消</a>
-                            </div>
-                        </div>
-                        <div class="sl-ext">
-                            <a class="sl-e-more J_extMore" href="javascript:;" style="visibility: visible;">更多<i></i></a>
-                            <a class="sl-e-multiple J_extMultiple" href="javascript:;" style="visibility: hidden;">多选<i></i></a>
                         </div>
                     </div>
                 </div>
-                <div class="J_selectorLine s-category">
-                    <div class="sl-wrap">
-                        <div class="sl-key"><strong>女装：</strong></div>
-                        <div class="sl-value">
-                            <div class="sl-v-list">
-                                <ul class="J_valueList v-fixed">
-                                    <li>
-                                        <a title="毛呢大衣" data-v="9706" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9706#J_searchWrap" onclick="searchlog(1,9706,20000,51)"><i></i>毛呢大衣</a>
-                                    </li>
-                                    <li>
-                                        <a title="中老年女装" data-v="9721" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9721#J_searchWrap" onclick="searchlog(1,9721,20001,51)"><i></i>中老年女装</a>
-                                    </li>
-                                    <li>
-                                        <a title="大码女装" data-v="9722" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9722#J_searchWrap" onclick="searchlog(1,9722,20002,51)"><i></i>大码女装</a>
-                                    </li>
-                                    <li>
-                                        <a title="羽绒服" data-v="3983" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=3983#J_searchWrap" onclick="searchlog(1,3983,20003,51)"><i></i>羽绒服</a>
-                                    </li>
-                                    <li>
-                                        <a title="皮草" data-v="11993" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=11993#J_searchWrap" onclick="searchlog(1,11993,20004,51)"><i></i>皮草</a>
-                                    </li>
-                                    <li>
-                                        <a title="风衣" data-v="9708" href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;cid3=9708#J_searchWrap" onclick="searchlog(1,9708,20005,51)"><i></i>风衣</a>
-                                    </li>
-
-                                </ul>
+                <div class="layout-area">
+                    <div class="common-wid">
+                        <div class="clearfix search-area-box">
+                            <form class="head-search-area" method="get" action="http://www.qingtaoke.com/qingsou" id="searchForm">
+                                <div class="head-search-box">
+                                    <input autocomplete="off" disableautocomplete="" class="fl ipt common-xCtJ-count" data-params="ea=轻搜-头部搜索" data-fun="headSearch" type="text" placeholder="关键词 / 链接 / 品牌 / ID" id="headerSearchIpt" maxlength="500" name="title" value="">
+                                    <input type="hidden" name="f" value="1">
+                                    <a href="javascript:;" class="fr search-btn common-xCtJ-count" data-params="ea=轻搜-吸顶搜索" data-fun="headSearch" onclick="$(this).closest(&#39;form&#39;).submit();">
+                                        <span><em></em>轻搜一下</span>
+                                    </a>
+                                    <ul class="js_box" style="display: none;"></ul>
+                                    <span class="v3-common-search-clear"></span>
+                                </div>
+                            </form>
+                            <div class="head-search-kw">
+                                <a href="http://www.qingtaoke.com/qingsou?title=%E6%B4%97%E8%A1%A3%E6%B6%B2&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-洗衣液">洗衣液</a>
+                                <a href="http://www.qingtaoke.com/qingsou?title=%E5%86%85%E8%A3%A4&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-内裤">内裤</a>
+                                <a href="http://www.qingtaoke.com/qingsou?title=%E5%B8%BD%E5%AD%90&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-帽子">帽子</a>
+                                <a href="http://www.qingtaoke.com/qingsou?title=%E7%94%B7%E8%A3%85&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-男装">男装</a>
+                                <a href="http://www.qingtaoke.com/qingsou?title=%E6%88%92%E6%8C%87&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-戒指">戒指</a>
+                                <a href="http://www.qingtaoke.com/qingsou?title=%E5%A4%96%E5%A5%97&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-外套">外套</a>
+                                <a href="http://www.qingtaoke.com/qingsou?title=%E8%A2%9C%E5%AD%90%E7%94%B7&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-袜子男">袜子男</a>
+                                <a href="http://www.qingtaoke.com/?r=default/kwRank" class="kw-rank hide">热搜词排行 &gt;</a>
                             </div>
-                            <div class="sl-btns">
-                                <a class="btn btn-primary J_btnsConfirm disabled" href="javascript:;">确定</a>
-                                <a class="btn btn-default J_btnsCancel" href="javascript:;">取消</a>
-                            </div>
-                        </div>
-                        <div class="sl-ext">
-                            <a class="sl-e-more J_extMore" href="javascript:;" style="visibility: visible;">更多<i></i></a>
-                            <a class="sl-e-multiple J_extMultiple" href="javascript:;" style="visibility: hidden;">多选<i></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div id="J_selectorSize" class="J_selectorLine s-line">
-                    <div class="sl-wrap">
-                        <div class="sl-key"><span>尺码：</span></div>
-                        <div class="sl-value">
-                            <div class="sl-v-list">
-                                <ul class="J_valueList">
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_28%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30000,71,'尺码::28')"><i></i>28</a>
-                                    </li>
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_29%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30001,71,'尺码::29')"><i></i>29</a>
-                                    </li>
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_30%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30002,71,'尺码::30')"><i></i>30</a>
-                                    </li>
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_31%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30003,71,'尺码::31')"><i></i>31</a>
-                                    </li>
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_32%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30004,71,'尺码::32')"><i></i>32</a>
-                                    </li>
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_33%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30005,71,'尺码::33')"><i></i>33</a>
-                                    </li>
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_34%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30006,71,'尺码::34')"><i></i>34</a>
-                                    </li>
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_35%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30007,71,'尺码::35')"><i></i>35</a>
-                                    </li>
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_36%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30008,71,'尺码::36')"><i></i>36</a>
-                                    </li>
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_37%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30009,71,'尺码::37')"><i></i>37</a>
-                                    </li>
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_38%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30010,71,'尺码::38')"><i></i>38</a>
-                                    </li>
-                                    <li data-group="0">
-                                        <a href="search?keyword=%E5%A4%A7%E8%A1%A3&amp;enc=utf-8&amp;qrst=1&amp;rt=1&amp;stop=1&amp;vt=2&amp;wq=%E5%A4%A7%E8%A1%A3&amp;ev=exsize_40%5E&amp;uc=0#J_searchWrap" rel="nofollow" onclick="searchlog(1,0,30011,71,'尺码::40')"><i></i>40</a>
-                                    </li>
-
-                                </ul>
-                            </div>
-                            <div class="sl-btns">
-                                <a class="btn btn-primary J_btnsConfirm disabled" href="javascript:;">确定</a>
-                                <a class="btn btn-default J_btnsCancel" href="javascript:;">取消</a>
-                            </div>
-                        </div>
-                        <div class="sl-ext">
-                            <a class="sl-e-more J_extMore" href="javascript:;" style="visibility: visible;">更多<i></i></a>
-                            <a class="sl-e-multiple J_extMultiple" href="javascript:;">多选<i></i></a>
                         </div>
                     </div>
                 </div>
             </div>
+            <div id="v3-notice">
+                <a href="javascript:;" class="inner new-y">
+                    <em></em>
+                    <b class="fl msg">消息中心 (<span class="animated flash infinite"> 2 </span>)</b>
+                </a>
+            </div>
 
 
+            <div id="home-notice-area">
+                <div class="mask-area">
+                    <div class="box"><img src="http://www.qingtaoke.com/qingsou" alt=""></div>
+                </div>
+                <div class="main">
+                    <div class="no-msg-data hide">
+                        <span class="icon"></span>
+                        <p>暂时没有消息</p>
+                    </div>
+
+                    <div class="clearfix">
+                        <ul class="notice-banner"></ul>
+                        <div class="notice-list">
+                            <div class="list-item"> <div class="fl icon"><em></em><span></span></div> <div class="fr con"> <a href="http://www.qingtaoke.com/?r=/huidangsoNotice/detail&amp;id=102&amp;type=sys"> <div class="title">新春年货节 · 2018过年回家</div> <div class="info">“不忘初心，方得始终”，对于轻淘客而言，有责任、有担当一直都是使命。自轻淘客成立，一路走来，追梦与感恩同行。我们敢于创新...</div> </a> <div class="more"> <div class="fr data">2018-01-25 09:04:13</div> </div> </div> </div><div class="list-item"> <div class="fl icon"><em></em><span></span></div> <div class="fr con"> <a href="http://www.qingtaoke.com/?r=/huidangsoNotice/detail&amp;id=91&amp;type=sys"> <div class="title">见证 · 2018轻淘客行业先锋之路</div> <div class="info">2018悄然到来...&nbsp;轻淘客第二次官网升级&nbsp;紧随其后..本次迭代新增了消息中心、变更手机、优化交互...</div> </a> <div class="more"> <div class="fr data">2018-01-16 11:48:54</div> </div> </div> </div><div class="list-item msg-read"> <div class="fl icon"><span></span></div> <div class="fr con"> <a href="http://www.qingtaoke.com/?r=/huidangsoNotice/detail&amp;id=86&amp;type=sys"> <div class="title">开放API接口更新！</div> <div class="info">各位轻淘客开放API使用者你们好！此次更新增加了【淘抢购】、【聚划算】商品筛选的功能。更新的接口有：1、商品列表获取AP...</div> </a> <div class="more"> <div class="fr data">2017-07-28 16:31:49</div> </div> </div> </div>
+                        </div>
+                        <div class="more-msg" style="display: none;">暂无更多历史消息</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="v3-nav" class="none-mt">
+                <div class="common-wid v3-nav-area">
+                    <a class="active" href="http://www.qingtaoke.com/qingsou">商品库</a>
+                    <a class="" href="http://www.qingtaoke.com/baokuan">销量榜</a>
+                    <a class="" href="http://www.qingtaoke.com/realRank">实时爆款</a>
+                    <a class="" href="http://www.qingtaoke.com/activity">活动商品</a>
+                    <div class="fr nav-more-op"><em></em>导航</div>
+                </div>
+
+                <div id="nav-drop-down-box" class="clearfix nav-drop-down">
+                    <div class="common-wid nav-main-box">
+                        <div class="fl drop-down-item">
+                            <div id="drop-down-selected" class="fl selected">
+                                <div class="title">已选择的栏目</div>
+                                <div class="fl fixed">
+                                    <a href="javascript:;">商品库</a>
+                                </div>
+                                <div class="fl float">
+                                    <a href="javascript:;" data-val="xl">销量榜 <em></em></a>
+                                    <a href="javascript:;" data-val="bk">实时爆款 <em></em></a>
+                                    <a href="javascript:;" data-val="at">活动商品 <em></em></a>
+                                </div>
+                            </div>
+                            <div id="drop-down-select-options" class="fl select-options">
+                                <div class="title">未选择的栏目</div>
+                                <div class="fl float">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fr btn-area">
+                            <a href="javascript:;" id="nav-drop-down-cfm" class="btn cfm common-xCtJ-count" data-params="ea=轻搜-导航-设置">确定</a>
+                            <a href="javascript:;" id="nav-drop-down-cancel" class="btn cancel">取消</a>
+                        </div>
+                    </div>
+                    <div class="shadow-bg"></div>
+                </div>
+            </div>
+            @*<script>
+                var isReloadSort = true;//排序归零
+                var login_html = '<a href="/?r=userMsg/index" class="name"></a><a class="num" href="/?r=userCenter/authlist">【个人中心】</a>';
+                var NBTopNum = 0;
+                var nowNewYearSta = 1;
+
+                $(function () {
+                    var home_notice = $("#home-notice-area");
+                    var has_next = true;
+                    var page = 1;
+                    $("#v3-notice").on("click", function () {
+                        var tmp_fun;
+                        $("#home-notice-area").animate({ right: "-10px" }, 150);
+                        $("body").css("overflow", "hidden");
+
+                        $("#v3-common-header, #v3-header, #v3-header .head-nav, #v3-fixed-top, .v3-head-nav").addClass("hid");
+                        $("#huidangso-content-area").addClass("hid");
+                        tmp_fun = function () {
+                            $("#v3-notice .inner .msg").removeClass("msg").text("消息中心");
+                        };
+                        headerNotice.updateDo(tmp_fun);
+
+                    });
+                    home_notice.mouseleave(function () {
+                        home_notice.animate({ right: "-430px" }, 150);
+                        $("body").css("overflow", "auto");
+
+                        $("#v3-common-header, #v3-header, #v3-header .head-nav, #v3-fixed-top, .v3-head-nav").removeClass("hid");
+                        $("#huidangso-content-area").removeClass("hid");
+                    });
+
+                    var maskNBDom = $("#home-notice-area .mask-area");
+                    $("body").on("mouseover", "#home-notice-area .notice-banner li", function () {
+                        var noTopNum = $("#home-notice-area").scrollTop();
+                        var imgUrl = $(this).find("img").attr("src");
+                        NBTopNum = $(this)[0].offsetTop;
+                        maskNBDom.css("top", (NBTopNum - noTopNum) + 10 + "px");
+                        maskNBDom.find("img").attr("src", imgUrl);
+                        maskNBDom.show();
+                    });
+
+                    $("body").on("mouseout", "#home-notice-area .notice-banner li", function () {
+                        maskNBDom.hide();
+                    });
+
+                    home_notice.scroll(function () {
+                        var scrollTop = $(this).scrollTop();
+                        maskNBDom.css("top", NBTopNum - scrollTop + "px");
+                        var h = $(this).height();
+                        var sh = $(this)[0].scrollHeight;
+                        var st = $(this)[0].scrollTop;
+                        if (h + st >= sh) {
+                            userMsg(home_notice);
+                        }
+                    });
+
+
+                    var userMsg = function (home_notice) {
+                        if (has_next) {
+                            $.ajax({
+                                url: "/?r=userMsg/ajaxMsg",
+                                dataType: 'json',
+                                data: { page: page },
+                                timeout: 5000,
+                                success: function (json) {
+                                    var i, tmp, url;
+                                    if (json.status == 0 && home_notice.length > 0) {
+                                        page++;
+                                        if (json.data.no) {
+                                            has_next = false;
+                                            home_notice.find(".more-msg").show();
+                                        } else {
+                                            home_notice.find(".more-msg").hide();
+                                        }
+                                        if ((json.data.ad).length > 0) {
+                                            //广告位
+                                            //                                home_notice.find(".clearfix .notice-banner").html("");
+                                            for (i = 0; i < (json.data.ad).length; i++) {
+                                                tmp = json.data.ad[i];
+                                                url = tmp.url ? tmp.url : 'javascript:;';
+                                                home_notice.find(".clearfix .notice-banner").append('<li> <a href="' + url + '" target="_blank" rel="nofollow"> <img src="' + tmp.img + '" alt="' + tmp.description + '"></a></li>');
+                                            }
+                                        }
+                                        if ((json.data.list).length > 0) {
+                                            //                                home_notice.find(".clearfix .notice-list").html("");
+                                            //系统公告
+                                            headerNotice.viewItem(home_notice, json.data.list);
+                                        }
+                                        if (json.data.first) {
+                                            if (json.data.no) {
+                                                home_notice.find(".no-msg-data").removeClass("hide");
+                                                home_notice.find(".clearfix").addClass("hide");
+                                            } else {
+                                                home_notice.find(".no-msg-data").addClass("hide");
+                                                home_notice.find(".clearfix").removeClass("hide");
+                                            }
+                                            $("#home-notice-area").removeClass("hide");
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    };
+                    userMsg(home_notice);
+
+                });
+            </script>*@
+
+            
+
+
+            
         </div>
+      
+        
 
-
-        <div id="platform_logos_container" style="border:1px solid red;width:100%;height:200px">
-            平台logo集合
-        </div>
-
-        <div id="page_products_result" style="border:1px solid red;width:100%;height:500px">
-
-            <div id="search_sorting_container">
-                排序
-            </div>
-
-            <div id="product_list_container">
-                商品列表
-            </div>
-        </div>
-
-    </div>
-
-</div>
+       
+ 
 
 
     @*引入当前页面需要的js 支持 通过动态写入js脚本标记 实现版本控制*@

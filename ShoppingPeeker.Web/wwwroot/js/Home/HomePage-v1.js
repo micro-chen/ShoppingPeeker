@@ -15,7 +15,6 @@ $(function () {
 
         /*page controls begin*/
         //btn_save: $("#btn_save"),//保存按钮
-        container_fixed_top: $('#container_fixed_top'),//搜索悬浮框
         txt_search_keyword: $('#txt_search_keyword'),//搜索输入框
         btn_search_clear: $('i.search-clear'),//搜索内容清空按钮
         btn_search: $('#btn_search'),//搜索按钮
@@ -49,9 +48,6 @@ $(function () {
         /*init page */
         init: function (agrs) {
             //debugger;
-            /*头部悬浮设置*/
-            this.initFixedHead();
-
             //点击保存按钮事件
             //this.btn_save.click(homePage.saveDetails);
             //搜索输入框自动完成事件
@@ -130,43 +126,10 @@ $(function () {
 
             /*搜索按钮点击事件*/
             this.btn_search.click(homePage.btnSearchHandler);
-            
-          
-        },
 
-        initFixedHead: function () {
-            
-            var initHead = function (Ths) {
-            
-                var scrollTop = Ths.scrollTop();
-                
-                if (scrollTop >= 230) {
-                    //debugger
-                    homePage.container_fixed_top.slideDown(100);
-                } else {
-                    homePage.container_fixed_top.slideUp(100);
-                }
-                var commHead = $("#v3-common-header");
-                if (scrollTop >= 124) {
-                    var newNum = 140 - parseInt(scrollTop - 124);
-                    commHead.css("top", newNum + "px");
-
-                    $("#v3-header").css("background-position-y", "-" + parseInt((scrollTop - 124) / 2) + "px");
-                } else {
-                    commHead.css("top", "140px");
-                }
-                if (scrollTop <= 10) {
-                    $("#v3-header").css("background-position-y", "0");
-                }
-            }
-
-            initHead($(window));
-
-            $(window).scroll(function () {
-                initHead($(this));
-            });
 
         },
+
         /*输入关键词的按键事件*/
         searchKeywordKeyupHandler: function (event) {
             var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;

@@ -1,0 +1,108 @@
+/* var */
+/* share */
+.pointer {
+  cursor: pointer;
+}
+.breakTxt {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wordBreak {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+/* base */
+.clearfix {
+  *height: 1%;
+}
+.clearfix:after {
+  display: block;
+  content: " ";
+  height: 0;
+  line-height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.ml-0 {
+  margin-left: 0 !important;
+}
+.mt-0 {
+  margin-top: 0 !important;
+}
+.font-arial {
+  font-family: Arial;
+}
+.font-yaHei {
+  font-family: "Microsoft YaHei";
+}
+.show {
+  display: block !important;
+}
+.hide {
+  display: none !important;
+}
+.none-pad-left {
+  padding-left: 0 !important;
+}
+.none-pad-right {
+  padding-right: 0 !important;
+}
+.none-margin-right {
+  margin-right: 0 !important;
+}
+.oh {
+  overflow: hidden;
+}
+.txt-left {
+  text-align: left !important;
+}
+.txt-center {
+  text-align: center !important;
+}
+.txt-right {
+  text-align: right !important;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.text-light-gray {
+  color: #969696 !important;
+}
+.text-orange {
+  color: #ff6600 !important;
+}
+.fb {
+  font-weight: bold;
+}
+.num-font {
+  font-family: Arial !important;
+}
+.wid60 {
+  width: 60px !important;
+}
+.wid47 {
+  width: 47px !important;
+}
+.common-wid {
+  width: 1200px;
+  min-height: 1px;
+  margin: 0 auto;
+  /*background-color: #f2f2f2;*/
+}
+.main {
+  position: relative;
+  /*padding-bottom: 120px;*/
+}
+.header-list-nav {
+  padding: 0 30px;
+  float: left;
+}
+.common-bd-xCtJ-count,
+.common-xCtJ-count {
+  cursor: pointer;
+}

@@ -1,0 +1,82 @@
+/* var */
+/* share */
+.pointer {
+  cursor: pointer;
+}
+.breakTxt {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wordBreak {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+/* reset */
+* {
+  padding: 0;
+  margin: 0;
+}
+html,
+body {
+  font: 14px "Microsoft YaHei", Arial, Helvetica, Sans-Serif;
+}
+body {
+  width: 100%;
+  min-width: 1200px;
+  max-width: 1920px;
+  margin: 0 auto;
+  color: #6c6c6c;
+  background-image: none !important;
+  background-color: #fafafa !important;
+}
+input,
+textarea {
+  border: 0 none;
+  font-family: "Microsoft YaHei";
+}
+input:focus,
+textarea:focus {
+  outline: none;
+}
+input::-ms-clear {
+  display: none;
+}
+img {
+  max-width: 100%;
+  display: block;
+  border: 0;
+}
+a {
+  color: #6c6c6c;
+  text-decoration: none;
+}
+p,
+div {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+ul,
+li {
+  list-style: none;
+}
+b,
+i {
+  font-style: normal;
+  font-weight: normal;
+}
+em,
+i,
+b {
+  font-weight: normal;
+  font-style: normal;
+}
+div[contenteditable] {
+  outline: none;
+}
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
