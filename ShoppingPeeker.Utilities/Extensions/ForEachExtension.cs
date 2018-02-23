@@ -33,10 +33,18 @@ namespace System
 
         public static bool IsEmpty<T>(this IEnumerable<T> source)
         {
+            if (null==source)
+            {
+                return true;
+            }
             return !source.Any();
         }
         public static bool IsNotEmpty<T>(this IEnumerable<T> source)
         {
+            if (null==source)
+            {
+                return false;
+            }
             return source.Any();
         }
 
