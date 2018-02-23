@@ -879,3 +879,249 @@ https://uland.taobao.com/cp/pc_coupon_list?pid=mm_31965263_6394774_21932422&e=m%
 总结：这个方法比找别人和用淘宝买方便多了。
 
 --------------返利多的  价格不真实，水分大，如果没有同款 那么还是返利合适------
+
+docker 
+Docker start/stop/restart 命令
+ Docker 命令大全Docker 命令大全
+docker start :启动一个或多少已经被停止的容器
+docker stop :停止一个运行中的容器
+docker restart :重启容器
+语法
+docker start [OPTIONS] CONTAINER [CONTAINER...]
+docker stop [OPTIONS] CONTAINER [CONTAINER...]
+docker restart [OPTIONS] CONTAINER [CONTAINER...]
+实例
+启动已被停止的容器myrunoob
+docker start myrunoob
+停止运行中的容器myrunoob
+docker stop myrunoob
+重启容器myrunoob
+docker restart myrunoob
+
+docker run --name redis-server -p 6379:6379 -d redis  --appendonly yes
+
+启用客户端
+ docker exec -it redis-server redis-cli
+ 
+
+使用redis镜像
+运行容器
+runoob@runoob:~/redis$ docker run -p 6379:6379 -v $PWD/data:/data  -d redis:3.2 redis-server --appendonly yes
+43f7a65ec7f8bd64eb1c5d82bc4fb60e5eb31915979c4e7821759aac3b62f330
+runoob@runoob:~/redis$
+命令说明：
+-p 6379:6379 : 将容器的6379端口映射到主机的6379端口
+-v $PWD/data:/data : 将主机中当前目录下的data挂载到容器的/data
+redis-server --appendonly yes : 在容器执行redis-server启动命令，并打开redis持久化配置
+查看容器启动情况
+runoob@runoob:~/redis$ docker ps
+CONTAINER ID   IMAGE        COMMAND                 ...   PORTS                      NAMES
+43f7a65ec7f8   redis:3.2    "docker-entrypoint.sh"  ...   0.0.0.0:6379->6379/tcp     agitated_cray
+连接、查看容器
+使用redis镜像执行redis-cli命令连接到刚启动的容器,主机IP为172.17.0.1
+runoob@runoob:~/redis$ docker exec -it 43f7a65ec7f8 redis-cli
+172.17.0.1:6379> info
+# Server
+redis_version:3.2.0
+redis_git_sha1:00000000
+redis_git_dirty:0
+redis_build_id:f449541256e7d446
+redis_mode:standalone
+os:Linux 4.2.0-16-generic x86_64
+arch_bits:64
+multiplexing_api:epoll
+...
+
+
+-------注册阿里云 镜像  ，开通专属镜像加速服务-------------
+https://jplytq8f.mirror.aliyuncs.com
+
+针对安装了Docker Toolbox的用户，您可以参考以下配置步骤：
+
+创建一台安装有Docker环境的Linux虚拟机，指定机器名称为default，同时配置Docker加速器地址。
+
+docker-machine create --engine-registry-mirror=https://jplytq8f.mirror.aliyuncs.com -d virtualbox default
+查看机器的环境配置，并配置到本地，并通过Docker客户端访问Docker服务。
+
+docker-machine env default
+eval "$(docker-machine env default)"
+docker info
+针对安装了Docker for Windows的用户，您可以参考以下配置步骤：
+
+在系统右下角托盘图标内右键菜单选择 Settings，打开配置窗口后左侧导航菜单选择 Docker Daemon。编辑窗口内的JSON串，填写加速器地址，如下所示：
+{
+  "registry-mirrors": ["https://jplytq8f.mirror.aliyuncs.com"]
+}
+编辑完成，点击 Apply 保存按钮，等待Docker重启并应用配置的镜像加速器。
+
+注意
+
+Docker for Windows 和 Docker Toolbox是不兼容，如果同时安装两者的话，需要使用hyperv的参数启动。
+docker-machine create --engine-registry-mirror=https://jplytq8f.mirror.aliyuncs.com -d hyperv default
+Docker for Windows 有两种运行模式，一种运行Windows相关容器，一种运行传统的Linux容器。同一时间只能选择一种模式运行。
+相关文档
+
+Docker学习笔记之top,inspect,exec,export命令
+原创 2016年11月01日 11:37:12 标签：docker /top /inspect /exec /export 2431
+PS：我的实验环境我是直接在root下所以命令都不需要进行sudo
+
+查看容器进程
+
+docker top可以查看运行容器中运行的进程 
+一般用于查看后台型，交互型的需要到其他终端下查看 
+首先创建一个后台型容器并处于始终睡眠 
+docker run -d --name=daemon_top ubuntu /bin/bash -c 'while true;do sleep 1;done;' 
+docker ps查看一下运行的容器 
+docker top daemon_top将看到如下 
+UID PID PPID C STIME TTY TIME CMD 
+root 22858 22848 0 22:10 ? 00:00:00 /bin/bash -c while true;do sleep 1; done 
+root 22915 22858 0 22:10 ? 00:00:00 sleep 1 
+这里能看到两个进程while和sleep（这里我听说shell中的一条语句就是一个进程？？不知道是不是真的，下次可以试试？？？）
+
+查看容器信息
+
+docker inspect 容器名/容器ID可以查看容器的配置信息：容器名，环境变量， 运行命令， 主机配置，网络配置，数据卷配置。 
+主要还是需要了解这些内容的细节。（这个接下来再具体了解。） 
+-f或者–format格式化标识， 
+查询容器的运行状态： 
+docker inspect --format='{{.State.Running}}' 容器名 
+查询容器的IP的地址 
+docker inspect --format='{{.NetworkSettings.IPAddress}}' 容器名
+
+容器内执行命令
+
+我们通常可能会在一个正在运行的容器中启动另一个程序（并发启动）会用到docker exec命令 
+执行命令可以创建交互型和后台型 
+-d：后台型 
+-it：标准输入和关联终端 
+docker exec -d 容器名 touch /tmp/new_file 
+这个命令就是要运行一个后台任务，在 
+/tmp下创建一个名为new_file的文件 
+docker exec -it 容器名 /bin/bash 
+这个命令都可以用交互型和后台型容器。 
+如果用于后台型容器就可以为后台型容器关联一个终端。 
+（这里可以想想前台程序和后台程序的区别？？？？）
+
+容器的导入和导出
+
+docker export命令提供一种容器持久化的方式。我们在运行了容器后修改配置等等操作后，我们用docker export 命令将容器导出成文件，这样我们就可以进行分享。 
+docker export 容器名 > 文件名 
+导出后我们当然也可以将文件导入作为镜像 
+cat 文件名 | docker import - 镜像名:标记 
+import会将从标准输入 读取容器内容。 
+import也可以从网络上导入容器 
+docker import url res:tag(镜像名：标记) 
+思考？？？ 
+res:tag具体对应什么可以去找一个例子试试。
+
+----docker 扩展linux 的命令集合----
+docker pull docker.io/busybox
+可以直接通过
+docker run -ti busybox 进去操作，也可以按照如下笨方法创建容器并进去操作。
+
+基于busybox镜像创建容器busyboxtest：
+
+
+[root@niaoyun43442 yum.repos.d]# docker run  -dti  --name busyboxtest  docker.io/busybox  /bin/sh
+
+
+然后就可以使用busybox 中的命令了
+docker run busybox /bin/echo Hello Docker
+
+
+1:使用docker attach命令
+我们使用
+ 
+docker attach db3 或者 docker attach d48b21a7e439
+ 
+
+ 
+db3是后台容器的NAMES,d48b21a7e439是容器的进程ID  CONTAINER ID
+然后就进去了这个容器的ssh界面。
+但是它有一个缺点，只要这个连接终止，或者使用了exit命令，容器就会退出后台运行
+ 
+ 
+2:使用docker exec命令
+这个命令使用exit命令后，不会退出后台，一般使用这个命令，使用方法如下
+ 
+docker exec -it db3 /bin/sh 或者 docker exec -it d48b21a7e439 /bin/sh
+ 
+
+ 
+db3是后台容器的NAMES,d48b21a7e439是容器的进程ID  CONTAINER ID
+ /bin/sh 是固定写法
+它也能进入这个容器
+
+--------------在docker 运行dotnet core 程序------------
+https://hub.docker.com/r/microsoft/dotnet/
+
+拉取官方镜像：
+docker pull microsoft/dotnet
+
+控制台程序测试
+ocker run -it --rm microsoft/dotnet
+[now in the container]
+mkdir app
+cd app
+dotnet new console
+ls
+dotnet restore
+dotnet run
+dotnet bin/Debug/netcoreapp1.0/app.dll
+dotnet publish -c Release -o out
+dotnet out/app.dll
+exit
+
+asp.net mvc 程序测试
+docker run -p 8000:80 -e "ASPNETCORE_URLS=http://+:80" -it --rm microsoft/dotnet
+[now in the container]
+mkdir app
+cd app
+dotnet new mvc
+dotnet restore
+dotnet run
+exit
+After running dotnet run in the container, browse to http://localhost:8000 in your host machine.
+
+The experience is very similar using Windows Containers. The commands should be the same, with the exception of the docker run. Replace the docker run command above with the following two commands:
+
+docker run -e "ASPNETCORE_URLS=http://+:80" -it --rm microsoft/dotnet
+ipconfig
+Copy the IP address from the output of ipconfig. After running dotnet run in the container, browse to that IP address in your browser on your host machine.
+
+You should see a default ASP.NET Core site and logging activity in the container.
+ 
+---------删除全部容器---powershell----
+PowerShell is so much easier!
+
+docker ps -aq | foreach {docker rm $_}
+ @Samshal
+Samshal commented 18 days ago •  edited 
+And Powershell can be so much faster @jaywryan
+
+docker rm $(docker ps -aq)
+
+
+Tested on 1.12.3 (Windows and Linux (centos 7))
+
+Linux
+
+Containers
+
+docker rm $(docker ps -a -q)
+
+Images
+
+docker rmi $(docker images -q)
+
+Windows
+
+Containers
+
+FOR /f "tokens=*" %i IN ('docker ps -a -q') DO docker rm %i
+
+Images
+
+FOR /f "tokens=*" %i IN ('docker images -q -f "dangling=true"') DO docker rmi %i
+
+
