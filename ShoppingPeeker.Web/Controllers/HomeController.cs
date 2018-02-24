@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShoppingPeeker.Web.Mvc;
 
 using ShoppingPeeker.Web.ViewModels;
-
+using ShoppingPeeker.Web.Framework.PlatformFecture;
 
 namespace ShoppingPeeker.Web.Controllers
 {
@@ -23,6 +23,9 @@ namespace ShoppingPeeker.Web.Controllers
 			
 			var dataContainer = new BusinessViewModelContainer<HomePageViewModel>();
             var viewModel = new HomePageViewModel();
+            //热搜词汇- 从检索的5分钟的词列表中获取
+            viewModel.HotWords = HotWordService.GetHotWords();
+
             dataContainer.Data = viewModel;
 
             return View(dataContainer);

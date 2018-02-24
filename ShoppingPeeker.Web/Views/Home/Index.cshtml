@@ -4,327 +4,371 @@
 @using ShoppingPeeker.Web.ViewModels
 @model BusinessViewModelContainer<HomePageViewModel>
 
-    <link href="~/css/index/reset.css" rel="stylesheet" />
-    <link href="~/css/index/animate.css" rel="stylesheet" />
-    <link href="~/css/index/base.css" rel="stylesheet" />
-    <link href="~/css/index/common.css" rel="stylesheet" />
-    <link href="~/css/index/common3.css" rel="stylesheet" />
-    <link href="~/css/index/index.css" rel="stylesheet" />
-    <link href="~/css/index/rank-info.css" rel="stylesheet" />
-    <style type="text/css">
-        /*<![CDATA[*/
-        body {
-            background-color: #f5f5f5 !important;
-        }
-        /*]]>*/
-    </style>
+<link href="~/css/index/reset.css" rel="stylesheet" />
+<link href="~/css/index/animate.css" rel="stylesheet" />
+<link href="~/css/index/base.css" rel="stylesheet" />
+<link href="~/css/index/common.css" rel="stylesheet" />
+<link href="~/css/index/common3.css" rel="stylesheet" />
+<link href="~/css/index/index.css" rel="stylesheet" />
+<link href="~/css/index/rank-info.css" rel="stylesheet" />
+<style type="text/css">
+    /*<![CDATA[*/
+    body {
+        background-color: #f5f5f5 !important;
+    }
+    /*]]>*/
+</style>
 
-        <div id="huidangso-content-area">
+<div id="huidangso-content-area">
 
-            <div id="container_fixed_top" style="">
-                <div class="common-wid">
-                    <div class="fl fixed-logo">
-                        <a href="/home/index"></a>
+    <div id="container_fixed_top" style="">
+        <div class="common-wid">
+            <div class="fl fixed-logo">
+                <a href="/home/index"></a>
+            </div>
+            <div id="topSearch" class="fl f-search-box">
+                <input id="txt_header_search_keyword" class="fl ipt common-xCtJ-count" type="text" placeholder="商品关键词 / 链接 / 品牌 " maxlength="500" name="title" value="">
+                <i class="icon ion-android-cancel search-top-clear search-clear"></i>
+                <a id="btn_headerSearchIpt" class="fr btn common-xCtJ-count" type="text" placeholder="商品关键词 / 链接 / 品牌 " maxlength="500" name="title" value="" href="javascript:;">搜索</a>
+
+                <span class="v3-common-search-clear"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="now-new-year">
+        <div id="v3-header" class="" style="background-position-y: 0px;">
+            <div class="head-nav">
+                <div class="common-wid head-nav-box">
+                    @*<a href="http://www.huidangso.com/qingsou"><div class="fl common-head-logo"></div></a>*@
+                    <div class="fl nav-link">
+                        @* <ul>
+                                <li><a href="http://www.huidangso.com/qingsou">首页</a></li>
+                                <li class="solution">
+                                    <a href="javascript:;">解决方案 <em></em></a>
+                                    <!--下拉菜单-->
+                                    <div id="header-drop-down" class="header-drop-down pos-ab">
+                                        <div class="common-wid main">
+                                            <div class="fl goods">
+                                                <a href="http://www.huidangso.com/solution/index">
+                                                    <div class="title"><em></em>精准选品</div>
+                                                    <div class="con">确保商品推广价值的同时提升选品效率，实时行业数据一览无余让选品更轻松</div>
+                                                </a>
+                                            </div>
+                                            <div class="fl link">
+                                                <a href="http://www.huidangso.com/solution/transfer">
+                                                    <div class="title"><em></em>高效转链</div>
+                                                    <div class="con">轻功能、高效率、精打磨、匹配多种渠道、契合多种场景的一键式转链方案</div>
+                                                </a>
+                                            </div>
+                                            <div class="fl spread">
+                                                <a href="http://www.huidangso.com/solution/spread">
+                                                    <div class="title"><em></em>推广内容</div>
+                                                    <div class="con">
+                                                        <ul class="sp-kw">
+                                                            <li>内容 • 优质主图、优质文案</li>
+                                                            <li>定义 • 设置话术模版</li>
+                                                            <li>展示 • 所见即所得</li>
+                                                        </ul>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="fl data">
+                                                <a href="http://www.huidangso.com/solution/data">
+                                                    <div class="title data-tit">行业大数据</div>
+                                                    <div class="con">
+                                                        <ul>
+                                                            <li>商品采集大数据</li>
+                                                            <li>大数据部分应用</li>
+                                                            <li>大数据应用方向</li>
+                                                        </ul>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><a href="http://www.huidangso.com/chajian" target="_blank">旗舰版插件</a></li>
+                                <li><a href="http://www.huidangso.com/openapi" target="_blank">开放 API</a></li>
+                            </ul>
+                        *@
                     </div>
-                    <div id="topSearch" class="fl f-search-box" >
-                        <input id="topSearchInput"class="fl ipt common-xCtJ-count" type="text" placeholder="商品关键词 / 链接 / 品牌 " maxlength="500" name="title" value="">
-                        <input type="hidden" name="f" value="1">
-                        <a id="headerSearchIpt"  class="fr btn common-xCtJ-count"  type="text" placeholder="商品关键词 / 链接 / 品牌 " maxlength="500" name="title" value="" href="javascript:;">搜索</a>
-                        <ul class="js_box" style="display: none;"></ul>
-                        <span class="v3-common-search-clear"></span>
+                    <div class="fr nav-user">
+                        <ul>
+                            <!--<li><a href="#">联系我们</a></li>
+                            <li><a href="#">联系客服</a></li>-->
+                            <li><a href="/home/about" target="_blank">关于我们</a></li>
+                            <li><a href="/home/help" target="_blank">帮助中心</a></li>
+                            <li><a href="javascript:;" target="_blank" rel="nofollow">商务合作</a></li>
+                            <li class="account js-login">
+                                @*<a href="http://www.huidangso.com/?r=userMsg/index" class="name">15032646625</a><a class="num" href="http://www.huidangso.com/?r=userCenter/authlist">【个人中心】</a>*@
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="now-new-year">
-                <div id="v3-header" class="" style="background-position-y: 0px;">
-                    <div class="head-nav">
-                        <div class="common-wid head-nav-box">
-                            @*<a href="http://www.qingtaoke.com/qingsou"><div class="fl common-head-logo"></div></a>*@
-                            <div class="fl nav-link">
-                                @* <ul>
-            <li><a href="http://www.qingtaoke.com/qingsou">首页</a></li>
-            <li class="solution">
-                <a href="javascript:;">解决方案 <em></em></a>
-                <!--下拉菜单-->
-                <div id="header-drop-down" class="header-drop-down pos-ab">
-                    <div class="common-wid main">
-                        <div class="fl goods">
-                            <a href="http://www.qingtaoke.com/solution/index">
-                                <div class="title"><em></em>精准选品</div>
-                                <div class="con">确保商品推广价值的同时提升选品效率，实时行业数据一览无余让选品更轻松</div>
+        <div class="layout-area">
+            <div class="common-wid">
+                <div class="clearfix search-area-box">
+                    <div id="searchForm" class="head-search-area">
+                        <div class="head-search-box">
+                            <input id="txt_search_keyword" class="fl ipt common-xCtJ-count" type="text" autocomplete="off" placeholder="商品关键词 / 链接 / 品牌 " maxlength="500" name="title" value="">
+                            <i class="icon ion-android-cancel search-bottom-clear search-clear"></i>
+
+                            <a href="javascript:;" class="fr search-btn common-xCtJ-count">
+                                <span id="btn_search"><em></em>搜索一下</span>
                             </a>
-                        </div>
-                        <div class="fl link">
-                            <a href="http://www.qingtaoke.com/solution/transfer">
-                                <div class="title"><em></em>高效转链</div>
-                                <div class="con">轻功能、高效率、精打磨、匹配多种渠道、契合多种场景的一键式转链方案</div>
-                            </a>
-                        </div>
-                        <div class="fl spread">
-                            <a href="http://www.qingtaoke.com/solution/spread">
-                                <div class="title"><em></em>推广内容</div>
-                                <div class="con">
-                                    <ul class="sp-kw">
-                                        <li>内容 • 优质主图、优质文案</li>
-                                        <li>定义 • 设置话术模版</li>
-                                        <li>展示 • 所见即所得</li>
-                                    </ul>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="fl data">
-                            <a href="http://www.qingtaoke.com/solution/data">
-                                <div class="title data-tit">行业大数据</div>
-                                <div class="con">
-                                    <ul>
-                                        <li>商品采集大数据</li>
-                                        <li>大数据部分应用</li>
-                                        <li>大数据应用方向</li>
-                                    </ul>
-                                </div>
-                            </a>
+                            <ul class="js_box" style="display: none;"></ul>
+                            <span class="v3-common-search-clear"></span>
                         </div>
                     </div>
-                </div>
-            </li>
-            <li><a href="http://www.qingtaoke.com/chajian" target="_blank">旗舰版插件</a></li>
-            <li><a href="http://www.qingtaoke.com/openapi" target="_blank">开放 API</a></li>
-        </ul>
-                                *@
-                            </div>
-                            <div class="fr nav-user">
-                                <ul>
-                                    <!--<li><a href="#">联系我们</a></li>
-    <li><a href="#">联系客服</a></li>-->
-                                    <li><a href="/home/about" target="_blank">关于我们</a></li>
-                                    <li><a href="/home/help" target="_blank">帮助中心</a></li>
-                                    <li><a href="javascript:;" target="_blank" rel="nofollow">商务合作</a></li>
-                                    <li class="account js-login">
-                                        @*<a href="http://www.qingtaoke.com/?r=userMsg/index" class="name">15032646625</a><a class="num" href="http://www.qingtaoke.com/?r=userCenter/authlist">【个人中心】</a>*@
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="layout-area">
-                    <div class="common-wid">
-                        <div class="clearfix search-area-box">
-                            <form class="head-search-area" method="get" action="http://www.qingtaoke.com/qingsou" id="searchForm">
-                                <div class="head-search-box">
-                                    <input autocomplete="off" disableautocomplete="" class="fl ipt common-xCtJ-count" data-params="ea=轻搜-头部搜索" data-fun="headSearch" type="text" placeholder="关键词 / 链接 / 品牌 / ID" id="headerSearchIpt" maxlength="500" name="title" value="">
-                                    <input type="hidden" name="f" value="1">
-                                    <a href="javascript:;" class="fr search-btn common-xCtJ-count" data-params="ea=轻搜-吸顶搜索" data-fun="headSearch" onclick="$(this).closest(&#39;form&#39;).submit();">
-                                        <span><em></em>轻搜一下</span>
-                                    </a>
-                                    <ul class="js_box" style="display: none;"></ul>
-                                    <span class="v3-common-search-clear"></span>
-                                </div>
-                            </form>
-                            <div class="head-search-kw">
-                                <a href="http://www.qingtaoke.com/qingsou?title=%E6%B4%97%E8%A1%A3%E6%B6%B2&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-洗衣液">洗衣液</a>
-                                <a href="http://www.qingtaoke.com/qingsou?title=%E5%86%85%E8%A3%A4&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-内裤">内裤</a>
-                                <a href="http://www.qingtaoke.com/qingsou?title=%E5%B8%BD%E5%AD%90&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-帽子">帽子</a>
-                                <a href="http://www.qingtaoke.com/qingsou?title=%E7%94%B7%E8%A3%85&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-男装">男装</a>
-                                <a href="http://www.qingtaoke.com/qingsou?title=%E6%88%92%E6%8C%87&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-戒指">戒指</a>
-                                <a href="http://www.qingtaoke.com/qingsou?title=%E5%A4%96%E5%A5%97&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-外套">外套</a>
-                                <a href="http://www.qingtaoke.com/qingsou?title=%E8%A2%9C%E5%AD%90%E7%94%B7&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-袜子男">袜子男</a>
-                                <a href="http://www.qingtaoke.com/?r=default/kwRank" class="kw-rank hide">热搜词排行 &gt;</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="v3-notice">
-                <a href="javascript:;" class="inner new-y">
-                    <em></em>
-                    <b class="fl msg">消息中心 (<span class="animated flash infinite"> 2 </span>)</b>
-                </a>
-            </div>
+                    <div class="head-search-kw">
+                        <a href="javascript:void(0)" class="kw-rank">热搜词排行 :</a>
 
-
-            <div id="home-notice-area">
-                <div class="mask-area">
-                    <div class="box"><img src="http://www.qingtaoke.com/qingsou" alt=""></div>
-                </div>
-                <div class="main">
-                    <div class="no-msg-data hide">
-                        <span class="icon"></span>
-                        <p>暂时没有消息</p>
-                    </div>
-
-                    <div class="clearfix">
-                        <ul class="notice-banner"></ul>
-                        <div class="notice-list">
-                            <div class="list-item"> <div class="fl icon"><em></em><span></span></div> <div class="fr con"> <a href="http://www.qingtaoke.com/?r=/huidangsoNotice/detail&amp;id=102&amp;type=sys"> <div class="title">新春年货节 · 2018过年回家</div> <div class="info">“不忘初心，方得始终”，对于轻淘客而言，有责任、有担当一直都是使命。自轻淘客成立，一路走来，追梦与感恩同行。我们敢于创新...</div> </a> <div class="more"> <div class="fr data">2018-01-25 09:04:13</div> </div> </div> </div><div class="list-item"> <div class="fl icon"><em></em><span></span></div> <div class="fr con"> <a href="http://www.qingtaoke.com/?r=/huidangsoNotice/detail&amp;id=91&amp;type=sys"> <div class="title">见证 · 2018轻淘客行业先锋之路</div> <div class="info">2018悄然到来...&nbsp;轻淘客第二次官网升级&nbsp;紧随其后..本次迭代新增了消息中心、变更手机、优化交互...</div> </a> <div class="more"> <div class="fr data">2018-01-16 11:48:54</div> </div> </div> </div><div class="list-item msg-read"> <div class="fl icon"><span></span></div> <div class="fr con"> <a href="http://www.qingtaoke.com/?r=/huidangsoNotice/detail&amp;id=86&amp;type=sys"> <div class="title">开放API接口更新！</div> <div class="info">各位轻淘客开放API使用者你们好！此次更新增加了【淘抢购】、【聚划算】商品筛选的功能。更新的接口有：1、商品列表获取AP...</div> </a> <div class="more"> <div class="fr data">2017-07-28 16:31:49</div> </div> </div> </div>
-                        </div>
-                        <div class="more-msg" style="display: none;">暂无更多历史消息</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="v3-nav" class="none-mt">
-                <div class="common-wid v3-nav-area">
-                    <a class="active" href="http://www.qingtaoke.com/qingsou">商品库</a>
-                    <a class="" href="http://www.qingtaoke.com/baokuan">销量榜</a>
-                    <a class="" href="http://www.qingtaoke.com/realRank">实时爆款</a>
-                    <a class="" href="http://www.qingtaoke.com/activity">活动商品</a>
-                    <div class="fr nav-more-op"><em></em>导航</div>
-                </div>
-
-                <div id="nav-drop-down-box" class="clearfix nav-drop-down">
-                    <div class="common-wid nav-main-box">
-                        <div class="fl drop-down-item">
-                            <div id="drop-down-selected" class="fl selected">
-                                <div class="title">已选择的栏目</div>
-                                <div class="fl fixed">
-                                    <a href="javascript:;">商品库</a>
-                                </div>
-                                <div class="fl float">
-                                    <a href="javascript:;" data-val="xl">销量榜 <em></em></a>
-                                    <a href="javascript:;" data-val="bk">实时爆款 <em></em></a>
-                                    <a href="javascript:;" data-val="at">活动商品 <em></em></a>
-                                </div>
-                            </div>
-                            <div id="drop-down-select-options" class="fl select-options">
-                                <div class="title">未选择的栏目</div>
-                                <div class="fl float">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="fr btn-area">
-                            <a href="javascript:;" id="nav-drop-down-cfm" class="btn cfm common-xCtJ-count" data-params="ea=轻搜-导航-设置">确定</a>
-                            <a href="javascript:;" id="nav-drop-down-cancel" class="btn cancel">取消</a>
-                        </div>
-                    </div>
-                    <div class="shadow-bg"></div>
-                </div>
-            </div>
-            @*<script>
-                var isReloadSort = true;//排序归零
-                var login_html = '<a href="/?r=userMsg/index" class="name"></a><a class="num" href="/?r=userCenter/authlist">【个人中心】</a>';
-                var NBTopNum = 0;
-                var nowNewYearSta = 1;
-
-                $(function () {
-                    var home_notice = $("#home-notice-area");
-                    var has_next = true;
-                    var page = 1;
-                    $("#v3-notice").on("click", function () {
-                        var tmp_fun;
-                        $("#home-notice-area").animate({ right: "-10px" }, 150);
-                        $("body").css("overflow", "hidden");
-
-                        $("#v3-common-header, #v3-header, #v3-header .head-nav, #v3-fixed-top, .v3-head-nav").addClass("hid");
-                        $("#huidangso-content-area").addClass("hid");
-                        tmp_fun = function () {
-                            $("#v3-notice .inner .msg").removeClass("msg").text("消息中心");
-                        };
-                        headerNotice.updateDo(tmp_fun);
-
-                    });
-                    home_notice.mouseleave(function () {
-                        home_notice.animate({ right: "-430px" }, 150);
-                        $("body").css("overflow", "auto");
-
-                        $("#v3-common-header, #v3-header, #v3-header .head-nav, #v3-fixed-top, .v3-head-nav").removeClass("hid");
-                        $("#huidangso-content-area").removeClass("hid");
-                    });
-
-                    var maskNBDom = $("#home-notice-area .mask-area");
-                    $("body").on("mouseover", "#home-notice-area .notice-banner li", function () {
-                        var noTopNum = $("#home-notice-area").scrollTop();
-                        var imgUrl = $(this).find("img").attr("src");
-                        NBTopNum = $(this)[0].offsetTop;
-                        maskNBDom.css("top", (NBTopNum - noTopNum) + 10 + "px");
-                        maskNBDom.find("img").attr("src", imgUrl);
-                        maskNBDom.show();
-                    });
-
-                    $("body").on("mouseout", "#home-notice-area .notice-banner li", function () {
-                        maskNBDom.hide();
-                    });
-
-                    home_notice.scroll(function () {
-                        var scrollTop = $(this).scrollTop();
-                        maskNBDom.css("top", NBTopNum - scrollTop + "px");
-                        var h = $(this).height();
-                        var sh = $(this)[0].scrollHeight;
-                        var st = $(this)[0].scrollTop;
-                        if (h + st >= sh) {
-                            userMsg(home_notice);
-                        }
-                    });
-
-
-                    var userMsg = function (home_notice) {
-                        if (has_next) {
-                            $.ajax({
-                                url: "/?r=userMsg/ajaxMsg",
-                                dataType: 'json',
-                                data: { page: page },
-                                timeout: 5000,
-                                success: function (json) {
-                                    var i, tmp, url;
-                                    if (json.status == 0 && home_notice.length > 0) {
-                                        page++;
-                                        if (json.data.no) {
-                                            has_next = false;
-                                            home_notice.find(".more-msg").show();
-                                        } else {
-                                            home_notice.find(".more-msg").hide();
-                                        }
-                                        if ((json.data.ad).length > 0) {
-                                            //广告位
-                                            //                                home_notice.find(".clearfix .notice-banner").html("");
-                                            for (i = 0; i < (json.data.ad).length; i++) {
-                                                tmp = json.data.ad[i];
-                                                url = tmp.url ? tmp.url : 'javascript:;';
-                                                home_notice.find(".clearfix .notice-banner").append('<li> <a href="' + url + '" target="_blank" rel="nofollow"> <img src="' + tmp.img + '" alt="' + tmp.description + '"></a></li>');
-                                            }
-                                        }
-                                        if ((json.data.list).length > 0) {
-                                            //                                home_notice.find(".clearfix .notice-list").html("");
-                                            //系统公告
-                                            headerNotice.viewItem(home_notice, json.data.list);
-                                        }
-                                        if (json.data.first) {
-                                            if (json.data.no) {
-                                                home_notice.find(".no-msg-data").removeClass("hide");
-                                                home_notice.find(".clearfix").addClass("hide");
-                                            } else {
-                                                home_notice.find(".no-msg-data").addClass("hide");
-                                                home_notice.find(".clearfix").removeClass("hide");
-                                            }
-                                            $("#home-notice-area").removeClass("hide");
-                                        }
-                                    }
+                        @{
+                            if (null != Model && Model.Data != null)
+                            {
+                                var hotWords = Model.Data.HotWords;
+                                foreach (var item in hotWords)
+                                {
+                                    <a href="javascript:void(0)" class="common-xCtJ-count" data-word="@item">@item</a>
                                 }
-                            })
+                            }
                         }
+
+                        @*<a href="http://www.huidangso.com/qingsou?title=%E6%B4%97%E8%A1%A3%E6%B6%B2&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-洗衣液">洗衣液</a>
+                            <a href="http://www.huidangso.com/qingsou?title=%E5%86%85%E8%A3%A4&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-内裤">内裤</a>
+                            <a href="http://www.huidangso.com/qingsou?title=%E5%B8%BD%E5%AD%90&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-帽子">帽子</a>
+                            <a href="http://www.huidangso.com/qingsou?title=%E7%94%B7%E8%A3%85&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-男装">男装</a>
+                            <a href="http://www.huidangso.com/qingsou?title=%E6%88%92%E6%8C%87&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-戒指">戒指</a>
+                            <a href="http://www.huidangso.com/qingsou?title=%E5%A4%96%E5%A5%97&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-外套">外套</a>
+                            <a href="http://www.huidangso.com/qingsou?title=%E8%A2%9C%E5%AD%90%E7%94%B7&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-袜子男">袜子男</a>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="v3-notice">
+        <a href="javascript:;" class="inner new-y">
+            <em></em>
+            <b class="fl msg">消息中心 (<span class="animated flash infinite"> 2 </span>)</b>
+        </a>
+    </div>
+
+
+    <div id="home-notice-area">
+        <div class="mask-area">
+            <div class="box"><img src="" alt=""></div>
+        </div>
+        <div class="main">
+            <div class="no-msg-data hide">
+                <span class="icon"></span>
+                <p>暂时没有消息</p>
+            </div>
+
+            <div class="clearfix">
+                <ul class="notice-banner"></ul>
+                <div class="notice-list">
+                    <div class="list-item">
+                        <div class="fl icon"><em></em><span></span></div>
+                        <div class="fr con">
+                            <a href="http://www.huidangso.com/?r=/huidangsoNotice/detail&amp;id=102&amp;type=sys">
+                                <div class="title">新春年货节 · 2018过年回家</div>
+                                <div class="info">“不忘初心，方得始终”，对于轻淘客而言，有责任、有担当一直都是使命。自轻淘客成立，一路走来，追梦与感恩同行。我们敢于创新...</div>
+                            </a>
+                            <div class="more"> <div class="fr data">2018-01-25 09:04:13</div> </div>
+                        </div>
+                    </div><div class="list-item">
+                        <div class="fl icon">
+                            <em></em><span></span>
+                        </div> <div class="fr con">
+                            <a href="http://www.huidangso.com/?r=/huidangsoNotice/detail&amp;id=91&amp;type=sys">
+                                <div class="title">见证 · 2018轻淘客行业先锋之路</div> <div class="info">2018悄然到来...&nbsp;轻淘客第二次官网升级&nbsp;紧随其后..本次迭代新增了消息中心、变更手机、优化交互...</div>
+                            </a>
+                            <div class="more"> <div class="fr data">2018-01-16 11:48:54</div> </div>
+                        </div>
+                    </div>
+                    <div class="list-item msg-read">
+                        <div class="fl icon"><span></span></div> <div class="fr con">
+                            <a href="http://www.huidangso.com/?r=/huidangsoNotice/detail&amp;id=86&amp;type=sys">
+                                <div class="title">开放API接口更新！</div> <div class="info">各位轻淘客开放API使用者你们好！此次更新增加了【淘抢购】、【聚划算】商品筛选的功能。更新的接口有：1、商品列表获取AP...</div>
+                            </a>
+                            <div class="more">
+                                <div class="fr data">2017-07-28 16:31:49</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="more-msg" style="display: none;">暂无更多历史消息</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="v3-nav" class="none-mt">
+        <div class="common-wid v3-nav-area">
+            <a class="active" href="http://www.huidangso.com/qingsou">商品库</a>
+            <a class="" href="http://www.huidangso.com/baokuan">销量榜</a>
+            <a class="" href="http://www.huidangso.com/realRank">实时爆款</a>
+            <a class="" href="http://www.huidangso.com/activity">活动商品</a>
+            <div class="fr nav-more-op"><em></em>导航</div>
+        </div>
+
+        <div id="nav-drop-down-box" class="clearfix nav-drop-down">
+            <div class="common-wid nav-main-box">
+                <div class="fl drop-down-item">
+                    <div id="drop-down-selected" class="fl selected">
+                        <div class="title">已选择的栏目</div>
+                        <div class="fl fixed">
+                            <a href="javascript:;">商品库</a>
+                        </div>
+                        <div class="fl float">
+                            <a href="javascript:;" data-val="xl">销量榜 <em></em></a>
+                            <a href="javascript:;" data-val="bk">实时爆款 <em></em></a>
+                            <a href="javascript:;" data-val="at">活动商品 <em></em></a>
+                        </div>
+                    </div>
+                    <div id="drop-down-select-options" class="fl select-options">
+                        <div class="title">未选择的栏目</div>
+                        <div class="fl float">
+                        </div>
+                    </div>
+                </div>
+                <div class="fr btn-area">
+                    <a href="javascript:;" id="nav-drop-down-cfm" class="btn cfm common-xCtJ-count" data-params="ea=轻搜-导航-设置">确定</a>
+                    <a href="javascript:;" id="nav-drop-down-cancel" class="btn cancel">取消</a>
+                </div>
+            </div>
+            <div class="shadow-bg"></div>
+        </div>
+    </div>
+    @*<script>
+            var isReloadSort = true;//排序归零
+            var login_html = '<a href="/?r=userMsg/index" class="name"></a><a class="num" href="/?r=userCenter/authlist">【个人中心】</a>';
+            var NBTopNum = 0;
+            var nowNewYearSta = 1;
+
+            $(function () {
+                var home_notice = $("#home-notice-area");
+                var has_next = true;
+                var page = 1;
+                $("#v3-notice").on("click", function () {
+                    var tmp_fun;
+                    $("#home-notice-area").animate({ right: "-10px" }, 150);
+                    $("body").css("overflow", "hidden");
+
+                    $("#v3-common-header, #v3-header, #v3-header .head-nav, #v3-fixed-top, .v3-head-nav").addClass("hid");
+                    $("#huidangso-content-area").addClass("hid");
+                    tmp_fun = function () {
+                        $("#v3-notice .inner .msg").removeClass("msg").text("消息中心");
                     };
-                    userMsg(home_notice);
+                    headerNotice.updateDo(tmp_fun);
 
                 });
-            </script>*@
+                home_notice.mouseleave(function () {
+                    home_notice.animate({ right: "-430px" }, 150);
+                    $("body").css("overflow", "auto");
 
-            
+                    $("#v3-common-header, #v3-header, #v3-header .head-nav, #v3-fixed-top, .v3-head-nav").removeClass("hid");
+                    $("#huidangso-content-area").removeClass("hid");
+                });
+
+                var maskNBDom = $("#home-notice-area .mask-area");
+                $("body").on("mouseover", "#home-notice-area .notice-banner li", function () {
+                    var noTopNum = $("#home-notice-area").scrollTop();
+                    var imgUrl = $(this).find("img").attr("src");
+                    NBTopNum = $(this)[0].offsetTop;
+                    maskNBDom.css("top", (NBTopNum - noTopNum) + 10 + "px");
+                    maskNBDom.find("img").attr("src", imgUrl);
+                    maskNBDom.show();
+                });
+
+                $("body").on("mouseout", "#home-notice-area .notice-banner li", function () {
+                    maskNBDom.hide();
+                });
+
+                home_notice.scroll(function () {
+                    var scrollTop = $(this).scrollTop();
+                    maskNBDom.css("top", NBTopNum - scrollTop + "px");
+                    var h = $(this).height();
+                    var sh = $(this)[0].scrollHeight;
+                    var st = $(this)[0].scrollTop;
+                    if (h + st >= sh) {
+                        userMsg(home_notice);
+                    }
+                });
 
 
-            
-        </div>
-      
-        
+                var userMsg = function (home_notice) {
+                    if (has_next) {
+                        $.ajax({
+                            url: "/?r=userMsg/ajaxMsg",
+                            dataType: 'json',
+                            data: { page: page },
+                            timeout: 5000,
+                            success: function (json) {
+                                var i, tmp, url;
+                                if (json.status == 0 && home_notice.length > 0) {
+                                    page++;
+                                    if (json.data.no) {
+                                        has_next = false;
+                                        home_notice.find(".more-msg").show();
+                                    } else {
+                                        home_notice.find(".more-msg").hide();
+                                    }
+                                    if ((json.data.ad).length > 0) {
+                                        //广告位
+                                        //                                home_notice.find(".clearfix .notice-banner").html("");
+                                        for (i = 0; i < (json.data.ad).length; i++) {
+                                            tmp = json.data.ad[i];
+                                            url = tmp.url ? tmp.url : 'javascript:;';
+                                            home_notice.find(".clearfix .notice-banner").append('<li> <a href="' + url + '" target="_blank" rel="nofollow"> <img src="' + tmp.img + '" alt="' + tmp.description + '"></a></li>');
+                                        }
+                                    }
+                                    if ((json.data.list).length > 0) {
+                                        //                                home_notice.find(".clearfix .notice-list").html("");
+                                        //系统公告
+                                        headerNotice.viewItem(home_notice, json.data.list);
+                                    }
+                                    if (json.data.first) {
+                                        if (json.data.no) {
+                                            home_notice.find(".no-msg-data").removeClass("hide");
+                                            home_notice.find(".clearfix").addClass("hide");
+                                        } else {
+                                            home_notice.find(".no-msg-data").addClass("hide");
+                                            home_notice.find(".clearfix").removeClass("hide");
+                                        }
+                                        $("#home-notice-area").removeClass("hide");
+                                    }
+                                }
+                            }
+                        })
+                    }
+                };
+                userMsg(home_notice);
 
-       
- 
+            });
+        </script>*@
 
 
-    @*引入当前页面需要的js 支持 通过动态写入js脚本标记 实现版本控制*@
-    @section Scripts {
 
-        <script type="text/javascript">
+
+
+</div>
+
+
+
+
+
+
+
+@*引入当前页面需要的js 支持 通过动态写入js脚本标记 实现版本控制*@
+@section Scripts {
+
+    <script type="text/javascript">
     document.write("<script src='/js/Home/HomePage.js?v=" + js_lib_version + "'><\/script>");
     $(function() {
         /*when page is loaded,set server data to page js*/
@@ -333,5 +377,5 @@
             ShoppingPeeker.HomePage.init(initData);
         }
     })
-        </script>
-    }
+    </script>
+}

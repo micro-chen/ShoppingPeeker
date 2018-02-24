@@ -16,8 +16,11 @@ $(function () {
         /*page controls begin*/
         //btn_save: $("#btn_save"),//保存按钮
         container_fixed_top: $('#container_fixed_top'),//搜索悬浮框
+        txt_header_search_keyword: $('#txt_header_search_keyword'),//悬浮搜索框
+        btn_search_top_clear: $('i.search-top-clear'),//悬浮搜索内容清空按钮
+        btn_headerSearchIpt: $('#btn_headerSearchIpt'),//悬浮搜索按钮
         txt_search_keyword: $('#txt_search_keyword'),//搜索输入框
-        btn_search_clear: $('i.search-clear'),//搜索内容清空按钮
+        btn_search_clear: $('i.search-bottom-clear'),//搜索内容清空按钮
         btn_search: $('#btn_search'),//搜索按钮
         /*page controls end*/
 
@@ -54,11 +57,81 @@ $(function () {
 
             //点击保存按钮事件
             //this.btn_save.click(homePage.saveDetails);
+            this.txt_header_search_keyword.keyup(function () {
+               
+                //如果内容不为空 显示清空按钮
+                var keyWord = homePage.txt_header_search_keyword.val();
+                homePage.txt_search_keyword.val(keyWord);
+                if (isNullOrEmpty(keyWord)) {
+                    homePage.btn_search_top_clear.hide();
+                } else {
+                    homePage.btn_search_top_clear.show();
+                }
+            });
+            /*浮动搜索的自动完成事件*/
+            this.txt_header_search_keyword.autocomplete({
+                serviceUrl: this.api_auto_complete_suggest,
+                dataType: "json",
+                width: "504px",
+                deferRequestBy: 300,//不要立即请求 间隔一个缓冲
+                paramName: "key",
+                params: { "key": this.txt_header_search_keyword.val(), "sign": ShoppingPeeker.apiSignFunc() },
+                formatResult: function (suggestion, currentValue, idx) {
+
+
+                    var processorStrong = function () {
+                        // Do not replace anything if the current value is empty
+                        if (!currentValue) {
+                            return suggestion.value;
+                        }
+                        if (suggestion.value.indexOf(currentValue) < 0) {
+                            return suggestion.value;
+                        }
+
+                        var pattern = '(' + $.Autocomplete.utils.escapeRegExChars(currentValue) + ')';
+
+                        var fullText = '<strong>' + suggestion.value + '<\/strong>';
+                        return fullText
+                            .replace(new RegExp(pattern, 'gi'), '<\/strong>$1<strong>');
+                        //.replace(/&/g, '&amp;')
+                        //.replace(/</g, '&lt;')
+                        //.replace(/>/g, '&gt;')
+                        //.replace(/"/g, '&quot;')
+                        //.replace(/&lt;(\/?strong)&gt;/g, '<$1>');
+
+                    }
+                    var displayText = processorStrong();
+                    //console.log(idx);
+                    var backColor = "";
+                    //色彩差异
+                    if (idx == 0) {
+                        backColor = "#f58c85";
+                    } else if (idx == 1) {
+                        backColor = "#fcbc4b";
+                    } else if (idx == 2) {
+                        backColor = "#a1d958";
+                    }
+                    if (backColor != "") {
+                        return "<em class='hot' style='background-color:{2};'>{0}</em> <span class=''>{1}</span>".format(idx + 1, displayText, backColor);
+                    }
+                    return "<em class='hot'>{0}</em> <span class=''>{1}</span>".format(idx + 1, displayText);
+
+                },
+                onSelect: function (suggestion) {
+                    console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
+                    if (!isNullOrEmpty(suggestion.value)) {
+                        homePage.txt_header_search_keyword.val(suggestion.value);
+                        homePage.txt_search_keyword.val(suggestion.value);
+                        homePage.btn_search.click();
+                    }
+
+                }
+            });
             //搜索输入框自动完成事件
             this.txt_search_keyword.autocomplete({
                 serviceUrl: this.api_auto_complete_suggest,
                 dataType: "json",
-                width:"640px",
+                width:"678px",
                 deferRequestBy: 300,//不要立即请求 间隔一个缓冲
                 paramName: "key",
                 params: { "key": this.txt_search_keyword.val(), "sign": ShoppingPeeker.apiSignFunc() },
@@ -106,6 +179,7 @@ $(function () {
                 onSelect: function (suggestion) {
                     console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
                     if (!isNullOrEmpty(suggestion.value)) {
+                        homePage.txt_header_search_keyword.val(suggestion.value);
                         homePage.txt_search_keyword.val(suggestion.value);
                         homePage.btn_search.click();
                     }
@@ -113,10 +187,11 @@ $(function () {
                 }
             });
 
-            /*搜索输入框的回车事件*/
+            /*搜索输入框的keyup事件*/
             this.txt_search_keyword.keyup(homePage.searchKeywordKeyupHandler);
-            /*清除内容按钮*/
-            this.btn_search_clear.mouseover(function () {
+
+            /*搜索内容清除按钮事件*/
+            $("i.search-clear").mouseover(function () {
                 var sender = $(this);
                 sender.addClass("search-clear-highlight");
             }).mouseout(function () {
@@ -124,6 +199,7 @@ $(function () {
                 sender.removeClass("search-clear-highlight");
                 }).click(function () {
                     var sender = $(this);
+                    homePage.txt_header_search_keyword.val("");
                     homePage.txt_search_keyword.val("");
                     sender.hide();
                 });
@@ -133,7 +209,7 @@ $(function () {
             
           
         },
-
+        /*悬浮头部*/
         initFixedHead: function () {
             
             var initHead = function (Ths) {
@@ -142,9 +218,13 @@ $(function () {
                 
                 if (scrollTop >= 230) {
                     //debugger
-                    homePage.container_fixed_top.slideDown(100);
+                    homePage.container_fixed_top.slideDown(100);//下拉浮动显示
+                    var domAutoComplete = $("div.autocomplete-suggestions");
+                    domAutoComplete.hide();
+
+                  
                 } else {
-                    homePage.container_fixed_top.slideUp(100);
+                    homePage.container_fixed_top.slideUp(100);//隐藏
                 }
                 var commHead = $("#v3-common-header");
                 if (scrollTop >= 124) {
@@ -176,6 +256,7 @@ $(function () {
             }
             //如果内容不为空 显示清空按钮
             var keyWord = homePage.txt_search_keyword.val();
+            homePage.txt_header_search_keyword.val(keyWord);
             if (isNullOrEmpty(keyWord)) {
                 homePage.btn_search_clear.hide();
             } else {
@@ -191,7 +272,7 @@ $(function () {
 
             var keyWord = homePage.txt_search_keyword.val();
             if (isNullOrEmpty(keyWord)) {
-                var warnInfo = homePage.txt_search_keyword.attr("placeholder");
+                var warnInfo = "请输入：" +homePage.txt_search_keyword.attr("placeholder");
                 MessageBox.toast(warnInfo);
                 return;
             }

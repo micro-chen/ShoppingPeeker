@@ -37,7 +37,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord
                 var lstWords_Tmall = new List<string>();
                 var lstWords_Taobao = new List<string>();
                 //------------cache begin-----------------------
-                string cacheKey = string.Concat("AutoMapping-", keyWord);
+                string cacheKey = string.Concat("AutoMapping:", keyWord);
                 var cacheManager = CacheConfigFactory.GetCacheManager();
                 if (cacheManager.IsHasSet(cacheKey))
                 {
@@ -124,7 +124,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.AutoMappingWord
                         break;
                     }
                 }
-                cacheManager.Set(cacheKey, resultList, 30);
+                cacheManager.Set(cacheKey, resultList, 60*5);
 
                 return resultList;
             });

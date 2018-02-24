@@ -142,7 +142,7 @@ namespace ShoppingPeeker.Utilities.Caching
         /// <returns>The value associated with the specified key.</returns>
         public virtual T Get<T>(string key)
         {
-
+            
             var rValue = Database.StringGet(key);
             if (!rValue.HasValue)
                 return default(T);
@@ -150,7 +150,20 @@ namespace ShoppingPeeker.Utilities.Caching
 
             return result;
         }
-
+        /// <summary>
+        /// 返回键的剩余时间
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public virtual TimeSpan GetLeftTime(string key)
+        {
+            var time = Database.KeyTimeToLive(key);
+            if (null==time)
+            {
+                return TimeSpan.Zero;
+            }
+            return time.Value;
+        }
         /// <summary>
         /// Adds the specified key and object to the cache.
         /// </summary>

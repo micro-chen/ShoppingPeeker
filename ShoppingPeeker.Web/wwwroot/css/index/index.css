@@ -5035,7 +5035,7 @@ p.line-mask {
 .now-new-year {
   width: auto;
   height: 450px;
-  background: url("https://img.alicdn.com/imgextra/i4/2508158775/TB288mUpmfD8KJjSszhXXbIJFXa_!!2508158775.png?t=20180205025") top center no-repeat;
+  background: url("/images/bg.png") top center no-repeat;
   position: relative;
 }
 .now-new-year .js_box {
@@ -5160,4 +5160,108 @@ p.line-mask {
   float: left;
   margin: 11px 10px auto auto;
   background: url(/images/v3/icon3.png?t=20180126013) -180px -11px no-repeat;
+}
+
+/*---autocomplete style-----begin*/
+.autocomplete-suggestions {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid #999;
+    background: #FFF;
+    cursor: default;
+    overflow: auto;
+    -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+    -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+    box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+}
+
+.autocomplete-suggestion {
+    /*padding: 2px 5px;
+    white-space: nowrap;
+    overflow: hidden;*/
+    cursor: pointer;
+    /* padding: 5px; */
+    padding-left: 13px;
+    color: black;
+    display: block;
+    font: menu;
+    font-size: 14px;
+    line-height: 26px;
+    overflow: hidden;
+    font-weight: normal;
+    border: 1px solid transparent;
+    border-width: 1px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+    .autocomplete-suggestion em {
+        background: #7cbce4;
+        border-radius: 2px;
+        overflow: hidden;
+        margin: 6px 9px 0 0;
+        width: 15px;
+        height: 16px;
+        padding-right: 1px;
+        line-height: 15px;
+        font-size: 11px;
+        text-align: center;
+        color: white;
+        -webkit-text-size-adjust: none;
+    }
+
+    .autocomplete-suggestion em, .autocomplete-suggestion span {
+        float: left;
+    }
+
+
+.autocomplete-no-suggestion {
+    padding: 2px 5px;
+}
+
+.autocomplete-selected {
+    background: #F0F0F0;
+}
+
+.autocomplete-suggestions strong {
+    font-weight: bold;
+    color: #000;
+}
+
+.autocomplete-group {
+    padding: 2px 5px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #000;
+    display: block;
+    border-bottom: 1px solid #000;
+}
+/*---autocomplete style-----end*/
+.search-top-clear {
+    font-size: 20px;
+    color: #C3C3C3;
+    display: none;
+    position: absolute;
+    right: 65px;
+    bottom: auto;
+    left: auto;
+    cursor: pointer;
+    top: 4px;
+}
+
+.search-bottom-clear {
+    font-size: 25px;
+    color: #C3C3C3;
+    display: none;
+    position: absolute;
+    right: 175px;
+    bottom: auto;
+    left: auto;
+    cursor: pointer;
+}
+
+.search-clear-highlight {
+    color: #4F8EF7;
 }

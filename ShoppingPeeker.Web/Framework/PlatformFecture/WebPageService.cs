@@ -46,6 +46,9 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
 
             try
             {
+                //注册搜索词到热词服务
+                HotWordService.AddWord(webArgs.KeyWord);
+
                 //是否开启内容缓存，如果开启，那么从缓存中加载内容
                 if (true == WorkContext.IsFetchPageCacheaAble)
                 {

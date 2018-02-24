@@ -310,7 +310,7 @@
                 offset = that.el.offset();
             //---调整了样式----2018-0129
             offset.top += 5;
-            offset.left -= 13;
+           // offset.left -= 13;
             var styles = { 'top': offset.top, 'left': offset.left };
 
             if (orientation === 'auto') {
