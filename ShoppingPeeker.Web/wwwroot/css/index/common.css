@@ -660,7 +660,7 @@ a.advanced-search-item-active span {
   width: 38px;
   height: 21px;
   display: inline-block;
-  background-image: url("../images/new-msg.gif?t=20180205025");
+  background-image: url("/images/new-msg.gif?t=20180205025");
   float: left;
   margin: 5px 4px auto auto;
 }
@@ -905,13 +905,13 @@ a.advanced-search-item-active span {
 }
 .media-list-s12-icon {
   width: 32px;
-  background-image: url('../images/s1712/s1212.png?t=20180205025') !important;
+  background-image: url('/images/s1712/s1212.png?t=20180205025') !important;
 }
 .media-list-s12t-icon {
   display: inline-block;
   width: 41px;
   height: 18px;
-  background-image: url('../images/s1712/s1212t.png?t=20180205025') !important;
+  background-image: url('/images/s1712/s1212t.png?t=20180205025') !important;
 }
 .media-list-coupon {
   margin-top: 8px;
@@ -1099,7 +1099,7 @@ a.advanced-search-item-active span {
   left: auto;
   width: 33px;
   height: 65px;
-  background: url("../images/go-top.png?t=20180205025") left top no-repeat;
+  background: url("/images/go-top.png?t=20180205025") left top no-repeat;
   cursor: pointer;
   display: none;
   transition: top .4s;
@@ -1115,13 +1115,13 @@ a.advanced-search-item-active span {
   top: -10% !important;
 }
 .common-icons {
-  background-image: url("../images/icon1.png?t=20180205025");
+  background-image: url("/images/icon1.png?t=20180205025");
 }
 .common-icons2 {
-  background-image: url("../images/icon2.png?t=20180205025");
+  background-image: url("/images/icon2.png?t=20180205025");
 }
 .common-icons3 {
-  background-image: url("../images/v3/icon3.png?t=20180205025");
+  background-image: url("/images/v3/icon3.png?t=20180205025");
 }
 /**意见反馈**/
 .boutique-list-feedback {
@@ -1147,7 +1147,7 @@ a.advanced-search-item-active span {
   width: 19px;
   height: 19px;
   margin: 11px;
-  background-image: url("../images/icon1.png?t=20180205025");
+  background-image: url("/images/icon1.png?t=20180205025");
   background-position: -348px -171px !important;
 }
 .boutique-list-feedback-box {
@@ -1373,7 +1373,7 @@ a.advanced-search-item-active span {
   width: 19px;
   height: 19px;
   margin: 11px;
-  background-image: url("../images/icon1.png?t=20180205025");
+  background-image: url("/images/icon1.png?t=20180205025");
   background-position: -348px -171px !important;
 }
 .commodity-correction .boutique-list-feedback-confirm {
@@ -1444,7 +1444,7 @@ a.advanced-search-item-active span {
   color: #6c6c6c;
 }
 .agree-selected i {
-  background-image: url("../images/icon1.png?t=20180205025");
+  background-image: url("/images/icon1.png?t=20180205025");
   background-position: -158px -19px;
 }
 .agree-selected a {
@@ -1513,7 +1513,7 @@ a.advanced-search-item-active span {
 .help-header .common-header-search-input {
   border-left: none;
 }
-.help-header .qtk-notice-nav ul {
+.help-header .huidangso-notice-nav ul {
   overflow: hidden;
 }
 .help-header.well-goods-header .common-logo-area {
@@ -1669,7 +1669,7 @@ a.advanced-search-item-active span {
 .loading-more-load .loading-more-load-icon {
   width: 32px;
   height: 32px;
-  background: url("../images/loading.gif?t=20180205025") no-repeat;
+  background: url("/images/loading.gif?t=20180205025") no-repeat;
   margin: 9px 27px;
   float: left;
 }
@@ -1725,7 +1725,7 @@ a.advanced-search-item-active span {
   cursor: pointer;
 }
 /*淘客大数据-榜单-下拉菜单*/
-.common-qtk-drop-down {
+.common-huidangso-drop-down {
   height: 148px;
   overflow: hidden;
   position: absolute;
@@ -1739,80 +1739,80 @@ a.advanced-search-item-active span {
   text-align: center;
   display: none;
 }
-.common-qtk-drop-down.empty-banner {
+.common-huidangso-drop-down.empty-banner {
   top: 50px !important;
 }
-.common-qtk-drop-down ul {
+.common-huidangso-drop-down ul {
   width: 1200px;
   height: 148px !important;
   margin: 0 auto;
   overflow: hidden;
 }
-.common-qtk-drop-down ul li {
+.common-huidangso-drop-down ul li {
   display: inline-block;
   padding: 32px 0;
   overflow: hidden;
   float: none !important;
   margin-right: 112px !important;
 }
-.common-qtk-drop-down ul li:last-child {
+.common-huidangso-drop-down ul li:last-child {
   margin-right: 0 !important;
 }
-.common-qtk-drop-down ul li a {
+.common-huidangso-drop-down ul li a {
   display: block;
   padding: 0 !important;
 }
-.common-qtk-drop-down ul li a em {
+.common-huidangso-drop-down ul li a em {
   width: 65px;
   height: 63px;
   display: inline-block;
 }
-.common-qtk-drop-down ul li a em.icon1 {
+.common-huidangso-drop-down ul li a em.icon1 {
   background-position: -344px -548px;
 }
-.common-qtk-drop-down ul li a em.icon2 {
+.common-huidangso-drop-down ul li a em.icon2 {
   background-position: -427px -548px;
 }
-.common-qtk-drop-down ul li a em.icon3 {
+.common-huidangso-drop-down ul li a em.icon3 {
   background-position: -511px -548px;
 }
-.common-qtk-drop-down ul li a em.icon4 {
+.common-huidangso-drop-down ul li a em.icon4 {
   background-position: -595px -548px;
 }
-.common-qtk-drop-down ul li a em.icon5 {
+.common-huidangso-drop-down ul li a em.icon5 {
   background-position: -678px -548px;
 }
-.common-qtk-drop-down ul li a div {
+.common-huidangso-drop-down ul li a div {
   font-size: 12px;
   color: #333;
   line-height: 0;
   transition: color .3s;
 }
-.common-qtk-drop-down ul li:hover {
+.common-huidangso-drop-down ul li:hover {
   background-color: #fff;
 }
-.common-qtk-drop-down ul li:hover div {
+.common-huidangso-drop-down ul li:hover div {
   color: #fe5c5c;
 }
-.common-qtk-drop-down ul li.active div {
+.common-huidangso-drop-down ul li.active div {
   color: #fe5c5c;
 }
-.common-qtk-drop-down ul li:first-child:hover div {
+.common-huidangso-drop-down ul li:first-child:hover div {
   color: #4a95db;
 }
-.common-qtk-drop-down ul li:first-child.active div {
+.common-huidangso-drop-down ul li:first-child.active div {
   color: #4a95db;
 }
-.common-header .common-qtk-drop-down ul li div {
+.common-header .common-huidangso-drop-down ul li div {
   line-height: 1.5;
 }
-.qtk-home-header .common-qtk-drop-down {
+.huidangso-home-header .common-huidangso-drop-down {
   top: 130px;
 }
-.qtk-home-header .common-qtk-drop-down ul li div {
+.huidangso-home-header .common-huidangso-drop-down ul li div {
   line-height: 1.5;
 }
-.fixed-search .common-qtk-drop-down {
+.fixed-search .common-huidangso-drop-down {
   top: 42px;
 }
 /*共用slogan*/

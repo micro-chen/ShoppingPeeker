@@ -22,6 +22,8 @@ $(function () {
         txt_search_keyword: $('#txt_search_keyword'),//搜索输入框
         btn_search_clear: $('i.search-bottom-clear'),//搜索内容清空按钮
         btn_search: $('#btn_search'),//搜索按钮
+        container_hot_words: $('#container_hot_words'),//
+        btn_goTop: $('#btn_goTop'),//
         /*page controls end*/
 
         api_auto_complete_suggest: "api/servicebus/suggest",//搜索框自动完成api
@@ -206,8 +208,25 @@ $(function () {
 
             /*搜索按钮点击事件*/
             this.btn_search.click(homePage.btnSearchHandler);
-            
+
+              /*注册热搜词点击事件*/
+            this.container_hot_words.find("a[data-word]").click(homePage.hotWordSelectHandler);
+
+
+            /*回到顶部*/
+            this.btn_goTop.click(function () {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 200);
+            });
           
+        },
+        /*热搜词点击事件*/
+        hotWordSelectHandler: function() {
+            var sender = $(this);
+            var word = sender.attr("data-word");
+            homePage.txt_header_search_keyword.val(word);
+            homePage.txt_search_keyword.val(word);
         },
         /*悬浮头部*/
         initFixedHead: function () {

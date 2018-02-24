@@ -112,6 +112,7 @@
         <div class="layout-area">
             <div class="common-wid">
                 <div class="clearfix search-area-box">
+                    <!--搜索框-->
                     <div id="searchForm" class="head-search-area">
                         <div class="head-search-box">
                             <input id="txt_search_keyword" class="fl ipt common-xCtJ-count" type="text" autocomplete="off" placeholder="商品关键词 / 链接 / 品牌 " maxlength="500" name="title" value="">
@@ -124,7 +125,9 @@
                             <span class="v3-common-search-clear"></span>
                         </div>
                     </div>
-                    <div class="head-search-kw">
+
+                    <!--热搜词-->
+                    <div id="container_hot_words" class="head-search-kw">
                         <a href="javascript:void(0)" class="kw-rank">热搜词排行 :</a>
 
                         @{
@@ -137,14 +140,6 @@
                                 }
                             }
                         }
-
-                        @*<a href="http://www.huidangso.com/qingsou?title=%E6%B4%97%E8%A1%A3%E6%B6%B2&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-洗衣液">洗衣液</a>
-                            <a href="http://www.huidangso.com/qingsou?title=%E5%86%85%E8%A3%A4&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-内裤">内裤</a>
-                            <a href="http://www.huidangso.com/qingsou?title=%E5%B8%BD%E5%AD%90&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-帽子">帽子</a>
-                            <a href="http://www.huidangso.com/qingsou?title=%E7%94%B7%E8%A3%85&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-男装">男装</a>
-                            <a href="http://www.huidangso.com/qingsou?title=%E6%88%92%E6%8C%87&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-戒指">戒指</a>
-                            <a href="http://www.huidangso.com/qingsou?title=%E5%A4%96%E5%A5%97&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-外套">外套</a>
-                            <a href="http://www.huidangso.com/qingsou?title=%E8%A2%9C%E5%AD%90%E7%94%B7&amp;f=1" class="common-xCtJ-count" data-params="ea=轻搜-袜子男">袜子男</a>*@
 
                     </div>
                 </div>
@@ -208,157 +203,913 @@
         </div>
     </div>
 
-    <div id="v3-nav" class="none-mt">
-        <div class="common-wid v3-nav-area">
-            <a class="active" href="http://www.huidangso.com/qingsou">商品库</a>
-            <a class="" href="http://www.huidangso.com/baokuan">销量榜</a>
-            <a class="" href="http://www.huidangso.com/realRank">实时爆款</a>
-            <a class="" href="http://www.huidangso.com/activity">活动商品</a>
-            <div class="fr nav-more-op"><em></em>导航</div>
-        </div>
+    @*
 
-        <div id="nav-drop-down-box" class="clearfix nav-drop-down">
-            <div class="common-wid nav-main-box">
-                <div class="fl drop-down-item">
-                    <div id="drop-down-selected" class="fl selected">
-                        <div class="title">已选择的栏目</div>
-                        <div class="fl fixed">
-                            <a href="javascript:;">商品库</a>
-                        </div>
-                        <div class="fl float">
-                            <a href="javascript:;" data-val="xl">销量榜 <em></em></a>
-                            <a href="javascript:;" data-val="bk">实时爆款 <em></em></a>
-                            <a href="javascript:;" data-val="at">活动商品 <em></em></a>
-                        </div>
-                    </div>
-                    <div id="drop-down-select-options" class="fl select-options">
-                        <div class="title">未选择的栏目</div>
-                        <div class="fl float">
-                        </div>
-                    </div>
-                </div>
-                <div class="fr btn-area">
-                    <a href="javascript:;" id="nav-drop-down-cfm" class="btn cfm common-xCtJ-count" data-params="ea=轻搜-导航-设置">确定</a>
-                    <a href="javascript:;" id="nav-drop-down-cancel" class="btn cancel">取消</a>
-                </div>
-            </div>
-            <div class="shadow-bg"></div>
-        </div>
-    </div>
-    @*<script>
-            var isReloadSort = true;//排序归零
-            var login_html = '<a href="/?r=userMsg/index" class="name"></a><a class="num" href="/?r=userCenter/authlist">【个人中心】</a>';
-            var NBTopNum = 0;
-            var nowNewYearSta = 1;
+        <script>
+                var isReloadSort = true;//排序归零
+                var login_html = '<a href="/?r=userMsg/index" class="name"></a><a class="num" href="/?r=userCenter/authlist">【个人中心】</a>';
+                var NBTopNum = 0;
+                var nowNewYearSta = 1;
 
-            $(function () {
-                var home_notice = $("#home-notice-area");
-                var has_next = true;
-                var page = 1;
-                $("#v3-notice").on("click", function () {
-                    var tmp_fun;
-                    $("#home-notice-area").animate({ right: "-10px" }, 150);
-                    $("body").css("overflow", "hidden");
+                $(function () {
+                    var home_notice = $("#home-notice-area");
+                    var has_next = true;
+                    var page = 1;
+                    $("#v3-notice").on("click", function () {
+                        var tmp_fun;
+                        $("#home-notice-area").animate({ right: "-10px" }, 150);
+                        $("body").css("overflow", "hidden");
 
-                    $("#v3-common-header, #v3-header, #v3-header .head-nav, #v3-fixed-top, .v3-head-nav").addClass("hid");
-                    $("#huidangso-content-area").addClass("hid");
-                    tmp_fun = function () {
-                        $("#v3-notice .inner .msg").removeClass("msg").text("消息中心");
-                    };
-                    headerNotice.updateDo(tmp_fun);
+                        $("#v3-common-header, #v3-header, #v3-header .head-nav, #v3-fixed-top, .v3-head-nav").addClass("hid");
+                        $("#huidangso-content-area").addClass("hid");
+                        tmp_fun = function () {
+                            $("#v3-notice .inner .msg").removeClass("msg").text("消息中心");
+                        };
+                        headerNotice.updateDo(tmp_fun);
 
-                });
-                home_notice.mouseleave(function () {
-                    home_notice.animate({ right: "-430px" }, 150);
-                    $("body").css("overflow", "auto");
+                    });
+                    home_notice.mouseleave(function () {
+                        home_notice.animate({ right: "-430px" }, 150);
+                        $("body").css("overflow", "auto");
 
-                    $("#v3-common-header, #v3-header, #v3-header .head-nav, #v3-fixed-top, .v3-head-nav").removeClass("hid");
-                    $("#huidangso-content-area").removeClass("hid");
-                });
+                        $("#v3-common-header, #v3-header, #v3-header .head-nav, #v3-fixed-top, .v3-head-nav").removeClass("hid");
+                        $("#huidangso-content-area").removeClass("hid");
+                    });
 
-                var maskNBDom = $("#home-notice-area .mask-area");
-                $("body").on("mouseover", "#home-notice-area .notice-banner li", function () {
-                    var noTopNum = $("#home-notice-area").scrollTop();
-                    var imgUrl = $(this).find("img").attr("src");
-                    NBTopNum = $(this)[0].offsetTop;
-                    maskNBDom.css("top", (NBTopNum - noTopNum) + 10 + "px");
-                    maskNBDom.find("img").attr("src", imgUrl);
-                    maskNBDom.show();
-                });
+                    var maskNBDom = $("#home-notice-area .mask-area");
+                    $("body").on("mouseover", "#home-notice-area .notice-banner li", function () {
+                        var noTopNum = $("#home-notice-area").scrollTop();
+                        var imgUrl = $(this).find("img").attr("src");
+                        NBTopNum = $(this)[0].offsetTop;
+                        maskNBDom.css("top", (NBTopNum - noTopNum) + 10 + "px");
+                        maskNBDom.find("img").attr("src", imgUrl);
+                        maskNBDom.show();
+                    });
 
-                $("body").on("mouseout", "#home-notice-area .notice-banner li", function () {
-                    maskNBDom.hide();
-                });
+                    $("body").on("mouseout", "#home-notice-area .notice-banner li", function () {
+                        maskNBDom.hide();
+                    });
 
-                home_notice.scroll(function () {
-                    var scrollTop = $(this).scrollTop();
-                    maskNBDom.css("top", NBTopNum - scrollTop + "px");
-                    var h = $(this).height();
-                    var sh = $(this)[0].scrollHeight;
-                    var st = $(this)[0].scrollTop;
-                    if (h + st >= sh) {
-                        userMsg(home_notice);
-                    }
-                });
+                    home_notice.scroll(function () {
+                        var scrollTop = $(this).scrollTop();
+                        maskNBDom.css("top", NBTopNum - scrollTop + "px");
+                        var h = $(this).height();
+                        var sh = $(this)[0].scrollHeight;
+                        var st = $(this)[0].scrollTop;
+                        if (h + st >= sh) {
+                            userMsg(home_notice);
+                        }
+                    });
 
 
-                var userMsg = function (home_notice) {
-                    if (has_next) {
-                        $.ajax({
-                            url: "/?r=userMsg/ajaxMsg",
-                            dataType: 'json',
-                            data: { page: page },
-                            timeout: 5000,
-                            success: function (json) {
-                                var i, tmp, url;
-                                if (json.status == 0 && home_notice.length > 0) {
-                                    page++;
-                                    if (json.data.no) {
-                                        has_next = false;
-                                        home_notice.find(".more-msg").show();
-                                    } else {
-                                        home_notice.find(".more-msg").hide();
-                                    }
-                                    if ((json.data.ad).length > 0) {
-                                        //广告位
-                                        //                                home_notice.find(".clearfix .notice-banner").html("");
-                                        for (i = 0; i < (json.data.ad).length; i++) {
-                                            tmp = json.data.ad[i];
-                                            url = tmp.url ? tmp.url : 'javascript:;';
-                                            home_notice.find(".clearfix .notice-banner").append('<li> <a href="' + url + '" target="_blank" rel="nofollow"> <img src="' + tmp.img + '" alt="' + tmp.description + '"></a></li>');
-                                        }
-                                    }
-                                    if ((json.data.list).length > 0) {
-                                        //                                home_notice.find(".clearfix .notice-list").html("");
-                                        //系统公告
-                                        headerNotice.viewItem(home_notice, json.data.list);
-                                    }
-                                    if (json.data.first) {
+                    var userMsg = function (home_notice) {
+                        if (has_next) {
+                            $.ajax({
+                                url: "/?r=userMsg/ajaxMsg",
+                                dataType: 'json',
+                                data: { page: page },
+                                timeout: 5000,
+                                success: function (json) {
+                                    var i, tmp, url;
+                                    if (json.status == 0 && home_notice.length > 0) {
+                                        page++;
                                         if (json.data.no) {
-                                            home_notice.find(".no-msg-data").removeClass("hide");
-                                            home_notice.find(".clearfix").addClass("hide");
+                                            has_next = false;
+                                            home_notice.find(".more-msg").show();
                                         } else {
-                                            home_notice.find(".no-msg-data").addClass("hide");
-                                            home_notice.find(".clearfix").removeClass("hide");
+                                            home_notice.find(".more-msg").hide();
                                         }
-                                        $("#home-notice-area").removeClass("hide");
+                                        if ((json.data.ad).length > 0) {
+                                            //广告位
+                                            //                                home_notice.find(".clearfix .notice-banner").html("");
+                                            for (i = 0; i < (json.data.ad).length; i++) {
+                                                tmp = json.data.ad[i];
+                                                url = tmp.url ? tmp.url : 'javascript:;';
+                                                home_notice.find(".clearfix .notice-banner").append('<li> <a href="' + url + '" target="_blank" rel="nofollow"> <img src="' + tmp.img + '" alt="' + tmp.description + '"></a></li>');
+                                            }
+                                        }
+                                        if ((json.data.list).length > 0) {
+                                            //                                home_notice.find(".clearfix .notice-list").html("");
+                                            //系统公告
+                                            headerNotice.viewItem(home_notice, json.data.list);
+                                        }
+                                        if (json.data.first) {
+                                            if (json.data.no) {
+                                                home_notice.find(".no-msg-data").removeClass("hide");
+                                                home_notice.find(".clearfix").addClass("hide");
+                                            } else {
+                                                home_notice.find(".no-msg-data").addClass("hide");
+                                                home_notice.find(".clearfix").removeClass("hide");
+                                            }
+                                            $("#home-notice-area").removeClass("hide");
+                                        }
                                     }
                                 }
-                            }
-                        })
-                    }
-                };
-                userMsg(home_notice);
+                            })
+                        }
+                    };
+                    userMsg(home_notice);
 
-            });
+                });
+            </script>*@
+
+
+    <div class="box-layout">
+        <div id="v3-filter">
+            <div class="common-wid filter-options">
+                <div class="filter-nav">
+                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=0&amp;is_all_selected=1" class=" active common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=全部">
+                        全部            <span class="0">
+                        </span>
+                    </a>
+                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=10&amp;is_all_selected=1" class="  common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=女装">
+                        女装            <span class="10">
+                        </span>
+                    </a>
+                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=11&amp;is_all_selected=1" class="  common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=内衣">
+                        内衣            <span class="11">
+                        </span>
+                    </a>
+                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=12&amp;is_all_selected=1" class="  common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=男装">
+                        男装            <span class="12">
+                        </span>
+                    </a>
+                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=2&amp;is_all_selected=1" class="  common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=母婴">
+                        母婴            <span class="2">
+                        </span>
+                    </a>
+                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=3&amp;is_all_selected=1" class="  common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=美妆">
+                        美妆            <span class="3">
+                        </span>
+                    </a>
+                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=4&amp;is_all_selected=1" class="  common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=居家">
+                        居家            <span class="4">
+                        </span>
+                    </a>
+                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=5&amp;is_all_selected=1" class="  common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=鞋包配饰">
+                        鞋包配饰            <span class="5">
+                        </span>
+                    </a>
+                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=6&amp;is_all_selected=1" class="  common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=美食">
+                        美食            <span class="6">
+                        </span>
+                    </a>
+                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=7&amp;is_all_selected=1" class="  common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=文体">
+                        文体            <span class="7">
+                        </span>
+                    </a>
+                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=8&amp;is_all_selected=1" class="  common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=家电数码">
+                        家电数码            <span class="8">
+                        </span>
+                    </a>
+                </div>
+
+                <!--平台icon 开始-->
+                <div id="v3-nav" class="none-mt">
+                    <div class="common-wid v3-nav-area">
+                        <a class="active" href="http://www.huidangso.com/qingsou">商品库</a>
+                        <a class="" href="http://www.huidangso.com/baokuan">销量榜</a>
+                        <a class="" href="http://www.huidangso.com/realRank">实时爆款</a>
+                        <a class="" href="http://www.huidangso.com/activity">活动商品</a>
+                    </div>
+
+                </div>
+                <!--平台icon 结束-->
+                <div id="filterForm" class="quick-filter">
+                    <div class="fl sort">
+                       
+                        <a href="javascript:" class="active ad-filter-sort common-xCtJ-count" data-val="1" onclick="sort(this);" data-fun="searchBeforeAfter" data-params="ea=人气">
+                            人气
+                        </a>
+                        <a href="javascript:" class=" ad-filter-sort common-xCtJ-count" data-val="2" onclick="sort(this);" data-fun="searchBeforeAfter" data-params="ea=最新">
+                            最新   <span class="common-icons icon-gray-down"></span>
+                        </a>
+                        <a href="javascript:" class=" ad-filter-sort common-xCtJ-count" data-val="3" onclick="sort(this);" data-fun="searchBeforeAfter" data-params="ea=销量">
+                            销量 <span class="common-icons icon-gray-down"></span>
+                        </a>
+
+                        <a href="javascript:" class=" common-xCtJ-count" data-val="4" onclick="sort(this);" data-fun="searchBeforeAfter" data-params="ea=价格">
+                            价格  <span class="common-icons icon-gray-up"></span>
+                        </a>
+                        <div class="fl g-item">
+                            <span class="fl opt-tit">价格区间: &nbsp;</span>
+                            <span>
+                                <input id="txt_min_price" class="fl input-is-number ipt-decimal" type="text" maxlength="9" name="min_price" placeholder="¥" value="">
+                                <b class="fl">-</b>
+                                <input id="txt_max_price" class="fl input-is-number ipt-decimal" type="text" maxlength="9" name="max_price" placeholder="¥" value="">
+                            </span>
+                             
+                                <span href="javascript:;" id="btn_price_confim" class="btn cfm common-xCtJ-count">确定</span>
+                            
+                        </div>
+
+                        @*<a href="javascript:" class=" ad-filter-sort common-xCtJ-count" data-val="5" onclick="sort(this);" data-fun="searchBeforeAfter" data-params="ea=佣金">
+            佣金                                    <span class="common-icons icon-gray-down"></span>
+        </a>
+        <a href="javascript:" class=" ad-filter-sort common-xCtJ-count" data-val="8" onclick="sort(this);" data-fun="searchBeforeAfter" data-params="ea=券金额">
+            券金额                                    <span class="common-icons icon-gray-down"></span>
+        </a>*@
+
+                    </div>
+                    @*<div class="fr high-filter">
+                        <div class="fl">
+                            <a href="javascript:" onclick="redio(this);toSubmit();" class=" common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=今日新品">
+                                <input name="new" class="rediotype" value="0" type="hidden">
+                                <em></em>今日新品
+                            </a>
+                            <a href="javascript:" onclick="redio(this,&#39;input[name=\&#39;isTaoQiangGou\&#39;],input[name=\&#39;isJu\&#39;]&#39;);toSubmit();" class=" common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=聚划算">
+                                <input name="isJu" class="rediotype" value="0" type="hidden">
+                                <em></em>聚划算
+                            </a>
+                            <a href="javascript:" onclick="redio(this,&#39;input[name=\&#39;isTaoQiangGou\&#39;],input[name=\&#39;isJu\&#39;]&#39;);toSubmit();" class=" common-xCtJ-count" data-fun="searchBeforeAfter" data-params="ea=淘抢购">
+                                <input name="isTaoQiangGou" class="rediotype" value="0" type="hidden">
+                                <em></em>淘抢购
+                            </a>
+                        </div>
+                        <div id="high-filter-btn" class="fr high-filter-btn">高级筛选 <em></em></div>
+                    </div> 
+                        
+                        <div id="high-filter-box" class="high-filter-box">
+                        <div class="high-filter-box-main">
+                            <div class="h-f-item a-item">
+                                <div class="fl title">店铺</div>
+                                <div class="fl options">
+                                    <a href="javascript:;" class="" onclick="redio(this);">
+                                        <input name="istmall" class="rediotype" value="0" type="hidden">
+                                        <em></em>只看天猫
+                                    </a>
+                                    <a href="javascript:;" class="" onclick="redio(this);">
+                                        <input name="gold" class="rediotype" value="0" type="hidden">
+                                        <em></em>金牌卖家
+                                    </a>
+                                    <a href="javascript:;" class="" onclick="redio(this);">
+                                        <input name="show_type" class="rediotype" value="0" type="hidden">
+                                        <em></em>旗舰店
+                                    </a>
+                                    <a href="javascript:;" class="" onclick="redio(this);">
+                                        <input name="isJyj" class="rediotype" value="0" type="hidden">
+                                        <em></em>极有家
+                                    </a>
+                                    <a href="javascript:;" class="" onclick="redio(this);">
+                                        <input name="isSeaBuy" class="rediotype" value="0" type="hidden">
+                                        <em></em>海淘
+                                    </a>
+                                    <a href="javascript:;" class="" onclick="redio(this);">
+                                        <input name="isPremium" class="rediotype" value="0" type="hidden">
+                                        <em></em>运费险
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="h-f-item ipt-item">
+                                <div class="fl title">商品</div>
+                                <div class="fl options">
+                                    <div class="fl g-item">
+                                        <div class="fl opt-tit">佣金比例≥</div>
+                                        <span>
+                                            <input class="input-is-number" type="text" data-min="1" data-max="99" maxlength="2" name="yongjin" value="">
+                                            <ul>
+                                                <li>30</li>
+                                                <li>40</li>
+                                                <li>50</li>
+                                            </ul>
+                                        </span>%
+                                    </div>
+                                    <div class="fl g-item">
+                                        <div class="fl opt-tit">评分≥</div>
+                                        <span>
+                                            <input class="input-is-number ipt-decimal" type="text" data-min="1" data-max="5" maxlength="3" name="dsr" value="">
+                                            <ul>
+                                                <li>4.9</li>
+                                                <li>4.8</li>
+                                                <li>4.7</li>
+                                                <li>4.6</li>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                    <div class="fl g-item">
+                                        <div class="fl opt-tit">销量≥</div>
+                                        <span>
+                                            <input class="sale-num input-is-number" type="text" data-min="1" data-max="900000" maxlength="6" name="xiaoliang" value="">
+                                            <ul>
+                                                <li>500</li>
+                                                <li>1,000</li>
+                                                <li>5,000</li>
+                                                <li>10,000</li>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                    <div class="fl g-item">
+                                        <span class="fl opt-tit">价格区间≥</span>
+                                        <span>
+                                            <input class="fl input-is-number ipt-decimal" type="text" maxlength="8" name="min_price" placeholder="¥" value="">
+                                            <b class="fl"></b>
+                                            <input class="fl input-is-number ipt-decimal" type="text" maxlength="8" name="max_price" placeholder="¥" value="">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="h-f-item ipt-item">
+                                <div class="fl title">领券</div>
+                                <div class="fl options">
+                                    <div class="fl g-item">
+                                        <span class="fl opt-tit">券金额≥</span>
+                                        <span>
+                                            <input class="fl input-is-number ipt-decimal" maxlength="8" name="min_coupon" type="text" placeholder="¥" value="">
+                                            <b class="fl"></b>
+                                            <input class="fl input-is-number ipt-decimal" maxlength="8" name="max_coupon" type="text" placeholder="¥" value="">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="h-f-btn btn-area">
+                                <a href="javascript:;" id="h-f-cfm" class="btn cfm common-xCtJ-count" data-params="ea=" data-fun="filterSelection" onclick="toSubmit();">确定</a>
+                                <a href="javascript:;" id="h-f-cancel" class="btn cancel">取消</a>
+                            </div>
+                        </div>
+                        <div class="line-shadow"></div>
+                    </div>*@
+
+                </div>
+            </div>
+        </div>
+
+
+      
+        <!--吸顶 结束-->
+        <div class="common-wid home-page">
+            <!--商品列表 开始-->
+            <div class="main huidangso-home">
+                <div id="createDom" class="media-list">
+                    <div class="media-list-item" data-sid="880734502" data-type="" data-ind="1">
+                        <div class="media-list-item-inner">
+                            <div class="media-list-item-top">
+                                <div class="media-list-img-box">
+                                    <a class="media-list-goods-url" href="http://www.qingtaoke.com/detail/540703003208" target="_blank">
+                                        <img class="media-list-img lazy common-xCtJ-count" data-params="ea=轻搜-商品库-商品图片,gid=540703003208,eg=,edx=" data-fun="searchMediaItem" data-img="https://img.alicdn.com/imgextra/i3/880734502/TB2OFVJlRDH8KJjy1zeXXXjepXa_!!880734502.jpg_310x310.jpg" alt="【三只松鼠_年货大礼包1448g】零食坚果组合干果特产送礼盒批发 F" src="http://imgproxy.qingtaoke.com/imgextra/i3/880734502/*t*b2*o*f*v*jl*r*d*h8*k*jjy1ze*x*x*xjep*xa_!!880734502.jpg" data-old="https://img.alicdn.com/imgextra/i3/880734502/TB2OFVJlRDH8KJjy1zeXXXjepXa_!!880734502.jpg" title="【三只松鼠_年货大礼包1448g】零食坚果组合干果特产送礼盒批发 F">
+                                    </a>
+
+                                    <div class="media-one-key-copy">
+                                        <div class="media-one-key-box">
+                                            <a href="http://www.qingtaoke.com/jc/default?goodsid=540703003208&amp;name=%E3%80%90%E4%B8%89%E5%8F%AA%E6%9D%BE%E9%BC%A0_%E5%B9%B4%E8%B4%A7%E5%A4%A7%E7%A4%BC%E5%8C%851448g%E3%80%91%E9%9B%B6%E9%A3%9F%E5%9D%9A%E6%9E%9C%E7%BB%84%E5%90%88%E5%B9%B2%E6%9E%9C%E7%89%B9%E4%BA%A7%E9%80%81%E7%A4%BC%E7%9B%92%E6%89%B9%E5%8F%91+F&amp;url=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fid%3D540703003208&amp;leixing=data_center.goods_quan" class="media-list-btn-tab common-xCtJ-count goods-correction" data-params="ea=轻搜-商品纠错,gid=540703003208,eg=,edx=" data-fun="searchMediaItem" target="_blank"><i></i>商品纠错</a>
+                                            <a class="media-list-btn-tab mediaOneKeyCopyBtn common-xCtJ-count" data-params="ea=轻搜-商品库-商品复制文案,gid=540703003208" data-fun="searchMediaItem" href="javascript:;"><i></i>复制文案</a>
+                                            <div class="media-list-text-box">
+                                                <b></b>
+                                                <p><img class="media-small-pic" src="http://imgproxy.qingtaoke.com/imgextra/i3/880734502/*t*b2*o*f*v*jl*r*d*h8*k*jjy1ze*x*x*xjep*xa_!!880734502.jpg" alt=""></p>
+                                                <div class="media-text-area">
+                                                    <p>【三只松鼠】坚果大礼包1448g</p>
+                                                    <p>券后【98元】包邮秒杀</p>
+                                                    <p>优惠券：<a href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=880734502&amp;activityId=fe0e8b851d654bfbbf2728eb4b295e54" rel="nofollow" target="_blank">https://shop.m.taobao.com/shop/coupon.htm?seller_id=880734502&amp;activityId=fe0e8b851d654bfbbf2728eb4b295e54</a></p>
+                                                    <p>商品地址：<a href="https://item.taobao.com/item.htm?id=540703003208" rel="nofollow" target="_blank">https://item.taobao.com/item.htm?id=540703003208</a></p>
+                                                    <p>坚果品牌第一，精选4种美味坚果+3种人气零食，碧根果、夏威夷果、松子、核桃、蟹黄蚕豆、兰花豆、紫薯花生！8大包组合装，1448g！超级精美大礼盒，美味升级！满满都是过年的味道！千万萌主的新年之选~</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="media-list-copy-writing">
+                                    <div class="media-list-copy-txt">
+                                        <a href="https://detail.tmall.com/item.htm?id=540703003208" target="_blank" rel="nofollow">
+                                            <p title="【三只松鼠_年货大礼包1448g】零食坚果组合干果特产送礼盒批发 F" class="common-xCtJ-count" data-params="ea=轻搜-商品库-商品标题,gid=540703003208" data-fun="searchMediaItem">
+                                                【三只松鼠】坚果大礼包1448g
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="media-list-price">
+                                    <div class="media-list-price-left">
+                                        <span class="media-list-price-icon" data-temp="6675.00">券后 <i class="num-font">¥</i></span>
+                                        <span class="media-list-price-num num-font"> 98</span>
+                                    </div>
+                                    <div class="fr item sale-num">月销：595634</div>
+                                </div>
+                                <div class="v2-list-item1">
+                                    <div class="fl item">佣比：<span class="percent">15.</span><span class="float">5%</span>&nbsp;(15.2元)</div>
+                                </div>
+                                <div class="v2-list-icons-group">
+                                    <div class="fl v2-list-coupon-online">
+                                        <a class="fl common-xCtJ-count" data-params="ea=轻搜-商品库-商品优惠券,gid=540703003208,eg=,edx=" data-fun="searchMediaItem" href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=880734502&amp;activityId=fe0e8b851d654bfbbf2728eb4b295e54" rel="nofollow" target="_blank">
+                                            <div class="fl media-tips-icon coupon yan" data-offset="-3" data-txt="该券已验证为可用单品券">
+                                                <span class="fl common-icons"></span>
+                                                <span class="fl coupon-price">20元</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="fr icons-group">
+                                        <span class="common-icons media-list-icons media-tips-icon media-list-qiang-icon" data-txt="淘抢购"></span><span class="common-icons media-list-icons media-tips-icon media-list-ju-icon" data-txt="聚划算"></span><span class="common-icons media-list-icons media-tips-icon media-list-tm-icon" data-txt="天猫"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-list-item" data-sid="628189716" data-type="" data-ind="2">
+                        <div class="media-list-item-inner">
+                            <div class="media-list-item-top">
+                                <div class="media-list-img-box">
+                                    <a class="media-list-goods-url" href="http://www.qingtaoke.com/detail/535545203459" target="_blank">
+                                        <img class="media-list-img lazy common-xCtJ-count" data-params="ea=轻搜-商品库-商品图片,gid=535545203459,eg=,edx=" data-fun="searchMediaItem" data-img="//img.alicdn.com/imgextra/i3/628189716/TB2t8Yoc3b.PuJjSZFpXXbuFpXa_!!628189716.jpg_310x310.jpg" alt="【百草味-坚果大礼包1428g】年货礼盒装过年礼品新年零食干果批发" src="http://thumbnail.qingtaoke.com/img/datacenterapi/20171011/2017101114512542737655.jpg" data-old="//img.alicdn.com/imgextra/i3/628189716/TB2t8Yoc3b.PuJjSZFpXXbuFpXa_!!628189716.jpg" title="【百草味-坚果大礼包1428g】年货礼盒装过年礼品新年零食干果批发">
+                                    </a>
+
+                                    <div class="media-one-key-copy">
+                                        <div class="media-one-key-box">
+                                            <a href="http://www.qingtaoke.com/jc/default?goodsid=535545203459&amp;name=%E3%80%90%E7%99%BE%E8%8D%89%E5%91%B3-%E5%9D%9A%E6%9E%9C%E5%A4%A7%E7%A4%BC%E5%8C%851428g%E3%80%91%E5%B9%B4%E8%B4%A7%E7%A4%BC%E7%9B%92%E8%A3%85%E8%BF%87%E5%B9%B4%E7%A4%BC%E5%93%81%E6%96%B0%E5%B9%B4%E9%9B%B6%E9%A3%9F%E5%B9%B2%E6%9E%9C%E6%89%B9%E5%8F%91&amp;url=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fid%3D535545203459&amp;leixing=data_center.goods_quan" class="media-list-btn-tab common-xCtJ-count goods-correction" data-params="ea=轻搜-商品纠错,gid=535545203459,eg=,edx=" data-fun="searchMediaItem" target="_blank"><i></i>商品纠错</a>
+                                            <a class="media-list-btn-tab mediaOneKeyCopyBtn common-xCtJ-count" data-params="ea=轻搜-商品库-商品复制文案,gid=535545203459" data-fun="searchMediaItem" href="javascript:;"><i></i>复制文案</a>
+                                            <div class="media-list-text-box">
+                                                <b></b>
+                                                <p><img class="media-small-pic" src="http://thumbnail.qingtaoke.com/img/datacenterapi/20171011/2017101114512542737655.jpg" alt=""></p>
+                                                <div class="media-text-area">
+                                                    <p>年货礼盒装过年礼品新年零食干果批发</p>
+                                                    <p>券后【88元】包邮秒杀</p>
+                                                    <p>优惠券：<a href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=628189716&amp;activityId=5b38dec6c69d4ae090e41b09127e7a5b" rel="nofollow" target="_blank">https://shop.m.taobao.com/shop/coupon.htm?seller_id=628189716&amp;activityId=5b38dec6c69d4ae090e41b09127e7a5b</a></p>
+                                                    <p>商品地址：<a href="https://item.taobao.com/item.htm?id=535545203459" rel="nofollow" target="_blank">https://item.taobao.com/item.htm?id=535545203459</a></p>
+                                                    <p>坚果零食大礼包，强悍组合N种口味，分量足，一次吃遍多口味，让您吃得过瘾，吃得开心</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="media-list-copy-writing">
+                                    <div class="media-list-copy-txt">
+                                        <a href="https://detail.tmall.com/item.htm?id=535545203459" target="_blank" rel="nofollow">
+                                            <p title="【百草味-坚果大礼包1428g】年货礼盒装过年礼品新年零食干果批发" class="common-xCtJ-count" data-params="ea=轻搜-商品库-商品标题,gid=535545203459" data-fun="searchMediaItem">
+                                                年货礼盒装过年礼品新年零食干果批发
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="media-list-price">
+                                    <div class="media-list-price-left">
+                                        <span class="media-list-price-icon" data-temp="6136.00">券后 <i class="num-font">¥</i></span>
+                                        <span class="media-list-price-num num-font"> 88</span>
+                                    </div>
+                                    <div class="fr item sale-num">月销：563789</div>
+                                </div>
+                                <div class="v2-list-item1">
+                                    <div class="fl item">佣比：<span class="percent">15.</span><span class="float">5%</span>&nbsp;(13.6元)</div>
+                                </div>
+                                <div class="v2-list-icons-group">
+                                    <div class="fl v2-list-coupon-online">
+                                        <a class="fl common-xCtJ-count" data-params="ea=轻搜-商品库-商品优惠券,gid=535545203459,eg=,edx=" data-fun="searchMediaItem" href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=628189716&amp;activityId=5b38dec6c69d4ae090e41b09127e7a5b" rel="nofollow" target="_blank">
+                                            <div class="fl media-tips-icon coupon yan" data-offset="-3" data-txt="该券已验证为可用单品券">
+                                                <span class="fl common-icons"></span>
+                                                <span class="fl coupon-price">10元</span>
+                                            </div>
+                                        </a>
+                                        <div class="fr online hide">在线人数：760</div>
+                                    </div>
+                                    <div class="fr icons-group">
+                                        <span class="common-icons media-list-icons media-tips-icon media-list-ju-icon" data-txt="聚划算"></span><span class="common-icons media-list-icons media-tips-icon media-list-tm-icon" data-txt="天猫"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-list-item" data-sid="2126881771" data-type="ad" data-ind="3">
+                        <div class="media-list-item-inner">
+                            <div class="media-list-item-top">
+                                <div class="media-list-img-box">
+                                    <a class="media-list-goods-url" href="http://www.qingtaoke.com/detail/41460044755" target="_blank">
+                                        <img class="media-list-img lazy common-xCtJ-count" data-params="ea=轻搜-商品库-商品图片,gid=41460044755,eg=,edx=" data-fun="searchMediaItem" data-img="https://img.alicdn.com/imgextra/i2/2268489351/TB2375NieALL1JjSZFjXXasqXXa_!!2268489351.jpg_310x310.jpg" alt="植物主义孕妇橄榄油预防妊娠去纹纯止痒天然怀孕期专用护肤修复霜" src="http://imgproxy.qingtaoke.com/imgextra/i2/2268489351/*t*b2375*nie*a*l*l1*jj*s*z*fj*x*xasq*x*xa_!!2268489351.jpg" data-old="https://img.alicdn.com/imgextra/i2/2268489351/TB2375NieALL1JjSZFjXXasqXXa_!!2268489351.jpg" title="植物主义孕妇橄榄油预防妊娠去纹纯止痒天然怀孕期专用护肤修复霜">
+                                    </a>
+
+                                    <div class="media-one-key-copy">
+                                        <div class="media-one-key-box">
+                                            <a href="http://www.qingtaoke.com/jc/default?goodsid=41460044755&amp;name=%E6%A4%8D%E7%89%A9%E4%B8%BB%E4%B9%89%E5%AD%95%E5%A6%87%E6%A9%84%E6%A6%84%E6%B2%B9%E9%A2%84%E9%98%B2%E5%A6%8A%E5%A8%A0%E5%8E%BB%E7%BA%B9%E7%BA%AF%E6%AD%A2%E7%97%92%E5%A4%A9%E7%84%B6%E6%80%80%E5%AD%95%E6%9C%9F%E4%B8%93%E7%94%A8%E6%8A%A4%E8%82%A4%E4%BF%AE%E5%A4%8D%E9%9C%9C&amp;url=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fid%3D41460044755&amp;leixing=data_center.goods_quan" class="media-list-btn-tab common-xCtJ-count goods-correction" data-params="ea=轻搜-商品纠错,gid=41460044755,eg=,edx=" data-fun="searchMediaItem" target="_blank"><i></i>商品纠错</a>
+                                            <a class="media-list-btn-tab mediaOneKeyCopyBtn common-xCtJ-count" data-params="ea=轻搜-商品库-商品复制文案,gid=41460044755" data-fun="searchMediaItem" href="javascript:;"><i></i>复制文案</a>
+                                            <div class="media-list-text-box">
+                                                <b></b>
+                                                <p><img class="media-small-pic" src="http://imgproxy.qingtaoke.com/imgextra/i2/2268489351/*t*b2375*nie*a*l*l1*jj*s*z*fj*x*xasq*x*xa_!!2268489351.jpg" alt=""></p>
+                                                <div class="media-text-area">
+                                                    <p>植物主义孕妇除妊娠去肚纹橄榄油</p>
+                                                    <p>券后【9.9元】包邮秒杀</p>
+                                                    <p>优惠券：<a href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=2126881771&amp;activityId=7f8f3a3cd5474b1f9ec178b0d604f0b4" rel="nofollow" target="_blank">https://shop.m.taobao.com/shop/coupon.htm?seller_id=2126881771&amp;activityId=7f8f3a3cd5474b1f9ec178b0d604f0b4</a></p>
+                                                    <p>商品地址：<a href="https://item.taobao.com/item.htm?id=41460044755" rel="nofollow" target="_blank">https://item.taobao.com/item.htm?id=41460044755</a></p>
+                                                    <p>橄榄油提取精华液，滋润不油腻，有效修护妊娠纹，孕前孕后均可用。</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="media-list-copy-writing">
+                                    <div class="media-list-copy-txt">
+                                        <a href="https://detail.tmall.com/item.htm?id=41460044755" target="_blank" rel="nofollow">
+                                            <p title="植物主义孕妇橄榄油预防妊娠去纹纯止痒天然怀孕期专用护肤修复霜" class="common-xCtJ-count" data-params="ea=轻搜-商品库-商品标题,gid=41460044755" data-fun="searchMediaItem">
+                                                植物主义孕妇除妊娠去肚纹橄榄油
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="media-list-price">
+                                    <div class="media-list-price-left">
+                                        <span class="media-list-price-icon" data-temp="1480.00">券后 <i class="num-font">¥</i></span>
+                                        <span class="media-list-price-num num-font"> 9.9</span>
+                                    </div>
+                                    <div class="fr item sale-num">月销：8590</div>
+                                </div>
+                                <div class="v2-list-item1">
+                                    <div class="fl item">佣比：<span class="percent">30.</span><span class="float">5%</span>&nbsp;(3元)</div>
+                                </div>
+                                <div class="v2-list-icons-group">
+                                    <div class="fl v2-list-coupon-online">
+                                        <a class="fl common-xCtJ-count" data-params="ea=轻搜-商品库-商品优惠券,gid=41460044755,eg=,edx=" data-fun="searchMediaItem" href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=2126881771&amp;activityId=7f8f3a3cd5474b1f9ec178b0d604f0b4" rel="nofollow" target="_blank">
+                                            <div class="fl media-tips-icon coupon" data-offset="-3" data-txt="">
+                                                <span class="fl common-icons"></span>
+                                                <span class="fl coupon-price">20元</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="fr icons-group">
+                                        <span class="common-icons media-list-icons media-tips-icon media-list-tm-icon" data-txt="天猫"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-list-item" data-sid="642841100" data-type="" data-ind="4">
+                        <div class="media-list-item-inner">
+                            <div class="media-list-item-top">
+                                <div class="media-list-img-box">
+                                    <a class="media-list-goods-url" href="http://www.qingtaoke.com/detail/537524790998" target="_blank">
+                                        <img class="media-list-img lazy common-xCtJ-count" data-params="ea=轻搜-商品库-商品图片,gid=537524790998,eg=,edx=" data-fun="searchMediaItem" data-img="https://img.alicdn.com/imgextra/i1/642841100/TB2ncqPgvBNTKJjy1zdXXaScpXa_!!642841100.jpg_310x310.jpg" alt="Ymer比实木防霉小麦切菜板抗菌砧板粘板厨房刀板塑料家用水果案板" src="http://thumbnail.qingtaoke.com/img/datacenterapi/20170703/2017070322270840785762.jpg" data-old="https://img.alicdn.com/imgextra/i1/642841100/TB2ncqPgvBNTKJjy1zdXXaScpXa_!!642841100.jpg" title="Ymer比实木防霉小麦切菜板抗菌砧板粘板厨房刀板塑料家用水果案板">
+                                    </a>
+
+                                    <div class="media-one-key-copy">
+                                        <div class="media-one-key-box">
+                                            <a href="http://www.qingtaoke.com/jc/default?goodsid=537524790998&amp;name=Ymer%E6%AF%94%E5%AE%9E%E6%9C%A8%E9%98%B2%E9%9C%89%E5%B0%8F%E9%BA%A6%E5%88%87%E8%8F%9C%E6%9D%BF%E6%8A%97%E8%8F%8C%E7%A0%A7%E6%9D%BF%E7%B2%98%E6%9D%BF%E5%8E%A8%E6%88%BF%E5%88%80%E6%9D%BF%E5%A1%91%E6%96%99%E5%AE%B6%E7%94%A8%E6%B0%B4%E6%9E%9C%E6%A1%88%E6%9D%BF&amp;url=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fid%3D537524790998&amp;leixing=data_center.goods_quan" class="media-list-btn-tab common-xCtJ-count goods-correction" data-params="ea=轻搜-商品纠错,gid=537524790998,eg=,edx=" data-fun="searchMediaItem" target="_blank"><i></i>商品纠错</a>
+                                            <a class="media-list-btn-tab mediaOneKeyCopyBtn common-xCtJ-count" data-params="ea=轻搜-商品库-商品复制文案,gid=537524790998" data-fun="searchMediaItem" href="javascript:;"><i></i>复制文案</a>
+                                            <div class="media-list-text-box">
+                                                <b></b>
+                                                <p><img class="media-small-pic" src="http://thumbnail.qingtaoke.com/img/datacenterapi/20170703/2017070322270840785762.jpg" alt=""></p>
+                                                <div class="media-text-area">
+                                                    <p>【ymer】小麦秸秆防霉环保家用案板</p>
+                                                    <p>券后【14.8元】包邮秒杀</p>
+                                                    <p>优惠券：<a href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=642841100&amp;activityId=674c5492a8b44f02ba0509407a92971a" rel="nofollow" target="_blank">https://shop.m.taobao.com/shop/coupon.htm?seller_id=642841100&amp;activityId=674c5492a8b44f02ba0509407a92971a</a></p>
+                                                    <p>商品地址：<a href="https://item.taobao.com/item.htm?id=537524790998" rel="nofollow" target="_blank">https://item.taobao.com/item.htm?id=537524790998</a></p>
+                                                    <p>【韵达速递】一体成型，防滑包边，北欧四色，舒适提把，小麦秸秆，安全环保，淡淡麦香，重新定义厨房健康新标准~！</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="media-list-copy-writing">
+                                    <div class="media-list-copy-txt">
+                                        <a href="https://detail.tmall.com/item.htm?id=537524790998" target="_blank" rel="nofollow">
+                                            <p title="Ymer比实木防霉小麦切菜板抗菌砧板粘板厨房刀板塑料家用水果案板" class="common-xCtJ-count" data-params="ea=轻搜-商品库-商品标题,gid=537524790998" data-fun="searchMediaItem">
+                                                【ymer】小麦秸秆防霉环保家用案板
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="media-list-price">
+                                    <div class="media-list-price-left">
+                                        <span class="media-list-price-icon" data-temp="5568.00">券后 <i class="num-font">¥</i></span>
+                                        <span class="media-list-price-num num-font"> 14.8</span>
+                                    </div>
+                                    <div class="fr item sale-num">月销：56204</div>
+                                </div>
+                                <div class="v2-list-item1">
+                                    <div class="fl item">佣比：<span class="percent">30.</span><span class="float">5%</span>&nbsp;(4.5元)</div>
+                                </div>
+                                <div class="v2-list-icons-group">
+                                    <div class="fl v2-list-coupon-online">
+                                        <a class="fl common-xCtJ-count" data-params="ea=轻搜-商品库-商品优惠券,gid=537524790998,eg=,edx=" data-fun="searchMediaItem" href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=642841100&amp;activityId=674c5492a8b44f02ba0509407a92971a" rel="nofollow" target="_blank">
+                                            <div class="fl media-tips-icon coupon yan" data-offset="-3" data-txt="该券已验证为可用单品券">
+                                                <span class="fl common-icons"></span>
+                                                <span class="fl coupon-price">15元</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="fr icons-group">
+                                        <span class="common-icons media-list-icons media-tips-icon media-list-xian-icon" data-txt="赠运费险"></span><span class="common-icons media-list-icons media-tips-icon media-list-ju-icon" data-txt="聚划算"></span><span class="common-icons media-list-icons media-tips-icon media-list-tm-icon" data-txt="天猫"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-list-item" data-sid="282249329" data-type="" data-ind="5">
+                        <div class="media-list-item-inner">
+                            <div class="media-list-item-top">
+                                <div class="media-list-img-box">
+                                    <a class="media-list-goods-url" href="http://www.qingtaoke.com/detail/521821745586" target="_blank">
+                                        <img class="media-list-img lazy common-xCtJ-count" data-params="ea=轻搜-商品库-商品图片,gid=521821745586,eg=,edx=" data-fun="searchMediaItem" data-img="http://img.alicdn.com/imgextra/i4/TB13sIkQFXXXXclXFXXXXXXXXXX_!!0-item_pic.jpg_310x310.jpg" alt="joyo诤友烟嘴 一次性烟嘴过滤器抛弃型香菸过滤嘴正品300健康烟具" src="http://thumbnail.qingtaoke.com/img/datacenterapi/20170607/2017060713435551699800.jpg" data-old="http://img.alicdn.com/imgextra/i4/TB13sIkQFXXXXclXFXXXXXXXXXX_!!0-item_pic.jpg" title="joyo诤友烟嘴 一次性烟嘴过滤器抛弃型香菸过滤嘴正品300健康烟具">
+                                    </a>
+
+                                    <div class="media-one-key-copy">
+                                        <div class="media-one-key-box">
+                                            <a href="http://www.qingtaoke.com/jc/default?goodsid=521821745586&amp;name=joyo%E8%AF%A4%E5%8F%8B%E7%83%9F%E5%98%B4+%E4%B8%80%E6%AC%A1%E6%80%A7%E7%83%9F%E5%98%B4%E8%BF%87%E6%BB%A4%E5%99%A8%E6%8A%9B%E5%BC%83%E5%9E%8B%E9%A6%99%E8%8F%B8%E8%BF%87%E6%BB%A4%E5%98%B4%E6%AD%A3%E5%93%81300%E5%81%A5%E5%BA%B7%E7%83%9F%E5%85%B7&amp;url=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fid%3D521821745586&amp;leixing=data_center.goods_quan" class="media-list-btn-tab common-xCtJ-count goods-correction" data-params="ea=轻搜-商品纠错,gid=521821745586,eg=,edx=" data-fun="searchMediaItem" target="_blank"><i></i>商品纠错</a>
+                                            <a class="media-list-btn-tab mediaOneKeyCopyBtn common-xCtJ-count" data-params="ea=轻搜-商品库-商品复制文案,gid=521821745586" data-fun="searchMediaItem" href="javascript:;"><i></i>复制文案</a>
+                                            <div class="media-list-text-box">
+                                                <b></b>
+                                                <p><img class="media-small-pic" src="http://thumbnail.qingtaoke.com/img/datacenterapi/20170607/2017060713435551699800.jpg" alt=""></p>
+                                                <div class="media-text-area">
+                                                    <p>一次性烟嘴过滤器200支</p>
+                                                    <p>券后【19元】包邮秒杀</p>
+                                                    <p>优惠券：<a href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=282249329&amp;activityId=2e8bdd4b36a04e6e81cc6c9eff1490ff" rel="nofollow" target="_blank">https://shop.m.taobao.com/shop/coupon.htm?seller_id=282249329&amp;activityId=2e8bdd4b36a04e6e81cc6c9eff1490ff</a></p>
+                                                    <p>商品地址：<a href="https://item.taobao.com/item.htm?id=521821745586" rel="nofollow" target="_blank">https://item.taobao.com/item.htm?id=521821745586</a></p>
+                                                    <p>经典爆款，月销30000笔！诤友16年，老品牌，信得过！送父亲送丈夫，戒不了烟那就减烟害，呵护亲人健康，成就家庭幸福！</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="media-list-copy-writing">
+                                    <div class="media-list-copy-txt">
+                                        <a href="https://detail.tmall.com/item.htm?id=521821745586" target="_blank" rel="nofollow">
+                                            <p title="joyo诤友烟嘴 一次性烟嘴过滤器抛弃型香菸过滤嘴正品300健康烟具" class="common-xCtJ-count" data-params="ea=轻搜-商品库-商品标题,gid=521821745586" data-fun="searchMediaItem">
+                                                一次性烟嘴过滤器200支
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="media-list-price">
+                                    <div class="media-list-price-left">
+                                        <span class="media-list-price-icon" data-temp="5534.00">券后 <i class="num-font">¥</i></span>
+                                        <span class="media-list-price-num num-font"> 19</span>
+                                    </div>
+                                    <div class="fr item sale-num">月销：38980</div>
+                                </div>
+                                <div class="v2-list-item1">
+                                    <div class="fl item">佣比：<span class="percent">30.</span><span class="float">5%</span>&nbsp;(5.8元)</div>
+                                </div>
+                                <div class="v2-list-icons-group">
+                                    <div class="fl v2-list-coupon-online">
+                                        <a class="fl common-xCtJ-count" data-params="ea=轻搜-商品库-商品优惠券,gid=521821745586,eg=,edx=" data-fun="searchMediaItem" href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=282249329&amp;activityId=2e8bdd4b36a04e6e81cc6c9eff1490ff" rel="nofollow" target="_blank">
+                                            <div class="fl media-tips-icon coupon yan" data-offset="-3" data-txt="该券已验证为可用单品券">
+                                                <span class="fl common-icons"></span>
+                                                <span class="fl coupon-price">10元</span>
+                                            </div>
+                                        </a>
+                                        <div class="fr online hide">在线人数：765</div>
+                                    </div>
+                                    <div class="fr icons-group">
+                                        <span class="common-icons media-list-icons media-tips-icon media-list-xian-icon" data-txt="赠运费险"></span><span class="common-icons media-list-icons media-tips-icon media-list-qiang-icon" data-txt="淘抢购"></span><span class="common-icons media-list-icons media-tips-icon media-list-tm-icon" data-txt="天猫"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-list-item" data-sid="2057428013" data-type="" data-ind="6">
+                        <div class="media-list-item-inner">
+                            <div class="media-list-item-top">
+                                <div class="media-list-img-box">
+                                    <a class="media-list-goods-url" href="http://www.qingtaoke.com/detail/40739545590" target="_blank">
+                                        <img class="media-list-img lazy common-xCtJ-count" data-params="ea=轻搜-商品库-商品图片,gid=40739545590,eg=,edx=" data-fun="searchMediaItem" data-img="//img.alicdn.com/imgextra/i4/2057428013/TB2GfY5csr_F1JjSZFoXXbVRXXa_!!2057428013.jpg_310x310.jpg" alt="聚【甘源牌蟹黄味瓜子仁蚕豆青豆组合1055g】 坚果零食小吃大礼包" src="http://thumbnail.qingtaoke.com/img/datacenterapi/20171023/2017102311084588837172.jpg" data-old="//img.alicdn.com/imgextra/i4/2057428013/TB2GfY5csr_F1JjSZFoXXbVRXXa_!!2057428013.jpg" title="聚【甘源牌蟹黄味瓜子仁蚕豆青豆组合1055g】 坚果零食小吃大礼包">
+                                    </a>
+
+                                    <div class="media-one-key-copy">
+                                        <div class="media-one-key-box">
+                                            <a href="http://www.qingtaoke.com/jc/default?goodsid=40739545590&amp;name=%E8%81%9A%E3%80%90%E7%94%98%E6%BA%90%E7%89%8C%E8%9F%B9%E9%BB%84%E5%91%B3%E7%93%9C%E5%AD%90%E4%BB%81%E8%9A%95%E8%B1%86%E9%9D%92%E8%B1%86%E7%BB%84%E5%90%881055g%E3%80%91+%E5%9D%9A%E6%9E%9C%E9%9B%B6%E9%A3%9F%E5%B0%8F%E5%90%83%E5%A4%A7%E7%A4%BC%E5%8C%85&amp;url=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fid%3D40739545590&amp;leixing=data_center.goods_quan" class="media-list-btn-tab common-xCtJ-count goods-correction" data-params="ea=轻搜-商品纠错,gid=40739545590,eg=,edx=" data-fun="searchMediaItem" target="_blank"><i></i>商品纠错</a>
+                                            <a class="media-list-btn-tab mediaOneKeyCopyBtn common-xCtJ-count" data-params="ea=轻搜-商品库-商品复制文案,gid=40739545590" data-fun="searchMediaItem" href="javascript:;"><i></i>复制文案</a>
+                                            <div class="media-list-text-box">
+                                                <b></b>
+                                                <p><img class="media-small-pic" src="http://thumbnail.qingtaoke.com/img/datacenterapi/20171023/2017102311084588837172.jpg" alt=""></p>
+                                                <div class="media-text-area">
+                                                    <p>【甘源】蟹黄瓜子蚕豆青豆组合1055g</p>
+                                                    <p>券后【26.9元】包邮秒杀</p>
+                                                    <p>优惠券：<a href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=2057428013&amp;activityId=3d1d92c5665042c0adc3e1336e5aa3b3" rel="nofollow" target="_blank">https://shop.m.taobao.com/shop/coupon.htm?seller_id=2057428013&amp;activityId=3d1d92c5665042c0adc3e1336e5aa3b3</a></p>
+                                                    <p>商品地址：<a href="https://item.taobao.com/item.htm?id=40739545590" rel="nofollow" target="_blank">https://item.taobao.com/item.htm?id=40739545590</a></p>
+                                                    <p>黄晓明代言，好评推荐，酥脆清新，一吃上瘾，休闲时刻必备解馋零嘴，限量抢购！【赠运费险】</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="media-list-copy-writing">
+                                    <div class="media-list-copy-txt">
+                                        <a href="https://detail.tmall.com/item.htm?id=40739545590" target="_blank" rel="nofollow">
+                                            <p title="聚【甘源牌蟹黄味瓜子仁蚕豆青豆组合1055g】 坚果零食小吃大礼包" class="common-xCtJ-count" data-params="ea=轻搜-商品库-商品标题,gid=40739545590" data-fun="searchMediaItem">
+                                                【甘源】蟹黄瓜子蚕豆青豆组合1055g
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="media-list-price">
+                                    <div class="media-list-price-left">
+                                        <span class="media-list-price-icon" data-temp="5476.00">券后 <i class="num-font">¥</i></span>
+                                        <span class="media-list-price-num num-font"> 26.9</span>
+                                    </div>
+                                    <div class="fr item sale-num">月销：106709</div>
+                                </div>
+                                <div class="v2-list-item1">
+                                    <div class="fl item">佣比：<span class="percent">25.</span><span class="float">5%</span>&nbsp;(6.9元)</div>
+                                </div>
+                                <div class="v2-list-icons-group">
+                                    <div class="fl v2-list-coupon-online">
+                                        <a class="fl common-xCtJ-count" data-params="ea=轻搜-商品库-商品优惠券,gid=40739545590,eg=,edx=" data-fun="searchMediaItem" href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=2057428013&amp;activityId=3d1d92c5665042c0adc3e1336e5aa3b3" rel="nofollow" target="_blank">
+                                            <div class="fl media-tips-icon coupon yan" data-offset="-3" data-txt="该券已验证为可用单品券">
+                                                <span class="fl common-icons"></span>
+                                                <span class="fl coupon-price">3元</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="fr icons-group">
+                                        <span class="common-icons media-list-icons media-tips-icon media-list-xian-icon" data-txt="赠运费险"></span><span class="common-icons media-list-icons media-tips-icon media-list-ju-icon" data-txt="聚划算"></span><span class="common-icons media-list-icons media-tips-icon media-list-tm-icon" data-txt="天猫"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="media-list-item" data-sid="822280525" data-type="" data-ind="16">
+                        <div class="media-list-item-inner">
+                            <div class="media-list-item-top">
+                                <div class="media-list-img-box">
+                                    <a class="media-list-goods-url" href="http://www.qingtaoke.com/detail/18904870069" target="_blank">
+                                        <img class="media-list-img lazy common-xCtJ-count" data-params="ea=轻搜-商品库-商品图片,gid=18904870069,eg=,edx=" data-fun="searchMediaItem" data-img="http://img.alicdn.com/imgextra/i3/822280525/TB2qGxNql8lpuFjSspaXXXJKpXa_!!822280525.jpg_310x310.jpg" alt="珍视明蒸汽热敷眼罩睡眠发热加热护眼缓解眼疲劳黑眼圈" src="http://imgproxy.qingtaoke.com/imgextra/i3/822280525/*t*b2q*gx*nql8lpu*fj*sspa*x*x*x*j*kp*xa_!!822280525.jpg" data-old="http://img.alicdn.com/imgextra/i3/822280525/TB2qGxNql8lpuFjSspaXXXJKpXa_!!822280525.jpg" title="珍视明蒸汽热敷眼罩睡眠发热加热护眼缓解眼疲劳黑眼圈">
+                                    </a>
+
+                                    <div class="media-one-key-copy">
+                                        <div class="media-one-key-box">
+                                            <a href="http://www.qingtaoke.com/jc/default?goodsid=18904870069&amp;name=%E7%8F%8D%E8%A7%86%E6%98%8E%E8%92%B8%E6%B1%BD%E7%83%AD%E6%95%B7%E7%9C%BC%E7%BD%A9%E7%9D%A1%E7%9C%A0%E5%8F%91%E7%83%AD%E5%8A%A0%E7%83%AD%E6%8A%A4%E7%9C%BC%E7%BC%93%E8%A7%A3%E7%9C%BC%E7%96%B2%E5%8A%B3%E9%BB%91%E7%9C%BC%E5%9C%88&amp;url=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fid%3D18904870069&amp;leixing=data_center.goods_quan" class="media-list-btn-tab common-xCtJ-count goods-correction" data-params="ea=轻搜-商品纠错,gid=18904870069,eg=,edx=" data-fun="searchMediaItem" target="_blank"><i></i>商品纠错</a>
+                                            <a class="media-list-btn-tab mediaOneKeyCopyBtn common-xCtJ-count" data-params="ea=轻搜-商品库-商品复制文案,gid=18904870069" data-fun="searchMediaItem" href="javascript:;"><i></i>复制文案</a>
+                                            <div class="media-list-text-box">
+                                                <b></b>
+                                                <p><img class="media-small-pic" src="http://imgproxy.qingtaoke.com/imgextra/i3/822280525/*t*b2q*gx*nql8lpu*fj*sspa*x*x*x*j*kp*xa_!!822280525.jpg" alt=""></p>
+                                                <div class="media-text-area">
+                                                    <p>珍视明蒸汽热敷眼罩睡眠发热加热护眼缓解眼疲劳黑眼圈</p>
+                                                    <p>券后【39元】包邮秒杀</p>
+                                                    <p>优惠券：<a href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=822280525&amp;activityId=77eddb3455d4455f974d43f0db9f5f51" rel="nofollow" target="_blank">https://shop.m.taobao.com/shop/coupon.htm?seller_id=822280525&amp;activityId=77eddb3455d4455f974d43f0db9f5f51</a></p>
+                                                    <p>商品地址：<a href="https://item.taobao.com/item.htm?id=18904870069" rel="nofollow" target="_blank">https://item.taobao.com/item.htm?id=18904870069</a></p>
+                                                    <p>源于1968专业护眼，女神刘涛倾情代言，淡化眼圈，缓解眼疲劳，给眼部带来全新的SPA体验。</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="media-list-copy-writing">
+                                    <div class="media-list-copy-txt">
+                                        <a href="https://detail.tmall.com/item.htm?id=18904870069" target="_blank" rel="nofollow">
+                                            <p title="珍视明蒸汽热敷眼罩睡眠发热加热护眼缓解眼疲劳黑眼圈" class="common-xCtJ-count" data-params="ea=轻搜-商品库-商品标题,gid=18904870069" data-fun="searchMediaItem">
+                                                珍视明蒸汽热敷眼罩睡眠发热加热护眼缓解眼疲劳黑眼圈
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="media-list-price">
+                                    <div class="media-list-price-left">
+                                        <span class="media-list-price-icon" data-temp="5062.00">券后 <i class="num-font">¥</i></span>
+                                        <span class="media-list-price-num num-font"> 39</span>
+                                    </div>
+                                    <div class="fr item sale-num">月销：42165</div>
+                                </div>
+                                <div class="v2-list-item1">
+                                    <div class="fl item">佣比：<span class="percent">30.</span><span class="float">5%</span>&nbsp;(11.9元)</div>
+                                </div>
+                                <div class="v2-list-icons-group">
+                                    <div class="fl v2-list-coupon-online">
+                                        <a class="fl common-xCtJ-count" data-params="ea=轻搜-商品库-商品优惠券,gid=18904870069,eg=,edx=" data-fun="searchMediaItem" href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=822280525&amp;activityId=77eddb3455d4455f974d43f0db9f5f51" rel="nofollow" target="_blank">
+                                            <div class="fl media-tips-icon coupon yan" data-offset="-3" data-txt="该券已验证为可用单品券">
+                                                <span class="fl common-icons"></span>
+                                                <span class="fl coupon-price">10元</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="fr icons-group">
+                                        <span class="common-icons media-list-icons media-tips-icon media-list-xian-icon" data-txt="赠运费险"></span><span class="common-icons media-list-icons media-tips-icon media-list-ju-icon" data-txt="聚划算"></span><span class="common-icons media-list-icons media-tips-icon media-list-tm-icon" data-txt="天猫"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="media-list-item" data-sid="735580970" data-type="" data-ind="52">
+                        <div class="media-list-item-inner">
+                            <div class="media-list-item-top">
+                                <div class="media-list-img-box">
+                                    <a class="media-list-goods-url" href="http://www.qingtaoke.com/detail/45911616676" target="_blank">
+                                        <img class="media-list-img lazy common-xCtJ-count" data-params="ea=轻搜-首页-商品图片,gid=45911616676,eg=,edx=" data-fun="searchMediaItem" data-img="http://img.alicdn.com/imgextra/i1/735580970/TB25O25bP3nyKJjSZFHXXaTCpXa_!!735580970.jpg_310x310.jpg" alt="健元堂薏米红豆燕麦全麦饼干杂粮粗粮热脂卡饱腹代餐压缩低零食品" src="http://thumbnail.qingtaoke.com/img/datacenterapi/20170728/2017072816020837468252.jpg" data-old="http://img.alicdn.com/imgextra/i1/735580970/TB25O25bP3nyKJjSZFHXXaTCpXa_!!735580970.jpg" title="健元堂薏米红豆燕麦全麦饼干杂粮粗粮热脂卡饱腹代餐压缩低零食品">
+                                    </a>
+
+                                    <div class="media-one-key-copy">
+                                        <div class="media-one-key-box">
+                                            <a href="http://www.qingtaoke.com/jc/default?goodsid=45911616676&amp;name=%E5%81%A5%E5%85%83%E5%A0%82%E8%96%8F%E7%B1%B3%E7%BA%A2%E8%B1%86%E7%87%95%E9%BA%A6%E5%85%A8%E9%BA%A6%E9%A5%BC%E5%B9%B2%E6%9D%82%E7%B2%AE%E7%B2%97%E7%B2%AE%E7%83%AD%E8%84%82%E5%8D%A1%E9%A5%B1%E8%85%B9%E4%BB%A3%E9%A4%90%E5%8E%8B%E7%BC%A9%E4%BD%8E%E9%9B%B6%E9%A3%9F%E5%93%81&amp;url=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fid%3D45911616676&amp;leixing=data_center.goods_quan" class="media-list-btn-tab common-xCtJ-count goods-correction" data-params="ea=轻搜-商品纠错,gid=45911616676,eg=,edx=" data-fun="searchMediaItem" target="_blank"><i></i>商品纠错</a>
+                                            <a class="media-list-btn-tab mediaOneKeyCopyBtn common-xCtJ-count" data-params="ea=轻搜-首页-商品复制文案,gid=45911616676" data-fun="searchMediaItem" href="javascript:;"><i></i>复制文案</a>
+                                            <div class="media-list-text-box">
+                                                <b></b>
+                                                <p><img class="media-small-pic" src="http://thumbnail.qingtaoke.com/img/datacenterapi/20170728/2017072816020837468252.jpg" alt=""></p>
+                                                <div class="media-text-area">
+                                                    <p>健元堂红豆燕麦杂粮代餐压缩饼干</p>
+                                                    <p>券后【19元】包邮秒杀</p>
+                                                    <p>优惠券：<a href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=735580970&amp;activityId=e98859febd7e493198e02924d9e3c658" rel="nofollow" target="_blank">https://shop.m.taobao.com/shop/coupon.htm?seller_id=735580970&amp;activityId=e98859febd7e493198e02924d9e3c658</a></p>
+                                                    <p>商品地址：<a href="https://item.taobao.com/item.htm?id=45911616676" rel="nofollow" target="_blank">https://item.taobao.com/item.htm?id=45911616676</a></p>
+                                                    <p>经典食养古方，新鲜烘焙，营养早餐，健康无加蔗糖，丰富膳食纤维，无添加蔗糖，轻卡饱腹代餐，经典搭配，膳食饱腹，木糖醇，好吃不胖，代餐不节食，营养粗粮不长肉。【赠运费险】</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="media-list-copy-writing">
+                                    <div class="media-list-copy-txt">
+                                        <a href="https://detail.tmall.com/item.htm?id=45911616676" target="_blank" rel="nofollow">
+                                            <p title="健元堂薏米红豆燕麦全麦饼干杂粮粗粮热脂卡饱腹代餐压缩低零食品" class="common-xCtJ-count" data-params="ea=轻搜-首页-商品标题,gid=45911616676" data-fun="searchMediaItem">
+                                                健元堂红豆燕麦杂粮代餐压缩饼干
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="media-list-price">
+                                    <div class="media-list-price-left">
+                                        <span class="media-list-price-icon" data-temp="4531.00">券后 <i class="num-font">¥</i></span>
+                                        <span class="media-list-price-num num-font"> 19</span>
+                                    </div>
+                                    <div class="fr item sale-num">月销：43197</div>
+                                </div>
+                                <div class="v2-list-item1">
+                                    <div class="fl item">佣比：<span class="percent">30.</span><span class="float">5%</span>&nbsp;(5.8元)</div>
+                                </div>
+                                <div class="v2-list-icons-group">
+                                    <div class="fl v2-list-coupon-online">
+                                        <a class="fl common-xCtJ-count" data-params="ea=轻搜-首页-商品优惠券,gid=45911616676,eg=,edx=" data-fun="searchMediaItem" href="https://shop.m.taobao.com/shop/coupon.htm?seller_id=735580970&amp;activityId=e98859febd7e493198e02924d9e3c658" rel="nofollow" target="_blank">
+                                            <div class="fl media-tips-icon coupon yan" data-offset="-3" data-txt="该券已验证为可用单品券">
+                                                <span class="fl common-icons"></span>
+                                                <span class="fl coupon-price">5元</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="fr icons-group">
+                                        <span class="common-icons media-list-icons media-tips-icon media-list-qiang-icon" data-txt="淘抢购"></span><span class="common-icons media-list-icons media-tips-icon media-list-tm-icon" data-txt="天猫"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="loading-more" id="load" data-next="/qingsou?s_type=1&amp;sort=1&amp;page=2&amp;isAli=1">
+                </div>
+
+            </div>
+            <!--商品列表 结束-->
+            @*<script>
+            var group_url = '/?r=default/group&title=&cat=&new=&istmall=0&gold=0&isTaoQiangGou=0&isJu=0&type=0&yongjin=&dsr=&xiaoliang=&min_price=&max_price=&min_coupon=&max_coupon=&quan_over=&s_type=1&isBrandDirectSale=0&sort=1&page=1&f=&quan_num=&show_type=&isJyj=&isSeaBuy=&isIfashion=&isPremium=&brandIds=&is_all_selected=0&isAli=1&activity_type=&t=0';
+            var form_url = '/qingsou';
+            var isCatReload = false;//是否分类归零
+            var isCatReloadTitle = true;//输入标题分类归零
+            var isReloadSort = true;//排序归零
+            var timeKey = 1517890405;
+            var flagShipUrl = '/chajian';
+            var setPidUrl = '/?r=userPid/setPid';
+            var setTplUrl = '/?r=userPid/setCode';
+            var setNoticeUrl = '/?r=userPid/setNotice';
+            var taoApi_url = '/?r=userPid/createWx';
+            var defaultGoodsId = "";
+            var sys_time = 1517890405;
+            var default_demo = "{图片}\n今日推荐：{标题}\n领{优惠券面额}元内部券，券后【{券后价}元】包邮秒杀！\n【推荐理由】{推广文案}\n\n商品链接{短链接}；或复制这条信息{淘口令}，打开☞手机淘宝☜即可查看并下单！";
+            var login_html = '<a href="/?r=userMsg/index" class="name"></a><a class="num" href="/?r=userCenter/authlist">【个人中心】</a>';
         </script>*@
+            <!--回到顶部-->
+            <div class="common-wid goTopFour">
+                <div class="goTopThree" style="display: block; left: auto; right: 0px;">
+                    <ul>
+                        <li class="feedback common-xCtJ-count">
+                            <a href="javascript:void(0)" target="_blank">意见<br>反馈</a>
+                        </li>
+                        <li id="btn_goTop" class="none-border go-top-btn common-xCtJ-count">
+                            <a href="javascript:;"><i class="common-icons go-top-icon"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!--老分页-->
+            @*<div class="common-wid">
+            <div class="page-box2">
+                <ul>
+                    <li><a class="page-curr" href="javascript:;"> <i class="common-icons"></i> 1</a></li>
+                    <li><a class="" href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;page=2&amp;isAli=1"> <i class="common-icons"></i> 2</a></li>
+                    <li><a class="" href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;page=3&amp;isAli=1"> <i class="common-icons"></i> 3</a></li>
+                    <li><a class="" href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;page=4&amp;isAli=1"> <i class="common-icons"></i> 4</a></li>
+                    <li><a class="" href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;page=5&amp;isAli=1"> <i class="common-icons"></i> 5</a></li>
+                    <li><a href="javascript:" class="ellipsis">...</a></li>
+                    <li></li>
+                    <li><a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;page=100&amp;isAli=1" class="">  100 </a></li>
+                    <li><a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;page=2&amp;isAli=1"> 下一页</a></li>
+                </ul>
+            </div>
+        </div>*@
 
 
 
+        </div>
 
+
+    </div>
 
 </div>
-
 
 
 

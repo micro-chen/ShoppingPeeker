@@ -3768,8 +3768,8 @@ p.line-mask {
 }
 #v3-nav {
   width: auto;
-  height: 52px;
-  line-height: 52px;
+  height: 120px;
+  line-height: 120px;
   background-color: #FFF;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
   position: relative;
@@ -3919,35 +3919,36 @@ p.line-mask {
 #v3-nav .drop-down-item .select-options a:hover em {
   background-position: -97px -44px;
 }
-.btn-area {
+/*.btn-area {
   width: 394px;
   text-align: center;
   margin-top: 10px;
+}*/
+.g-item .btn {
+    width: 44px;
+    height: 22px;
+    line-height: 22px;
+    display: inline-block;
+    border-radius: 2px;
+    border: 1px solid #ebebeb;
+    font-size: 12px;
+    text-align: center;
 }
-.btn-area .btn {
-  width: 44px;
-  height: 22px;
-  line-height: 22px;
-  display: inline-block;
-  border-radius: 2px;
-  border: 1px solid #ebebeb;
-  font-size: 12px;
-  text-align: center;
-}
-.btn-area .btn:hover {
-  opacity: .9;
-}
-.btn-area .cfm {
-  margin-right: 10px;
-  background-color: #e64a3e;
-  background: -webkit-linear-gradient(left, #e42944, #e7673a);
-  background: -o-linear-gradient(right, #e42944, #e7673a);
-  background: -moz-linear-gradient(right, #e42944, #e7673a);
-  background: linear-gradient(to right, #e42944, #e7673a);
-  color: #FFF;
-  border: none;
-  height: 24px;
-  line-height: 24px;
+.g-item .btn:hover {
+        opacity: .9;
+    }
+.g-item .cfm {
+    /*margin-right: 10px;*/
+    margin-left:5px;
+    background-color: #e64a3e;
+    background: -webkit-linear-gradient(left, #e42944, #e7673a);
+    background: -o-linear-gradient(right, #e42944, #e7673a);
+    background: -moz-linear-gradient(right, #e42944, #e7673a);
+    background: linear-gradient(to right, #e42944, #e7673a);
+    color: #FFF;
+    border: none;
+    height: 24px;
+    line-height: 24px;
 }
 #v3-filter {
   margin-top: 30px;
@@ -4191,13 +4192,14 @@ p.line-mask {
 #v3-filter .high-filter-box .h-f-item .options .g-item {
   margin-right: 20px;
 }
-#v3-filter .high-filter-box .h-f-item .options .g-item input {
-  padding: 0 7px;
-  width: 30px;
-  height: 20px;
-  line-height: 20px;
-  border: 1px solid #ebebeb;
-}
+    #v3-filter .high-filter-box .h-f-item .options .g-item input, .input-is-number {
+        padding: 0 7px;
+        width: 30px;
+        height: 20px;
+        line-height: 20px;
+        border: 1px solid #ebebeb;
+    }
+
 #v3-filter .high-filter-box .h-f-item .options .g-item input.sale-num {
   width: 50px;
 }
