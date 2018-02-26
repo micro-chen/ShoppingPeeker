@@ -2726,6 +2726,7 @@ p.line-mask {
 .home-page .common-wid .page-box2 {
   margin: 0 auto 60px;
 }
+ 
 .home-page .media-list-item-inner {
   height: auto;
 }
@@ -3957,6 +3958,7 @@ p.line-mask {
 }
 #v3-filter .filtered {
   overflow: hidden;
+  /*display:none;*/
 }
 #v3-filter .label {
   color: #8a8a8a;
@@ -4004,7 +4006,7 @@ p.line-mask {
   width: 16px;
   height: 16px;
   display: inline-block;
-  float: left;
+  /*float: left;*/
   margin-right: 5px;
   background: url("/images/v3/icon3.png?t=20180205025") -114px -13px no-repeat;
 }

@@ -79,7 +79,7 @@ var BaseFetchWebPageArgument =function() {
 
     this.Platform = 0;
     this.IsNeedResolveHeaderTags = true;
-    this.ResolvedUrl = "";
+    //this.ResolvedUrl = "";
     this.KeyWord = "";
     this.Brands = [];
     this.TagGroup = null;

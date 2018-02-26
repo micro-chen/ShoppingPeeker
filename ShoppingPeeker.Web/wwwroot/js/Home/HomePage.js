@@ -24,6 +24,11 @@ $(function () {
         btn_search: $('#btn_search'),//搜索按钮
         container_hot_words: $('#container_hot_words'),//
         btn_goTop: $('#btn_goTop'),//
+        container_filtered: $('#container_filtered'),//
+        btn_clear_all_filter: $('#btn_clear_all_filter'),//
+        filterForm: $('#filterForm'),//
+        txt_min_price: $('#txt_min_price'),//起始价格
+        txt_max_price: $('#txt_max_price'),//上限价格
         /*page controls end*/
 
         api_auto_complete_suggest: "api/servicebus/suggest",//搜索框自动完成api
@@ -59,21 +64,12 @@ $(function () {
 
             //点击保存按钮事件
             //this.btn_save.click(homePage.saveDetails);
-            this.txt_header_search_keyword.keyup(function () {
-               
-                //如果内容不为空 显示清空按钮
-                var keyWord = homePage.txt_header_search_keyword.val();
-                homePage.txt_search_keyword.val(keyWord);
-                if (isNullOrEmpty(keyWord)) {
-                    homePage.btn_search_top_clear.hide();
-                } else {
-                    homePage.btn_search_top_clear.show();
-                }
-            });
+
             /*浮动搜索的自动完成事件*/
             this.txt_header_search_keyword.autocomplete({
                 serviceUrl: this.api_auto_complete_suggest,
                 dataType: "json",
+                top:8,
                 width: "504px",
                 deferRequestBy: 300,//不要立即请求 间隔一个缓冲
                 paramName: "key",
@@ -133,6 +129,7 @@ $(function () {
             this.txt_search_keyword.autocomplete({
                 serviceUrl: this.api_auto_complete_suggest,
                 dataType: "json",
+                top: 2,
                 width:"678px",
                 deferRequestBy: 300,//不要立即请求 间隔一个缓冲
                 paramName: "key",
@@ -189,8 +186,9 @@ $(function () {
                 }
             });
 
-            /*搜索输入框的keyup事件*/
-            this.txt_search_keyword.keyup(homePage.searchKeywordKeyupHandler);
+             /*搜索输入框的keyup事件*/
+            this.txt_header_search_keyword.keyup("top",homePage.searchKeywordKeyupHandler);
+            this.txt_search_keyword.keyup("common",homePage.searchKeywordKeyupHandler);
 
             /*搜索内容清除按钮事件*/
             $("i.search-clear").mouseover(function () {
@@ -206,7 +204,8 @@ $(function () {
                     sender.hide();
                 });
 
-            /*搜索按钮点击事件*/
+             /*搜索按钮点击事件*/
+            this.btn_headerSearchIpt.click(homePage.btnSearchHandler);
             this.btn_search.click(homePage.btnSearchHandler);
 
               /*注册热搜词点击事件*/
@@ -219,8 +218,38 @@ $(function () {
                     scrollTop: 0
                 }, 200);
             });
+
+
+            this.btn_clear_all_filter.click(homePage.clearAllFilterResetSerch);
           
         },
+
+        /*清空全部过滤条件，并重新搜索商品*/
+        clearAllFilterResetSerch: function() {
+            var sender = $(this);
+            homePage.container_filtered.hide();
+            //1 清空过滤条件
+            homePage.container_filtered.find(".filter-item").remove();
+            //2 重新搜索
+            //关键词+排序
+            //向api发送商品搜索
+            var paras = new BaseFetchWebPageArgument();
+            // 关键词
+            paras.KeyWord = homePage.txt_search_keyword.val();
+            //不需要从新绘制tag
+            paras.IsNeedResolveHeaderTags = false;
+            //价格区间
+            paras.FromPrice = homePage.txt_min_price.val();
+            paras.ToPrice = homePage.txt_max_price.val();
+
+            //排序字段
+            var domSort = homePage.filterForm.find("a.active.common-xCtJ-count");
+            if (domSort && domSort.length>0) {
+                paras.OrderFiledName = domSort.attr("data-val");//保存客户端选中的排序字段值并在服务端解析映射
+            }
+            homePage.searchProductsHandler(paras);
+        },
+
         /*热搜词点击事件*/
         hotWordSelectHandler: function() {
             var sender = $(this);
@@ -273,14 +302,28 @@ $(function () {
                 homePage.btn_search.blur();
                 homePage.btnSearchHandler();
             }
-            //如果内容不为空 显示清空按钮
-            var keyWord = homePage.txt_search_keyword.val();
-            homePage.txt_header_search_keyword.val(keyWord);
-            if (isNullOrEmpty(keyWord)) {
-                homePage.btn_search_clear.hide();
+
+            var from = event.data;
+            if (from == "top") {
+                //如果内容不为空 显示清空按钮
+                var keyWord = homePage.txt_header_search_keyword.val();
+                homePage.txt_search_keyword.val(keyWord);
+                if (isNullOrEmpty(keyWord)) {
+                    homePage.btn_search_top_clear.hide();
+                } else {
+                    homePage.btn_search_top_clear.show();
+                }
             } else {
-                homePage.btn_search_clear.show();
+                //如果内容不为空 显示清空按钮
+                var keyWord = homePage.txt_search_keyword.val();
+                homePage.txt_header_search_keyword.val(keyWord);
+                if (isNullOrEmpty(keyWord)) {
+                    homePage.btn_search_clear.hide();
+                } else {
+                    homePage.btn_search_clear.show();
+                }
             }
+           
         },
 
         /*search handler
@@ -298,7 +341,14 @@ $(function () {
 
             //向api发送商品搜索
             var paras = new BaseFetchWebPageArgument();
+            // 关键词
             paras.KeyWord = keyWord;
+
+            homePage.searchProductsHandler(paras);
+
+        },
+        /*触发搜索商品总入口*/
+        searchProductsHandler: function(paras) {
 
             homePage.handler_api_search_tmall_products(paras);
             //homePage.handler_api_search_taobao_products(paras);
@@ -307,9 +357,7 @@ $(function () {
             //homePage.handler_api_search_guomei_products(paras);
             //homePage.handler_api_search_suning_products(paras);
             //homePage.handler_api_search_dangdang_products(paras);
-
         },
-
         //天猫商品检索
         handler_api_search_tmall_products: function (paras) {
             var queryAddress = homePage.api_search_tmall_products;
@@ -322,32 +370,53 @@ $(function () {
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_tmall_products);
         },
         //淘宝商品检索
-        handler_api_search_taobao_products: function () {
+        handler_api_search_taobao_products: function (paras) {
             var queryAddress = homePage.api_search_taobao_products;
-            var paras = {};
+            if (isNullOrUndefined(paras)) {
+                throw new Error("淘宝参数不正确！");
+                return;
+            }
+            paras.Platform = SupportPlatformEnum.Taobao;
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_taobao_products);
         },
         //京东商品检索
-        handler_api_search_jd_products: function () {
+        handler_api_search_jd_products: function (paras) {
             var queryAddress = homePage.api_search_jd_products;
-            var paras = {};
+            if (isNullOrUndefined(paras)) {
+                throw new Error("京东参数不正确！");
+                return;
+            }
+            paras.Platform = SupportPlatformEnum.Jingdong;
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_jd_products);
         },
         //拼多多商品检索
-        handler_api_search_pdd_products: function () {
+        handler_api_search_pdd_products: function (paras) {
             var queryAddress = homePage.api_search_pdd_products;
-            var paras = {};
+            if (isNullOrUndefined(paras)) {
+                throw new Error("拼多多参数不正确！");
+                return;
+            }
+            paras.Platform = SupportPlatformEnum.Pdd;
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_pdd_products);
         },
         //国美商品检索
-        handler_api_search_guomei_products: function () {
+        handler_api_search_guomei_products: function (paras) {
             var queryAddress = homePage.api_search_guomei_products;
-            var paras = {}; httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_guomei_products);
+            if (isNullOrUndefined(paras)) {
+                throw new Error("国美参数不正确！");
+                return;
+            }
+            paras.Platform = SupportPlatformEnum.Guomei;
+            httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_guomei_products);
         },
         //苏宁商品检索
-        handler_api_search_suning_products: function () {
+        handler_api_search_suning_products: function (paras) {
             var queryAddress = homePage.api_search_suning_products;
-            var paras = {};
+            if (isNullOrUndefined(paras)) {
+                throw new Error("苏宁参数不正确！");
+                return;
+            }
+            paras.Platform = SupportPlatformEnum.Suning;
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_suning_products);
         },
         ////唯品会商品检索
@@ -357,9 +426,13 @@ $(function () {
         //    httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_vip_products);
         //},
         //当当商品检索
-        handler_api_search_dangdang_products: function () {
+        handler_api_search_dangdang_products: function (paras) {
             var queryAddress = homePage.api_search_dangdang_products;
-            var paras = {};
+            if (isNullOrUndefined(paras)) {
+                throw new Error("当当参数不正确！");
+                return;
+            }
+            paras.Platform = SupportPlatformEnum.Dangdang;
             httpClient.post(queryAddress, paras, homePage.callBackHandler_api_search_dangdang_products);
         },
 

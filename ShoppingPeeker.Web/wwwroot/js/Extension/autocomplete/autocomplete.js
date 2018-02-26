@@ -96,6 +96,7 @@
         lookup: null,
         onSelect: null,
         width: 'auto',
+        top:5,
         minChars: 1,
         maxHeight: 300,
         deferRequestBy: 0,
@@ -308,8 +309,13 @@
                 containerHeight = $container.outerHeight(),
                 height = that.el.outerHeight(),
                 offset = that.el.offset();
-            //---调整了样式----2018-0129
-            offset.top += 5;
+            //---调整了样式----changed by me:2018-0129
+           
+            if (that.options.top) {
+                offset.top += that.options.top;
+            } else {
+                offset.top += 5;//默认保持5个距离
+            }
            // offset.left -= 13;
             var styles = { 'top': offset.top, 'left': offset.left };
 
