@@ -391,8 +391,8 @@ namespace Plugin.Guomei.Extension
                             //高级分类
                             var div_AttrsDom_AdvancedList = div_filterDoms.QuerySelectorAll("div.facets-category.facets-category-syn");
 
-                            var lstTags = new List<KeyWordTag>();
-                            var blockList = new BlockingCollection<KeyWordTag>();
+                            var lstTags = new List<KeyWordTagGroup>();
+                            var blockList = new BlockingCollection<KeyWordTagGroup>();
                             var taskArray = new List<Task>();
 
                             //普通分类tag 解析
@@ -412,6 +412,7 @@ namespace Plugin.Guomei.Extension
                                         var itemCategory = paraItem as IElement;
                                         //找到归属的组
                                         string groupName = itemCategory.QuerySelector("span.fc-key").TextContent;
+                                        var tagGroup = new KeyWordTagGroup(groupName);
 
                                         var childLiADomArray = itemCategory.QuerySelectorAll("div.category-normal>ul>li>a");
                                         foreach (var itemADom in childLiADomArray)
@@ -423,10 +424,12 @@ namespace Plugin.Guomei.Extension
 
                                             modelTag.FilterFiled = "facets";
                                             modelTag.Value = itemADom.GetAttribute("facetsid");
-                                            //----解析 a标签完毕-------
-                                            blockList.Add(modelTag);
 
+                                            tagGroup.Tags.Add(modelTag);
                                         }
+                                        //----解析 a标签完毕-------
+                                        blockList.Add(tagGroup);
+
 
                                     }, itemCate, TaskCreationOptions.None);
                                     //将并行任务放到数组
@@ -449,7 +452,7 @@ namespace Plugin.Guomei.Extension
                                         var itemAdvancedCategory = paraItem as IElement;
                                         //找到归属的组
                                         string groupName = itemAdvancedCategory.QuerySelector("span.fc-key").TextContent;
-
+                                        var tagGroup = new KeyWordTagGroup(groupName);
                                         var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("ul.category-syn-list>li>a");
                                         foreach (var itemADom in childLiADomArray)
                                         {
@@ -461,11 +464,12 @@ namespace Plugin.Guomei.Extension
                                             modelTag.FilterFiled = "facets";
                                             modelTag.Value = itemADom.GetAttribute("facetsid");
 
+                                            tagGroup.Tags.Add(modelTag);
 
-                                            //----解析 a标签完毕-------
-                                            blockList.Add(modelTag);
 
-                                        }
+                                        }     //----解析 a标签完毕-------
+                                        blockList.Add(tagGroup);
+
 
                                     }, itemSline, TaskCreationOptions.None);
                                     //将并行任务放到数组

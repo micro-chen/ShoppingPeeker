@@ -24,7 +24,7 @@ namespace ShoppingPeeker.Web.ViewModels
         /// <summary>
         /// 关联的tag集合
         /// </summary>
-        public List<KeyWordTag> Tags { get; set; }
+        public List<KeyWordTagGroup> Tags { get; set; }
 
         /// <summary>
         /// 搜索结果商品列表

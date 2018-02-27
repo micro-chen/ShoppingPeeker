@@ -289,7 +289,7 @@ namespace Plugin.Suning.Extension
                     if (!string.IsNullOrEmpty(searchHtmlContent) && !searchHtmlContent.Contains("no-result-tips"))
                     {
                         //文档转换
-                        htmlDoc = htmlParser.Parse(searchHtmlContent);
+                        htmlDoc = htmlParser.Parse(HttpUtility.HtmlDecode(searchHtmlContent));
 
                         if (searchHtmlContent.Contains("search-opt"))
                         {
@@ -421,8 +421,8 @@ namespace Plugin.Suning.Extension
                                 sb_tempIds.ToString()
                                  );
                             var tsk_Price = this.QueryPriceAsync(priceUrl,
-                                webArgs.KeyWord, 
-                                connStrConfig, 
+                                webArgs.KeyWord,
+                                connStrConfig,
                                 blockingList_ProductPrices);
 
                             lstQueryPriceTask.Add(tsk_Price);
@@ -455,21 +455,21 @@ namespace Plugin.Suning.Extension
                 foreach (var itemProduct in lstProducts)
                 {
                     SuningProduct modelProduct = itemProduct as SuningProduct;
-                    
+
                     string key = modelProduct.ItemId.ToString().PadLeft(18, '0');//长度不18 用0补充左边的位 string.Concat(modelProduct.BizCode, modelProduct.ItemId);
                     if (blockingList_ProductPrices.ContainsKey(key))
                     {
                         var priceInRemote = blockingList_ProductPrices[key];
                         if (null != priceInRemote)
                         {
-                            modelProduct.Price = priceInRemote.price??0;
+                            modelProduct.Price = priceInRemote.price ?? 0;
                             modelProduct.BizCode = priceInRemote.bizCode;
                             //modelProduct.ShopId= log priceInRemote.bizCode;
-                            if (modelProduct.IsSelfSale==false)
+                            if (modelProduct.IsSelfSale == false)
                             {
                                 modelProduct.ShopName = priceInRemote.vendorName;
                             }
-                          
+
                         }
 
                     }
@@ -498,10 +498,10 @@ namespace Plugin.Suning.Extension
         /// <param name="connStrConfig"></param>
         /// <param name="dataContainer"></param>
         /// <returns></returns>
-        private Task QueryPriceAsync(string url,string keyword, ShoppingWebCrawlerSection.ConnectionStringConfig connStrConfig, ConcurrentDictionary<string, SuningPriceJsonResult.PriceItem> priceContainer)
+        private Task QueryPriceAsync(string url, string keyword, ShoppingWebCrawlerSection.ConnectionStringConfig connStrConfig, ConcurrentDictionary<string, SuningPriceJsonResult.PriceItem> priceContainer)
         {
 
-            if (string.IsNullOrEmpty(url)||string.IsNullOrEmpty(keyword))
+            if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(keyword))
             {
                 throw new Exception("苏宁查询价格必须输入关键词和地址！");
             }
@@ -509,7 +509,7 @@ namespace Plugin.Suning.Extension
             {
                 //json地址
 
-                var webArgs = new BaseFetchWebPageArgument( );
+                var webArgs = new BaseFetchWebPageArgument();
                 webArgs.Platform = SupportPlatformEnum.Suning;
                 webArgs.KeyWord = keyword;
                 webArgs.ResolvedUrl = new ResolvedSearchUrlWithParas { Url = url };
@@ -551,7 +551,7 @@ namespace Plugin.Suning.Extension
                 //jsonp请求失败结果
                 if (!htmlPriceList.Contains("ds000000000"))
                 {
-                    PluginContext.Logger.Error("苏宁请求价格失败："+url);
+                    PluginContext.Logger.Error("苏宁请求价格失败：" + url);
                 }
 
                 int startPos = htmlPriceList.IndexOf('{');
@@ -591,32 +591,46 @@ namespace Plugin.Suning.Extension
                 var lstBrands = new List<BrandTag>();
                 if (null != div_BrandsDom)
                 {
+                    List<IElement> lstBrandADoms = new List<IElement>();
                     //从属性区域解析dom-品牌内容
+                    //1 可见的品牌
                     var brandADomList = div_BrandsDom.QuerySelectorAll("div.brand-item>div.clearfix>a");
-
                     if (null != brandADomList)
                     {
-
-                        foreach (var itemADom in brandADomList)
+                        lstBrandADoms.AddRange(brandADomList.AsEnumerable());
+                    }
+                    //2 其他文本品牌
+                    var txtBrandDom = div_BrandsDom.QuerySelector("textarea");
+                    if (null != txtBrandDom)
+                    {
+                        var docBrand = new HtmlParser().Parse(HttpUtility.HtmlDecode(txtBrandDom.InnerHtml));
+                        var notSeeBrandDoms = docBrand.QuerySelectorAll("a");
+                        if (null != notSeeBrandDoms)
                         {
-
-
-                            var model = new BrandTag();
-                            model.Platform = SupportPlatformEnum.Suning;
-                            model.FilterField = itemADom.GetAttribute("filter_id"); //使用的过滤字段参数
-                            model.BrandId = itemADom.GetAttribute("filter_value");
-
-                            model.BrandName = itemADom.GetAttribute("title").Replace("\n", "").Replace("\t", "");
-                            model.CharIndex = itemADom.GetAttribute("class"); ;//定位字符
-                            var imgDom = itemADom.QuerySelector("img");
-                            if (null != imgDom)
-                            {
-                                model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
-                            }
-
-                            lstBrands.Add(model);
+                            lstBrandADoms.AddRange(notSeeBrandDoms.AsEnumerable());
                         }
                     }
+
+                    foreach (var itemADom in lstBrandADoms)
+                    {
+
+
+                        var model = new BrandTag();
+                        model.Platform = SupportPlatformEnum.Suning;
+                        model.FilterField = itemADom.GetAttribute("filter_id"); //使用的过滤字段参数
+                        model.BrandId = itemADom.GetAttribute("filter_value");
+
+                        model.BrandName = itemADom.GetAttribute("title").Replace("\n", "").Replace("\t", "");
+                        model.CharIndex = itemADom.GetAttribute("class")[0].ToString();//定位字符
+                        var imgDom = itemADom.QuerySelector("img");
+                        if (null != imgDom)
+                        {
+                            model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
+                        }
+
+                        lstBrands.Add(model);
+                    }
+
                 }
                 resultBag.Add("Brands", lstBrands);
 
@@ -625,17 +639,26 @@ namespace Plugin.Suning.Extension
 
                 //category 解析  
                 //相关分类
-                var div_AttrsDom_Category_CommonList = div_filterDoms
-                    .QuerySelector("dl.dir-section")
-                    .QuerySelectorAll("div.item>a");
-                //指定的类目
-                var div_AttrsDom_Category_SpecialList = div_filterDoms.QuerySelectorAll("dl.model-section");
+                var div_AttrsDom_Category = div_filterDoms
+                    .QuerySelector("dl.dir-section");
+                IHtmlCollection<IElement> div_AttrsDom_Category_CommonList = null;
+                if (null != div_AttrsDom_Category)
+                {
+                    div_AttrsDom_Category_CommonList = div_AttrsDom_Category.QuerySelectorAll("div.item>a");
+
+                }
+
+                //普通tags
+                var div_AttrsDom_CommonTagList = div_filterDoms.QuerySelectorAll("dl")
+                    .Where(
+                            x => x.ClassList.Contains("prive-section") || x.ClassList.Contains("model-section")
+                    ).ToArray();
 
                 //高级分类
                 var div_AttrsDom_AdvancedList = div_filterDoms.QuerySelectorAll("dl#other-section>dd>ul>li");
 
-                var lstTags = new List<KeyWordTag>();
-                var blockList = new BlockingCollection<KeyWordTag>();
+                var lstTags = new List<KeyWordTagGroup>();
+                var blockList = new BlockingCollection<KeyWordTagGroup>();
                 var taskArray = new List<Task>();
 
                 //相关分类tag 解析
@@ -645,58 +668,55 @@ namespace Plugin.Suning.Extension
                     // PLINQ 的操作 
                     //div_AttrsDom_CategoryList.AsParallel().ForAll((x) => { })
 
-                    for (int i = 0; i < div_AttrsDom_Category_CommonList.Length; i++)
+                    var tskBrand = Task.Factory.StartNew(() =>
                     {
+                        //找到归属的组
+                        string groupName = "相关分类";//itemCategory.QuerySelector("span.fc-key").TextContent;
+                        var tagGroup = new KeyWordTagGroup(groupName);
 
-                        var itemCate = div_AttrsDom_Category_CommonList[i];
-                        var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
+                        //var childLiADomArray = itemCategory.QuerySelectorAll("div.category-normal>ul>li>a");
+                        foreach (var itemADom in div_AttrsDom_Category_CommonList)
                         {
-                            var itemCategory = paraItem as IElement;
+                            var modelTag = new KeyWordTag();
+                            modelTag.Platform = SupportPlatformEnum.Suning;
+                            modelTag.TagName = itemADom.TextContent;//标签名称
+                            modelTag.GroupShowName = groupName;
 
-                            //找到归属的组
-                            string groupName = "相关分类";//itemCategory.QuerySelector("span.fc-key").TextContent;
+                            modelTag.FilterFiled = "ci";
+                            modelTag.Value = itemADom.GetAttribute("id");
 
-                            //var childLiADomArray = itemCategory.QuerySelectorAll("div.category-normal>ul>li>a");
-                            foreach (var itemADom in div_AttrsDom_Category_CommonList)
-                            {
-                                var modelTag = new KeyWordTag();
-                                modelTag.Platform = SupportPlatformEnum.Suning;
-                                modelTag.TagName = itemADom.TextContent;//标签名称
-                                modelTag.GroupShowName = groupName;
+                            tagGroup.Tags.Add(modelTag);
+                        }
 
-                                modelTag.FilterFiled = "ci";
-                                modelTag.Value = itemADom.GetAttribute("id");
-                                //----解析 a标签完毕-------
-                                blockList.Add(modelTag);
+                        //----解析 a标签完毕-------
+                        blockList.Add(tagGroup);
+                    });
 
-                            }
-
-                        }, itemCate, TaskCreationOptions.None);
-                        //将并行任务放到数组
-                        taskArray.Add(taskResolveAEmelems);
-
-                    }
+                    //将并行任务放到数组
+                    taskArray.Add(tskBrand);
 
                 }
 
-                //指定分类tag 解析
-                if (null != div_AttrsDom_Category_SpecialList)
+
+
+                //普通tags 解析
+                if (null != div_AttrsDom_CommonTagList)
                 {
 
                     // PLINQ 的操作 
                     //div_AttrsDom_CategoryList.AsParallel().ForAll((x) => { })
 
-                    for (int i = 0; i < div_AttrsDom_Category_SpecialList.Length; i++)
+                    for (int i = 0; i < div_AttrsDom_CommonTagList.Length; i++)
                     {
 
-                        var itemCategory = div_AttrsDom_Category_SpecialList[i];
+                        var itemCategory = div_AttrsDom_CommonTagList[i];
                         var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
                         {
 
                             var itemSpceialCategory = paraItem as IElement;
-                            //找到归属的组
-                            string groupName = itemSpceialCategory.QuerySelector("dt").TextContent;
-
+                        //找到归属的组
+                        string groupName = itemSpceialCategory.QuerySelector("dt").TextContent;
+                            var tagGroup = new KeyWordTagGroup(groupName);
                             var childLiADomArray = itemSpceialCategory.QuerySelectorAll("div.clearfix>a");
                             foreach (var itemADom in childLiADomArray)
                             {
@@ -708,10 +728,12 @@ namespace Plugin.Suning.Extension
                                 modelTag.FilterFiled = itemSpceialCategory.GetAttribute("id");//根节点的筛选属性
 
                                 modelTag.Value = itemADom.GetAttribute("id");
-                                //----解析 a标签完毕-------
-                                blockList.Add(modelTag);
+
+                                tagGroup.Tags.Add(modelTag);
 
                             }
+                        //----解析 a标签完毕-------
+                        blockList.Add(tagGroup);
 
                         }, itemCategory, TaskCreationOptions.None);
                         //将并行任务放到数组
@@ -734,12 +756,14 @@ namespace Plugin.Suning.Extension
 
                             var itemAdvancedCategory = paraItem as IElement;
 
-                            //找到归属的组
-                            string groupName = itemAdvancedCategory.QuerySelector("a.a-item>span").TextContent;
+                        //找到归属的组
+                        string groupName = itemAdvancedCategory.QuerySelector("a.a-item>span").TextContent;
                             if (groupName.Equals("全部分类"))
                             {
                                 return;
                             }
+                            var tagGroup = new KeyWordTagGroup(groupName);
+
                             var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("div.list-item>div>a");
                             foreach (var itemADom in childLiADomArray)
                             {
@@ -751,11 +775,12 @@ namespace Plugin.Suning.Extension
                                 modelTag.FilterFiled = itemAdvancedCategory.GetAttribute("id");//根节点的筛选属性
                                 modelTag.Value = itemADom.GetAttribute("id");
 
+                                tagGroup.Tags.Add(modelTag);
 
-                                //----解析 a标签完毕-------
-                                blockList.Add(modelTag);
 
                             }
+                        //----解析 a标签完毕-------
+                        blockList.Add(tagGroup);
 
                         }, itemSline, TaskCreationOptions.None);
                         //将并行任务放到数组
@@ -799,35 +824,50 @@ namespace Plugin.Suning.Extension
                 if (null != div_BrandsDom)
                 {
                     //从属性区域解析dom-品牌内容
-                    var brandADomList = div_BrandsDom.QuerySelectorAll("ul.brands>li");
-
+                    List<IElement> lstBrandADoms = new List<IElement>();
+                    //从属性区域解析dom-品牌内容
+                    //1 可见的品牌
+                    var brandADomList = div_BrandsDom.QuerySelectorAll("div.brand-item>div.clearfix>a");
                     if (null != brandADomList)
                     {
-
-                        foreach (var itemADom in brandADomList)
+                        lstBrandADoms.AddRange(brandADomList.AsEnumerable());
+                    }
+                    //2 其他文本品牌
+                    var txtBrandDom = div_BrandsDom.QuerySelector("textarea");
+                    if (null != txtBrandDom)
+                    {
+                        var docBrand = new HtmlParser().Parse(HttpUtility.HtmlDecode(txtBrandDom.InnerHtml));
+                        var notSeeBrandDoms = docBrand.QuerySelectorAll("a");
+                        if (null != notSeeBrandDoms)
                         {
-
-
-                            var model = new BrandTag();
-                            model.Platform = SupportPlatformEnum.Suning;
-                            model.FilterField = itemADom.GetAttribute("filter_id"); //使用的过滤字段参数
-                            model.BrandId = itemADom.GetAttribute("filter_value");
-
-                            model.BrandName = itemADom.GetAttribute("title").Replace("\n", "").Replace("\t", "");
-                            string idxString = itemADom.GetAttribute("class");//定位字符
-                            if (!string.IsNullOrEmpty(idxString))
-                            {
-                                model.CharIndex = idxString.Last().ToString();//最后一个字符 ：s-brand.choose.P
-                            }
-                            var imgDom = itemADom.QuerySelector("a>img");
-                            if (null != imgDom)
-                            {
-                                model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
-                            }
-
-                            lstBrands.Add(model);
+                            lstBrandADoms.AddRange(notSeeBrandDoms.AsEnumerable());
                         }
                     }
+
+                    foreach (var itemADom in brandADomList)
+                    {
+
+
+                        var model = new BrandTag();
+                        model.Platform = SupportPlatformEnum.Suning;
+                        model.FilterField = itemADom.GetAttribute("filter_id"); //使用的过滤字段参数
+                        model.BrandId = itemADom.GetAttribute("filter_value");
+
+                        model.BrandName = itemADom.GetAttribute("title").Replace("\n", "").Replace("\t", "");
+                        string idxString = itemADom.GetAttribute("class");//定位字符
+                        if (!string.IsNullOrEmpty(idxString))
+                        {
+                            model.CharIndex = idxString.Last().ToString();//最后一个字符 ：s-brand.choose.P
+                        }
+                        var imgDom = itemADom.QuerySelector("a>img");
+                        if (null != imgDom)
+                        {
+                            model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
+                        }
+
+                        lstBrands.Add(model);
+                    }
+
                 }
                 resultBag.Add("Brands", lstBrands);
 
@@ -836,13 +876,13 @@ namespace Plugin.Suning.Extension
 
                 //category 解析  
 
-                //指定的类目
-                var div_AttrsDom_Category_SpecialList = div_filterDoms.QuerySelectorAll("div.filter-section")
+                //普通tags
+                var div_AttrsDom_CommonList = div_filterDoms.QuerySelectorAll("div.filter-section")
                     .Where(
                     (x) =>
                     {
-                        //id 不为空 并且不是第一个品牌元素的节点
-                        string id = x.GetAttribute("id");
+                    //id 不为空 并且不是第一个品牌元素的节点
+                    string id = x.GetAttribute("id");
                         if (string.IsNullOrEmpty(id))
                         {
                             return false;
@@ -862,23 +902,23 @@ namespace Plugin.Suning.Extension
                 var blockList = new BlockingCollection<KeyWordTag>();
                 var taskArray = new List<Task>();
 
-                //指定分类tag 解析
-                if (null != div_AttrsDom_Category_SpecialList)
+                //普通tags解析
+                if (null != div_AttrsDom_CommonList)
                 {
 
                     // PLINQ 的操作 
                     //div_AttrsDom_CategoryList.AsParallel().ForAll((x) => { })
 
-                    for (int i = 0; i < div_AttrsDom_Category_SpecialList.Length; i++)
+                    for (int i = 0; i < div_AttrsDom_CommonList.Length; i++)
                     {
 
-                        var itemCategory = div_AttrsDom_Category_SpecialList[i];
+                        var itemCategory = div_AttrsDom_CommonList[i];
                         var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
                         {
 
                             var itemSpceialCategory = paraItem as IElement;
-                            //找到归属的组
-                            string groupName = itemSpceialCategory.QuerySelector("div.s-left>label").TextContent;
+                        //找到归属的组
+                        string groupName = itemSpceialCategory.QuerySelector("div.s-left>label").TextContent;
 
                             var childLiADomArray = itemSpceialCategory.QuerySelectorAll("div.item-container>a");
                             foreach (var itemADom in childLiADomArray)
@@ -891,8 +931,8 @@ namespace Plugin.Suning.Extension
                                 modelTag.FilterFiled = itemSpceialCategory.GetAttribute("id");//根节点的筛选属性
 
                                 modelTag.Value = itemADom.GetAttribute("id");
-                                //----解析 a标签完毕-------
-                                blockList.Add(modelTag);
+                            //----解析 a标签完毕-------
+                            blockList.Add(modelTag);
 
                             }
 
@@ -917,8 +957,8 @@ namespace Plugin.Suning.Extension
 
                             var itemAdvancedCategory = paraItem as IElement;
 
-                            //找到归属的组
-                            string groupName = itemAdvancedCategory.QuerySelector("a.o-text>span").TextContent;
+                        //找到归属的组
+                        string groupName = itemAdvancedCategory.QuerySelector("a.o-text>span").TextContent;
                             if (groupName.Equals("全部分类"))
                             {
                                 return;
@@ -935,8 +975,8 @@ namespace Plugin.Suning.Extension
                                 modelTag.Value = itemADom.GetAttribute("id");
 
 
-                                //----解析 a标签完毕-------
-                                blockList.Add(modelTag);
+                            //----解析 a标签完毕-------
+                            blockList.Add(modelTag);
 
                             }
 
@@ -1022,11 +1062,11 @@ namespace Plugin.Suning.Extension
 
                 //title
                 var domTitle = domImage.ParentElement;
-                modelProduct.Title = domTitle.GetAttribute("title");
+                modelProduct.Title = productDom.QuerySelector("p.sell-point").TextContent;// domTitle.GetAttribute("title");
                 modelProduct.ItemUrl = domTitle.GetAttribute("href").GetHttpsUrl();
 
 
-                
+
 
 
 

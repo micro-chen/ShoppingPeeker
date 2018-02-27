@@ -454,7 +454,7 @@ namespace Plugin.Taobao.Extension
                         #region tags 解析
 
 
-                        var lstTags = new List<KeyWordTag>();
+                        var lstTags = new List<KeyWordTagGroup>();
 
                         var otherFilterNode1 = commonNode.Where(x => x.text != "品牌" && x.sub != null);
                         foreach (var itemNode in otherFilterNode1)
@@ -547,13 +547,14 @@ namespace Plugin.Taobao.Extension
         }
 
 
-        private static void ProcessTags(List<KeyWordTag> lstTags, IEnumerable<TaobaoPageJsonResut.sub> lstSub, string groupName)
+        private static void ProcessTags(List<KeyWordTagGroup> lstTags, IEnumerable<TaobaoPageJsonResut.sub> lstSub, string groupName)
         {
             if (null == lstTags)
             {
-                lstTags = new List<KeyWordTag>();
+                lstTags = new List<KeyWordTagGroup>();
             }
 
+            var tagGroup = new KeyWordTagGroup(groupName);
 
             foreach (var itemSub in lstSub)
             {
@@ -564,9 +565,10 @@ namespace Plugin.Taobao.Extension
                 modelTag.FilterFiled = itemSub.key;
                 modelTag.Value = itemSub.value;
 
-                lstTags.Add(modelTag);
+                tagGroup.Tags.Add(modelTag);
             }
 
+            lstTags.Add(tagGroup);
         }
 
         /// <summary>

@@ -111,7 +111,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.Resolvers
                 }
                 if (resultBag.ContainsKey("Tags"))
                 {
-                    dataModel.Tags = resultBag["Tags"] as List<KeyWordTag>;
+                    dataModel.Tags = resultBag["Tags"] as List<KeyWordTagGroup>;
                 }
 
             }

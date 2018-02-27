@@ -154,7 +154,7 @@ namespace Plugin.Jingdong.Extension
             sbSearchUrl.Append("&page=").Append(pageNumber);
 
             //京东前后翻页的时候 需要这个s 参数，前为prev 参数 ,后翻为next 参数
-            if (null!=webArgs.AttachParas&&webArgs.AttachParas.ContainsKey("jd_pager_s"))
+            if (null != webArgs.AttachParas && webArgs.AttachParas.ContainsKey("jd_pager_s"))
             {
                 sbSearchUrl.Append("&s=").Append(webArgs.AttachParas["jd_pager_s"]);
             }
@@ -297,7 +297,7 @@ namespace Plugin.Jingdong.Extension
         public override Dictionary<string, object> ResolveSearchPageContent(BaseFetchWebPageArgument webArgs, string content)
         {
 
-        
+
 
             if (!content.Contains("在京东找到了"))
             {
@@ -383,8 +383,8 @@ namespace Plugin.Jingdong.Extension
                         var div_AttrsDom_SlineList = div_filterDoms.QuerySelectorAll("div.J_selectorLine.s-line");
                         var div_AttrsDom_Senior = div_filterDoms.QuerySelector("div#J_selectorSenior");
 
-                        var lstTags = new List<KeyWordTag>();
-                        var blockList = new BlockingCollection<KeyWordTag>();
+                        var lstTags = new List<KeyWordTagGroup>();
+                        var blockList = new BlockingCollection<KeyWordTagGroup>();
                         var taskArray = new List<Task>();
                         if (null != div_AttrsDom_CategoryList)
                         {
@@ -395,7 +395,7 @@ namespace Plugin.Jingdong.Extension
                             for (int i = 0; i < div_AttrsDom_CategoryList.Length; i++)
                             {
 
-                                var itemCate= div_AttrsDom_CategoryList[i];
+                                var itemCate = div_AttrsDom_CategoryList[i];
                                 var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
                                 {
 
@@ -403,6 +403,7 @@ namespace Plugin.Jingdong.Extension
 
                                     //找到归属的组
                                     string groupName = itemCategory.QuerySelector("div.sl-key").Children[0].TextContent;
+                                    var tagGroup = new KeyWordTagGroup(groupName);
 
                                     var childLiADomArray = itemCategory.QuerySelectorAll("ul.J_valueList>li>a");
                                     foreach (var itemADom in childLiADomArray)
@@ -410,7 +411,7 @@ namespace Plugin.Jingdong.Extension
                                         var modelTag = new KeyWordTag();
                                         modelTag.Platform = SupportPlatformEnum.Jingdong;
                                         modelTag.TagName = itemADom.TextContent;//标签名称
-                                    modelTag.GroupShowName = groupName;
+                                        modelTag.GroupShowName = groupName;
                                         string hrefString = itemADom.GetAttribute("href");
                                         var catValueParas = HttpUtility.ParseQueryString(hrefString);
                                         if (catValueParas.AllKeys.Contains("ev"))
@@ -429,11 +430,12 @@ namespace Plugin.Jingdong.Extension
                                             modelTag.Value = catValueParas["cid3"].Replace("#J_searchWrap", "");
                                         }
 
+                                        tagGroup.Tags.Add(modelTag);
 
-                                    //----解析 a标签完毕-------
-                                    blockList.Add(modelTag);
 
                                     }
+                                    //----解析 a标签完毕-------
+                                    blockList.Add(tagGroup);
 
                                 }, itemCate, TaskCreationOptions.None);
                                 //将并行任务放到数组
@@ -459,14 +461,16 @@ namespace Plugin.Jingdong.Extension
                                     if (groupName.Contains("高级选项"))
                                     {
                                         return;//高级筛选不再这处理
-                                }
+                                    }
+                                    var tagGroup = new KeyWordTagGroup(groupName);
+
                                     var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("ul.J_valueList>li>a");
                                     foreach (var itemADom in childLiADomArray)
                                     {
                                         var modelTag = new KeyWordTag();
                                         modelTag.Platform = SupportPlatformEnum.Jingdong;
                                         modelTag.TagName = itemADom.TextContent;//标签名称
-                                    modelTag.GroupShowName = groupName;
+                                        modelTag.GroupShowName = groupName;
                                         string hrefString = itemADom.GetAttribute("href");
                                         var catValueParas = HttpUtility.ParseQueryString(hrefString);
                                         if (catValueParas.AllKeys.Contains("ev"))
@@ -487,12 +491,13 @@ namespace Plugin.Jingdong.Extension
 
 
 
-                                    //----解析 a标签完毕-------
-                                    blockList.Add(modelTag);
 
+                                        tagGroup.Tags.Add(modelTag);
                                     }
 
-                                },itemSline, TaskCreationOptions.None);
+                                    //----解析 a标签完毕-------
+                                    blockList.Add(tagGroup);
+                                }, itemSline, TaskCreationOptions.None);
                                 //将并行任务放到数组
                                 taskArray.Add(taskResolveAEmelems);
 
@@ -522,16 +527,18 @@ namespace Plugin.Jingdong.Extension
                                         if (groupName.Equals("其他分类"))
                                         {
                                             return;//不解析与当前关键词无关的分类信息
-                                    }
+                                        }
+                                        var tagGroup = new KeyWordTagGroup(groupName);
+
                                         if (null != lstTabContentItems[cursor])
                                         {
                                             var childLiADomArray = lstTabContentItems[cursor].QuerySelectorAll("ul.J_valueList>li>a");//找到匹配游标的内容组
-                                        foreach (var itemADom in childLiADomArray)
+                                            foreach (var itemADom in childLiADomArray)
                                             {
                                                 var modelTag = new KeyWordTag();
                                                 modelTag.Platform = SupportPlatformEnum.Jingdong;
                                                 modelTag.TagName = itemADom.TextContent;//标签名称
-                                            modelTag.GroupShowName = groupName;
+                                                modelTag.GroupShowName = groupName;
                                                 string hrefString = itemADom.GetAttribute("href");
                                                 var catValueParas = HttpUtility.ParseQueryString(hrefString);
                                                 if (catValueParas.AllKeys.Contains("ev"))
@@ -551,11 +558,12 @@ namespace Plugin.Jingdong.Extension
                                                 }
 
 
+                                                tagGroup.Tags.Add(modelTag);
 
-                                            //----解析 a标签完毕-------
-                                            blockList.Add(modelTag);
 
                                             }
+                                            //----解析 a标签完毕-------
+                                            blockList.Add(tagGroup);
                                         }
 
 
@@ -695,7 +703,7 @@ namespace Plugin.Jingdong.Extension
                                 string nextStr = parasArray[4];//第5个参数
                                 int.TryParse(nextStr, out pager_next_start);
 
-                                string prevStr= parasArray[5];//第6个参数
+                                string prevStr = parasArray[5];//第6个参数
                                 int.TryParse(prevStr, out pager_prev_start);
                             }
                         }
@@ -729,8 +737,8 @@ namespace Plugin.Jingdong.Extension
                               .ForAll((itemProductDom) =>
                         {
 
-                        //解析一个商品的节点
-                        JingdongProduct modelProduct = this.ResolverProductDom(itemProductDom);
+                            //解析一个商品的节点
+                            JingdongProduct modelProduct = this.ResolverProductDom(itemProductDom);
                             if (null != modelProduct && modelProduct.ItemId > 0)
                             {
                                 modelProduct.Prev_start = pager_prev_start;

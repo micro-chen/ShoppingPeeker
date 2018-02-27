@@ -111,7 +111,7 @@ namespace Plugin.Dangdang.Extension
                     }
 
                     //3 其他分类路径
-                    var catePathFilter= currentPlatformTag.FirstOrDefault(x => x.FilterFiled == "category_path");
+                    var catePathFilter = currentPlatformTag.FirstOrDefault(x => x.FilterFiled == "category_path");
                     if (null != catePathFilter)
                     {
                         sbSearchUrl.Append("&category_path=").Append(catePathFilter.Value);
@@ -196,15 +196,34 @@ namespace Plugin.Dangdang.Extension
 
 
                         //var div_BrandsDom = div_filterDoms.QuerySelector("div.s-brand");
-                        var brandULDom = div_filterDoms.QuerySelector("ul.img_list_content_ul");
+                        var brandULDom = div_filterDoms.QuerySelector("ul.img_list_content_ul");//图片的品牌格式
+                        bool isTextBrand = false;
+                        if (null == brandULDom)
+                        {
+                            //文字的品牌格式
+                            brandULDom = div_filterDoms.QuerySelectorAll("li.child_li").FirstOrDefault();
+                            if (null != brandULDom)
+                            {
+                                var isBrand = brandULDom.QuerySelector("div.list_left").TextContent.Trim().Contains("品牌");
+                                if (!isBrand)
+                                {
+                                    brandULDom = null;
+                                }
+                                else
+                                {
+                                    isTextBrand = true;
+                                }
+                            }
+                        }
                         #region 品牌解析
                         var lstBrands = new List<BrandTag>();
                         if (null != brandULDom)
                         {
                             //从属性区域解析dom-品牌内容
-                            
 
-                            
+
+                            if (isTextBrand == false)
+                            {
                                 var li_DomArray = brandULDom.QuerySelectorAll("li");
                                 foreach (var itemLiDom in li_DomArray)
                                 {
@@ -232,8 +251,43 @@ namespace Plugin.Dangdang.Extension
 
 
                                     lstBrands.Add(model);
-                                
+
+                                }
                             }
+                            else
+                            {
+                                //解析文本品牌节点
+                                var brandRoot = brandULDom.QuerySelector("div.clearfix");
+                                var childLiADomArray = brandRoot.QuerySelectorAll("span>a");
+                                foreach (var itemADom in childLiADomArray)
+                                {
+                                    var model = new BrandTag();
+                                    model.Platform = SupportPlatformEnum.Dangdang;
+                                    model.FilterField = "att";//使用的过滤字段参数
+
+                                    model.BrandName = itemADom.TextContent;//标签名称
+
+                                    var urlBrand = HttpUtility.UrlDecode(itemADom.GetAttribute("href"), Encoding.GetEncoding("gb2312"));
+                                    model.BrandId = HttpUtility.ParseQueryString(urlBrand)["att"];
+                                    if (!string.IsNullOrEmpty(model.BrandId))
+                                    {
+                                        model.BrandId = model.BrandId.Replace("#J_tab", "");
+                                    }
+                                    model.CharIndex = PinYin.GetFirstLetter(model.BrandName);//定位字符
+
+                                    //////var imgDom = itemADom.QuerySelector("img");
+                                    //////if (null != imgDom)
+                                    //////{
+                                    //////    model.IconUrl = imgDom.GetAttribute("src");
+                                    //////}
+
+
+                                    lstBrands.Add(model);
+
+                                }
+                              
+                            }
+
                         }
                         resultBag.Add("Brands", lstBrands);
 
@@ -261,8 +315,8 @@ namespace Plugin.Dangdang.Extension
 
                         });
 
-                        var lstTags = new List<KeyWordTag>();
-                        var blockList = new BlockingCollection<KeyWordTag>();
+                        var lstTags = new List<KeyWordTagGroup>();
+                        var blockList = new BlockingCollection<KeyWordTagGroup>();
                         var taskArray = new List<Task>();
                         if (null != div_AttrsDom_Category)
                         {
@@ -277,7 +331,7 @@ namespace Plugin.Dangdang.Extension
 
                                 //找到归属的组
                                 string groupName = "分类";
-
+                                var tagGroup = new KeyWordTagGroup(groupName);
                                 var childLiADomArray = itemCategory.QuerySelectorAll("div.clearfix>span>a");
                                 foreach (var itemADom in childLiADomArray)
                                 {
@@ -290,17 +344,19 @@ namespace Plugin.Dangdang.Extension
                                     if (catValueParas.AllKeys.Contains("category_id"))
                                     {
                                         modelTag.FilterFiled = "category_id";
-                                        modelTag.Value = catValueParas["category_id"].Replace("#J_tab", ""); 
-                                    }else if (catValueParas.AllKeys.Contains("category_path"))
+                                        modelTag.Value = catValueParas["category_id"].Replace("#J_tab", "");
+                                    }
+                                    else if (catValueParas.AllKeys.Contains("category_path"))
                                     {
                                         modelTag.FilterFiled = "category_path";
-                                        modelTag.Value = catValueParas["category_path"].Replace("#J_tab", ""); 
+                                        modelTag.Value = catValueParas["category_path"].Replace("#J_tab", "");
                                     }
 
-                                    //----解析 a标签完毕-------
-                                    blockList.Add(modelTag);
+                                    tagGroup.Tags.Add(modelTag);
 
                                 }
+                                //----解析 a标签完毕-------
+                                blockList.Add(tagGroup);
 
                             }, TaskCreationOptions.None);
                             //将并行任务放到数组
@@ -326,7 +382,11 @@ namespace Plugin.Dangdang.Extension
 
                                     //找到归属的组
                                     string groupName = itemCategory.QuerySelector("div.list_left").TextContent;
-
+                                    if (groupName.Contains("品牌"))
+                                    {
+                                        return;//不解析文字格式的品牌tags
+                                    }
+                                    var tagGroup = new KeyWordTagGroup(groupName);
                                     var childLiADomArray = itemCategory.QuerySelectorAll("div.clearfix>span>a");
                                     foreach (var itemADom in childLiADomArray)
                                     {
@@ -343,11 +403,11 @@ namespace Plugin.Dangdang.Extension
                                             modelTag.Value = catValueParas["att"].Replace("#J_tab", "");
                                         }
 
-
-                                        //----解析 a标签完毕-------
-                                        blockList.Add(modelTag);
+                                        tagGroup.Tags.Add(modelTag);
 
                                     }
+                                    //----解析 a标签完毕-------
+                                    blockList.Add(tagGroup);
 
                                 }, itemAttrGroup, TaskCreationOptions.None);
                                 //将并行任务放到数组
@@ -370,7 +430,7 @@ namespace Plugin.Dangdang.Extension
 
                 var lstProducts = new ProductBaseCollection();
                 //多任务并行解析商品
-               // ConcurrentDictionary<string, ProductOrdered<DangdangProduct>> blockingList_Products = new ConcurrentDictionary<string, ProductOrdered<DangdangProduct>>();
+                // ConcurrentDictionary<string, ProductOrdered<DangdangProduct>> blockingList_Products = new ConcurrentDictionary<string, ProductOrdered<DangdangProduct>>();
 
                 //普通商品区域--不含广告的商品区域
                 var div_ItemListDom = htmlDoc.QuerySelector("div#search_nature_rg");
@@ -389,7 +449,7 @@ namespace Plugin.Dangdang.Extension
                             {
                                 lstProducts.Add(modelProduct);
                             }
-                            
+
                         }
 
 
@@ -446,7 +506,7 @@ namespace Plugin.Dangdang.Extension
                 modelProduct.Title = titleDom.GetAttribute("title");
                 modelProduct.ItemUrl = titleDom.GetAttribute("href");
                 var hotDom = productDom.QuerySelector("p.search_hot_word");
-                if (null!=hotDom)
+                if (null != hotDom)
                 {
                     modelProduct.Title += hotDom.TextContent;
                 }
@@ -454,7 +514,7 @@ namespace Plugin.Dangdang.Extension
                 var picDom = productDom.QuerySelector("a.pic>img");
                 if (null != picDom)
                 {
-                      modelProduct.PicUrl = picDom.GetAttribute("src");
+                    modelProduct.PicUrl = picDom.GetAttribute("src");
                 }
 
                 //price
@@ -465,7 +525,7 @@ namespace Plugin.Dangdang.Extension
                     decimal.TryParse(priceContent, out decimal _price);
                     modelProduct.Price = _price;
                 }
-              
+
 
                 //shop
                 var shopDom = productDom.QuerySelector("p.link>a");
@@ -551,17 +611,17 @@ namespace Plugin.Dangdang.Extension
                                 //http://img3m0.ddimg.cn/53/17/1438240670-1_x.jpg
                                 skuItemObj.SkuImgUrl = iconSkuDom.GetAttribute("data-original");
 
-                                string skuIdStr=skuItemObj.SkuImgUrl.Substring(skuItemObj.SkuImgUrl.LastIndexOf('/')); //itemSkuDom.GetAttribute("sku");
+                                string skuIdStr = skuItemObj.SkuImgUrl.Substring(skuItemObj.SkuImgUrl.LastIndexOf('/')); //itemSkuDom.GetAttribute("sku");
                                 skuItemObj.SkuId = skuIdStr.Substring(0, skuIdStr.IndexOf('-'));
-                               skuItemObj.SkuName = littleImgeADom.GetAttribute("title");
+                                skuItemObj.SkuName = littleImgeADom.GetAttribute("title");
                                 skuItemObj.SkuUrl = string.Format("http://product.dangdang.com/{0}.html", skuItemObj.SkuId);
 
 
                                 modelProduct.SkuList.Add(skuItemObj);
                             }
 
-                          
-                          
+
+
                         }
                     }
                 }

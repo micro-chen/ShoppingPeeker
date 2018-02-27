@@ -166,7 +166,7 @@ namespace Plugin.Tmall.Extension
             {
                 if (content.Contains("环境有异常"))
                 {
-                    PluginContext.Logger.Error("天猫查询被进行蜘蛛验证！关键词："+webArgs.KeyWord);
+                    PluginContext.Logger.Error("天猫查询被进行蜘蛛验证！关键词：" + webArgs.KeyWord);
                     return resultBag;
                 }
                 if (content.Contains("member/login"))
@@ -174,7 +174,7 @@ namespace Plugin.Tmall.Extension
                     PluginContext.Logger.Error("天猫查询结果页面被强制跳转到了登录页！关键词：" + webArgs.KeyWord);
                     return resultBag;
                 }
-                
+
             }
 
 
@@ -187,16 +187,16 @@ namespace Plugin.Tmall.Extension
                 var htmlDoc = htmlParser.Parse(content);
                 var div_AttrsDom = htmlDoc.QuerySelector("div.j_NavAttrs");
 
-                if (webArgs.IsNeedResolveHeaderTags == true&&null!=div_AttrsDom)
+                if (webArgs.IsNeedResolveHeaderTags == true && null != div_AttrsDom)
                 {
 
-                    var ulDomArray = div_AttrsDom.QuerySelectorAll("div.attrValues>ul");
                     #region 品牌解析
                     var lstBrands = new List<BrandTag>();
-                    if (null != div_AttrsDom)
+                    var brandDom = div_AttrsDom.QuerySelector("div.j_Brand");
+                    if (null != brandDom)
                     {
                         //从属性区域解析dom-品牌内容
-                        var brandULDom = ulDomArray[0];// div_AttrsDom.QuerySelector("div.j_Brand>div.attrValues>ul");
+                        var brandULDom = brandDom.QuerySelector("div.attrValues>ul");//ulDomArray[0];// 
 
                         if (null != brandULDom)
                         {
@@ -228,16 +228,21 @@ namespace Plugin.Tmall.Extension
                     //    Platform = NTCPMessage.EntityPackage.SupportPlatformEnum.Tmall,
                     //    TagName = "大衣", Value = "dayi", FilterFiled = "sku"
                     //} };
+                    var ulDomArray = div_AttrsDom.QuerySelectorAll("div.attrValues>ul");
 
-                    var lstTags = new List<KeyWordTag>();
+                    var lstTags = new List<KeyWordTagGroup>();
                     if (null != div_AttrsDom)
                     {
-                        var blockList = new BlockingCollection<KeyWordTag>();
+                        var blockList = new BlockingCollection<KeyWordTagGroup>();
 
                         //分类 or 属性;品牌是第一个，其他属性是后续
-                        var taskArray = new Task[ulDomArray.Length - 1];
+                        int startIdx = brandDom == null ? 0 : 1;// //是否存在品牌的判断
+
+                        var taskArray = new Task[ulDomArray.Length - startIdx];
                         int counter = 0;
-                        for (int i = 1; i < ulDomArray.Length; i++)
+
+
+                        for (int i = startIdx; i < ulDomArray.Length; i++)
                         {
                             int cursor = i;
 
@@ -245,15 +250,15 @@ namespace Plugin.Tmall.Extension
                             {
                                 var itemUl = ulDomArray[cursor];
 
-                            //找到归属的组
-                            var attrKeyDom = itemUl.ParentElement.ParentElement.QuerySelector("div.attrKey");
+                                //找到归属的组
+                                var attrKeyDom = itemUl.ParentElement.ParentElement.QuerySelector("div.attrKey");
                                 string groupName = "";
                                 if (null != attrKeyDom)
                                 {
                                     groupName = attrKeyDom.TextContent.Replace("\n", "").Trim();
                                 }
 
-
+                                var tagGroup = new KeyWordTagGroup(groupName);
 
                                 var childLiADomArray = itemUl.QuerySelectorAll("li>a");
                                 foreach (var itemADom in childLiADomArray)
@@ -261,11 +266,11 @@ namespace Plugin.Tmall.Extension
                                     var modelTag = new KeyWordTag();
                                     modelTag.Platform = SupportPlatformEnum.Tmall;
                                     modelTag.TagName = itemADom.TextContent.Replace("\n", "");//标签名称
-                                modelTag.GroupShowName = groupName;
+                                    modelTag.GroupShowName = groupName;
 
-                                //////----解析 a标签开始-------
-                                //////检查 a 的href 中的参数；cat 或者prop
-                                string hrefValue = itemADom.GetAttribute("href");
+                                    //////----解析 a标签开始-------
+                                    //////检查 a 的href 中的参数；cat 或者prop
+                                    string hrefValue = itemADom.GetAttribute("href");
                                     if (!string.IsNullOrEmpty(hrefValue))
                                     {
                                         var urlParas = HttpUtility.ParseQueryString(hrefValue, Encoding.UTF8);
@@ -273,24 +278,27 @@ namespace Plugin.Tmall.Extension
                                         {
                                             if (hrefValue.IndexOf("cat=") > -1)
                                             {
-                                            //1 cat
-                                            string catValue = urlParas["cat"];
+                                                //1 cat
+                                                string catValue = urlParas["cat"];
                                                 modelTag.FilterFiled = "cat";
                                                 modelTag.Value = catValue;
                                             }
                                             else if (hrefValue.IndexOf("prop=") > -1)
                                             {
-                                            //2 prop
-                                            string propValue = urlParas["prop"];
+                                                //2 prop
+                                                string propValue = urlParas["prop"];
                                                 modelTag.FilterFiled = "prop";
                                                 modelTag.Value = propValue;
                                             }
                                         }
                                     }
-                                //----解析 a标签完毕-------
-                                blockList.Add(modelTag);
+                                    tagGroup.Tags.Add(modelTag);
+                                 
 
                                 }
+
+                                //----解析 a标签完毕-------
+                                blockList.Add(tagGroup);
 
                             });
                             //将并行任务放到数组
@@ -340,8 +348,8 @@ namespace Plugin.Tmall.Extension
                         div_productDomArray.AsParallel()
                             .ForAll((itemProductDom) =>
                         {
-                        //解析一个商品的节点
-                        TmallProduct modelProduct = this.ResolverProductDom(itemProductDom);
+                            //解析一个商品的节点
+                            TmallProduct modelProduct = this.ResolverProductDom(itemProductDom);
                             if (null != modelProduct && modelProduct.ItemId > 0)
                             {
                                 var orderedObj = blockingList_Products[modelProduct.ItemId.ToString()];
@@ -461,7 +469,7 @@ namespace Plugin.Tmall.Extension
 
                     //评论量
                     var remarkDomSpan = statusDom.Children[1];
-                    if (null != remarkDomSpan&&remarkDomSpan.OuterHtml.Contains("评价"))
+                    if (null != remarkDomSpan && remarkDomSpan.OuterHtml.Contains("评价"))
                     {
                         string remarkTotal = remarkDomSpan.Children[0].TextContent;
                         if (!string.IsNullOrEmpty(remarkTotal))
