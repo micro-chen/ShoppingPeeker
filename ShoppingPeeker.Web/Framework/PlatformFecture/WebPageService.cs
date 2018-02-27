@@ -129,7 +129,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                 &&null!=dataModel
                 &&dataModel.Products.IsNotEmpty())
             {
-                int cacheTime = ConfigHelper.AppSettingsConfiguration.GetConfigInt("IsFetchPageCacheaAble");
+                int cacheTime = ConfigHelper.AppSettingsConfiguration.GetConfigInt("FetchPageCacheTime");
                 if (cacheTime<=0)
                 {
                     cacheTime = 60;//默认缓存页面结果60秒

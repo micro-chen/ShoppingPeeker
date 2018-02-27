@@ -71,7 +71,7 @@ $(function () {
                 dataType: "json",
                 top:8,
                 width: "504px",
-                deferRequestBy: 300,//不要立即请求 间隔一个缓冲
+                deferRequestBy: 200,//不要立即请求 间隔一个缓冲
                 paramName: "key",
                 params: { "key": this.txt_header_search_keyword.val(), "sign": ShoppingPeeker.apiSignFunc() },
                 formatResult: function (suggestion, currentValue, idx) {
@@ -131,7 +131,7 @@ $(function () {
                 dataType: "json",
                 top: 2,
                 width:"678px",
-                deferRequestBy: 300,//不要立即请求 间隔一个缓冲
+                deferRequestBy: 200,//不要立即请求 间隔一个缓冲
                 paramName: "key",
                 params: { "key": this.txt_search_keyword.val(), "sign": ShoppingPeeker.apiSignFunc() },
                 formatResult: function (suggestion, currentValue, idx) {
@@ -351,12 +351,12 @@ $(function () {
         searchProductsHandler: function(paras) {
 
             homePage.handler_api_search_tmall_products(paras);
-            //homePage.handler_api_search_taobao_products(paras);
-            //homePage.handler_api_search_jd_products(paras);
-            //homePage.handler_api_search_pdd_products(paras);
-            //homePage.handler_api_search_guomei_products(paras);
-            //homePage.handler_api_search_suning_products(paras);
-            //homePage.handler_api_search_dangdang_products(paras);
+            homePage.handler_api_search_taobao_products(paras);
+            homePage.handler_api_search_jd_products(paras);
+            homePage.handler_api_search_pdd_products(paras);
+            homePage.handler_api_search_guomei_products(paras);
+            homePage.handler_api_search_suning_products(paras);
+            homePage.handler_api_search_dangdang_products(paras);
         },
         //天猫商品检索
         handler_api_search_tmall_products: function (paras) {
