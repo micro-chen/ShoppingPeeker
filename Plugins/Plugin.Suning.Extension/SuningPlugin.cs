@@ -231,7 +231,7 @@ namespace Plugin.Suning.Extension
 
             var resultBag = new Dictionary<string, object>();
 
-            ShoppingWebCrawlerSection.ConnectionStringConfig connStrConfig = null;
+            WebCrawlerConnection connStrConfig = null;
 
             try
             {
@@ -252,7 +252,7 @@ namespace Plugin.Suning.Extension
                     ////3 解析结果
                     if (webArgs.SystemAttachParas.ContainsKey("SoapTcpConnectionString"))
                     {
-                        connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as ShoppingWebCrawlerSection.ConnectionStringConfig;
+                        connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as WebCrawlerConnection;
 
                         //请求搜索页面的html
                         using (var conn = new SoapTcpConnection(connStrConfig))
@@ -329,7 +329,7 @@ namespace Plugin.Suning.Extension
                     {
 
 
-                        connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as ShoppingWebCrawlerSection.ConnectionStringConfig;
+                        connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as WebCrawlerConnection;
 
                         //json地址
                         string urlOfSlicedJson = this.ResolveSlicedSearchPageSilcedUrl(webArgs);
@@ -498,7 +498,7 @@ namespace Plugin.Suning.Extension
         /// <param name="connStrConfig"></param>
         /// <param name="dataContainer"></param>
         /// <returns></returns>
-        private Task QueryPriceAsync(string url, string keyword, ShoppingWebCrawlerSection.ConnectionStringConfig connStrConfig, ConcurrentDictionary<string, SuningPriceJsonResult.PriceItem> priceContainer)
+        private Task QueryPriceAsync(string url, string keyword, WebCrawlerConnection connStrConfig, ConcurrentDictionary<string, SuningPriceJsonResult.PriceItem> priceContainer)
         {
 
             if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(keyword))
@@ -1061,12 +1061,14 @@ namespace Plugin.Suning.Extension
 
 
                 //title
-                var domTitle = domImage.ParentElement;
-                modelProduct.Title = productDom.QuerySelector("p.sell-point").TextContent;// domTitle.GetAttribute("title");
-                modelProduct.ItemUrl = domTitle.GetAttribute("href").GetHttpsUrl();
-
-
-
+                var domImge = domImage.ParentElement;
+                var domTitle = productDom.QuerySelector("p.sell-point");
+                if (null==domTitle)
+                {
+                    domTitle = productDom.QuerySelector("a.sellPoint");
+                }
+                modelProduct.Title = domTitle.TextContent;// domTitle.GetAttribute("title");
+                modelProduct.ItemUrl = domImge.GetAttribute("href").GetHttpsUrl();
 
 
 

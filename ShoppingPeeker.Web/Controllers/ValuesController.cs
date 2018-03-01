@@ -46,7 +46,7 @@ namespace ShoppingPeeker.Web.Controllers
             try
             {
 
-                var connStr = ConfigHelper.ShoppingWebCrawlerSection.ConnectionStringCollection.First();
+                var connStr = ConfigHelper.WebCrawlerSection.ConnectionStringCollection.First();
                 using (var conn = new SoapTcpConnection(connStr))
                 {
                     if (conn.State == ConnectionState.Closed)

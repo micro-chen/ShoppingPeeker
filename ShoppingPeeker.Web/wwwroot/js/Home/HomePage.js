@@ -450,6 +450,7 @@ $(function () {
             console.log('callBackHandler_api_search_tmall_products');
          
         },
+        /*处理接收淘宝的数据*/
         callBackHandler_api_search_taobao_products: function (data) {
             console.log('callBackHandler_api_search_taobao_products');
         },

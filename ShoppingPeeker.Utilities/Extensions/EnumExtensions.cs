@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
@@ -7,6 +8,32 @@ namespace System
 {
     public static class EnumExtensions
     {
+
+
+        /// <summary>
+        /// 获取 枚举名:枚举值 格式的 字符串
+        /// </summary>
+        /// <param name="emObj"></param>
+        /// <returns></returns>
+        public static string GetEnumNameValueString(this Enum emObj)
+        {
+            var type = emObj.GetType();
+            var typeName = type.Name;
+            ///var valueNames = Enum.GetNames(type, emObj);
+            var flagValues = Enum.GetValues(type)
+                        .Cast<Enum>()
+                        .Where(m => emObj.HasFlag(m));
+
+            List<string> lst_Names = new List<string>();
+            foreach (var itemEnumValue in flagValues)
+            {
+                var valueName = Enum.GetName(type, itemEnumValue);
+                lst_Names.Add(valueName);
+            }
+            string names = string.Join(":", lst_Names.ToArray());
+            return string.Concat(typeName, ":", names);
+        }
+
 
 
         /// <summary>
@@ -40,7 +67,6 @@ namespace System
 
             return descAttr.Description;
         }
-    
 
     }
 }

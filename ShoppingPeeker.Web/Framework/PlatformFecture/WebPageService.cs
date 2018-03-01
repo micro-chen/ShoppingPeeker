@@ -69,46 +69,53 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                 }
                 string pageContent = string.Empty;
 
-                var connStrConfig = ConfigHelper.ShoppingWebCrawlerSection.ConnectionStringCollection.First();
-                webArgs.SystemAttachParas["SoapTcpConnectionString"] = connStrConfig;//register to attach paras
-
-                if (searchUrl.IsNeedPreRequest == true)
+                using (var connMgr = new WebCrawlerConnConfigManager())
                 {
-                    ////1 打开tcp 链接 
-                    ////2 发送参数
-                    ////3 解析结果
-                 
-                    using (var conn = new SoapTcpConnection(connStrConfig))
-                    {
-                        if (conn.State == ConnectionState.Closed)
-                        {
-                            conn.Open();
-                        }
 
-                        //发送soap
-                        var soapCmd = new SoapMessage() { Head = CommandConstants.CMD_FetchPage };
-                        soapCmd.Body = webArgs.ToJson();
-                        var dataContainer = conn.SendSoapMessage(soapCmd);
-                        if (null != dataContainer && dataContainer.Status == 1)
+                    var connStrConfig = connMgr.Connection;
+                    //;//ConfigHelper.WebCrawlerSection.ConnectionStringCollection["Crawler-Server1"];
+                    webArgs.SystemAttachParas["SoapTcpConnectionString"] = connStrConfig;//register to attach paras
+
+                    if (searchUrl.IsNeedPreRequest == true)
+                    {
+                        ////1 打开tcp 链接 
+                        ////2 发送参数
+                        ////3 解析结果
+
+                        using (var conn = new SoapTcpConnection(connStrConfig))
                         {
-                            pageContent = dataContainer.Result;
-                        }
-                        else
-                        {
-                            StringBuilder errMsg = new StringBuilder("抓取网页请求失败！参数：");
-                            errMsg.Append(soapCmd.Body);
-                            if (null != dataContainer && !string.IsNullOrEmpty(dataContainer.ErrorMsg))
+                            if (conn.State == ConnectionState.Closed)
                             {
-                                errMsg.Append("；服务端错误消息：")
-                                    .Append(dataContainer.ErrorMsg);
+                                conn.Open();
                             }
-                            throw new Exception(errMsg.ToString());
+
+                            //发送soap
+                            var soapCmd = new SoapMessage() { Head = CommandConstants.CMD_FetchPage };
+                            soapCmd.Body = webArgs.ToJson();
+                            var dataContainer = conn.SendSoapMessage(soapCmd);
+                            if (null != dataContainer && dataContainer.Status == 1)
+                            {
+                                pageContent = dataContainer.Result;
+                            }
+                            else
+                            {
+                                StringBuilder errMsg = new StringBuilder("抓取网页请求失败！参数：");
+                                errMsg.Append(soapCmd.Body);
+                                if (null != dataContainer && !string.IsNullOrEmpty(dataContainer.ErrorMsg))
+                                {
+                                    errMsg.Append("；服务端错误消息：")
+                                        .Append(dataContainer.ErrorMsg);
+                                }
+                                throw new Exception(errMsg.ToString());
+                            }
                         }
                     }
                 }
+
+
                 //开始解析内容字符串
                 //*******注意：针对可以直接进行内容解析的连接，交给内容解析函数进行地址的内容请求和解析*********
-                if (!string.IsNullOrEmpty(pageContent)||!searchUrl.IsNeedPreRequest)
+                if (!string.IsNullOrEmpty(pageContent) || !searchUrl.IsNeedPreRequest)
                 {
 
                     dataModel = resolver.ResolvePageContent(webArgs, pageContent);
@@ -118,6 +125,8 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                     }
                 }
 
+
+
             }
             catch (Exception ex)
             {
@@ -126,11 +135,11 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
 
             //如果开启缓存页面结果
             if (true == WorkContext.IsFetchPageCacheaAble
-                &&null!=dataModel
-                &&dataModel.Products.IsNotEmpty())
+                && null != dataModel
+                && dataModel.Products.IsNotEmpty())
             {
                 int cacheTime = ConfigHelper.AppSettingsConfiguration.GetConfigInt("FetchPageCacheTime");
-                if (cacheTime<=0)
+                if (cacheTime <= 0)
                 {
                     cacheTime = 60;//默认缓存页面结果60秒
                 }

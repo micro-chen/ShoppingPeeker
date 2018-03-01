@@ -266,7 +266,7 @@ namespace ShoppingPeeker.Web.Controllers
                 if (null!= guomeiPlugin_QuerySingleProductPrice)
                 {
                     //设定连接
-                    var connStrConfig = ConfigHelper.ShoppingWebCrawlerSection.ConnectionStringCollection.First();
+                    var connStrConfig = ConfigHelper.WebCrawlerSection.ConnectionStringCollection.First();
                     webArgs.SystemAttachParas["SoapTcpConnectionString"] = connStrConfig;//register to attach paras
 
                     container.Data = guomeiPlugin_QuerySingleProductPrice.Invoke(guomeiPlugin, new object[] { webArgs });

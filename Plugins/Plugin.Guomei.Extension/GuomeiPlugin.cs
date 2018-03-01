@@ -165,7 +165,7 @@ namespace Plugin.Guomei.Extension
             # region 杂项
             sbSearchUrl.Append("&deliv=0");
             sbSearchUrl.Append("&market=10");
-            sbSearchUrl.Append("&instock=1");//仅显示有货
+            //sbSearchUrl.Append("&instock=1");//仅显示有货
             sbSearchUrl.Append("&pzpq=0");
             sbSearchUrl.Append("&pzin=v4");
             #endregion
@@ -214,7 +214,7 @@ namespace Plugin.Guomei.Extension
             {
                 throw new Exception("参数缺少连接字符串设置！");
             }
-            var connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as ShoppingWebCrawlerSection.ConnectionStringConfig;
+            var connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as WebCrawlerConnection;
             //json地址
             string urlOfPriceJson = string.Format("https://ss.gome.com.cn/search/v1/price/single/{0}/{1}/11010000/flag/item/fn1?callback=fn1&_={2}",
                 pId,
@@ -280,7 +280,7 @@ namespace Plugin.Guomei.Extension
 
             var resultBag = new Dictionary<string, object>();
 
-            ShoppingWebCrawlerSection.ConnectionStringConfig connStrConfig = null;
+            WebCrawlerConnection connStrConfig = null;
 
             try
             {
@@ -298,7 +298,7 @@ namespace Plugin.Guomei.Extension
                     ////3 解析结果
                     if (webArgs.SystemAttachParas.ContainsKey("SoapTcpConnectionString"))
                     {
-                        connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as ShoppingWebCrawlerSection.ConnectionStringConfig;
+                        connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as WebCrawlerConnection;
 
                         //请求搜索页面的html
                         using (var conn = new SoapTcpConnection(connStrConfig))
@@ -503,7 +503,7 @@ namespace Plugin.Guomei.Extension
                 {
 
 
-                    connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as ShoppingWebCrawlerSection.ConnectionStringConfig;
+                    connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as WebCrawlerConnection;
 
                     //json地址
                     string urlOfSlicedJson = this.ResolveSlicedSearchPageSilcedUrl(webArgs.ResolvedUrl.Url);

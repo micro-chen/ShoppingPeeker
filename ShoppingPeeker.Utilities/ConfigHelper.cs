@@ -61,19 +61,19 @@ namespace ShoppingPeeker.Utilities
         }
 
 
-        private static ShoppingWebCrawlerSection _ShoppingWebCrawlerSection;
+        private static WebCrawlerSection _WebCrawlerSection;
         /// <summary>
         /// 蜘蛛连接配置
         /// </summary>
-        public static ShoppingWebCrawlerSection ShoppingWebCrawlerSection
+        public static WebCrawlerSection WebCrawlerSection
         {
             get
             {
-                if (null == _ShoppingWebCrawlerSection)
+                if (null == _WebCrawlerSection)
                 {
-                    _ShoppingWebCrawlerSection = GetShoppingWebCrawlerSection();
+                    _WebCrawlerSection = GetWebCrawlerSection();
                 }
-                return _ShoppingWebCrawlerSection;
+                return _WebCrawlerSection;
             }
         }
 
@@ -214,16 +214,16 @@ namespace ShoppingPeeker.Utilities
         /// 获取配置蜘蛛节点信息
         /// </summary>
         /// <returns></returns>
-        public static ShoppingWebCrawlerSection GetShoppingWebCrawlerSection()
+        public static WebCrawlerSection GetWebCrawlerSection()
         {
-            var key = ShoppingWebCrawlerSection.SectionName;
+            var key = WebCrawlerSection.SectionName;
             var section = AppSettingsConfiguration.GetSection(key);
             if (null == section)
             {
-                throw new Exception("GetShoppingWebCrawlerSection failed,not set ShoppingWebCrawlerSection. ");
+                throw new Exception("GetWebCrawlerSection failed,not set WebCrawlerSection. ");
             }
 
-            var configSection = section.Get<ShoppingWebCrawlerSection>();
+            var configSection = section.Get<WebCrawlerSection>();
 
             return configSection;
         }

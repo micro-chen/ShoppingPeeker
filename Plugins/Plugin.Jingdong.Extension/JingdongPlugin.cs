@@ -645,7 +645,7 @@ namespace Plugin.Jingdong.Extension
                     {
 
 
-                        var connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as ShoppingWebCrawlerSection.ConnectionStringConfig;
+                        var connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as WebCrawlerConnection;
 
                         //重写解析地址-首页的分片jsonp地址
                         string urlOfSlicedJsonp = this.ResolveSlicedSearchPageSilcedUrl(webArgs, next_start, show_items);

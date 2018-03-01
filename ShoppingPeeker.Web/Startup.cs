@@ -34,7 +34,7 @@ namespace ShoppingPeeker.Web
             //保证配置的全局
             ConfigHelper.AppSettingsConfiguration = configuration;
             //配置蜘蛛程序连接池
-            var crawlerConfigSection = ConfigHelper.ShoppingWebCrawlerSection;
+            var crawlerConfigSection = ConfigHelper.WebCrawlerSection;
             if (null != crawlerConfigSection)
             {
                 SoapTcpPool.InitPoolManager(crawlerConfigSection.ConnectionStringCollection);

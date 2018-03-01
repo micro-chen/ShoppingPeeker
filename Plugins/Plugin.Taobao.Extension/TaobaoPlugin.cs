@@ -350,7 +350,7 @@ namespace Plugin.Taobao.Extension
                         {
                             return jsonpContent;
                         }
-                        var connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as ShoppingWebCrawlerSection.ConnectionStringConfig;
+                        var connStrConfig = webArgs.SystemAttachParas["SoapTcpConnectionString"] as WebCrawlerConnection;
                         if (null == connStrConfig)
                         {
                             return jsonpContent;
@@ -463,14 +463,17 @@ namespace Plugin.Taobao.Extension
                             string groupName = itemNode.text;
                             ProcessTags(lstTags, itemNode.sub, groupName);
                         }
-
-                        //advNode 的解析
-                        foreach (var itemNode in advNode)
+                        if (null!= advNode)
                         {
-                            //找到归属的组
-                            string groupName = itemNode.text;
-                            ProcessTags(lstTags, itemNode.sub, groupName);
+                            //advNode 的解析
+                            foreach (var itemNode in advNode)
+                            {
+                                //找到归属的组
+                                string groupName = itemNode.text;
+                                ProcessTags(lstTags, itemNode.sub, groupName);
+                            }
                         }
+                      
                         resultBag.Add("Tags", lstTags);
 
                         #endregion
