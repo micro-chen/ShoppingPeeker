@@ -356,11 +356,11 @@ namespace Plugin.Jingdong.Extension
                                     }
                                     model.CharIndex = itemLiDom.GetAttribute("data-initial");//定位字符
 
-                                    var imgDom = itemADom.QuerySelector("img");
-                                    if (null != imgDom)
-                                    {
-                                        model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
-                                    }
+                                    //var imgDom = itemADom.QuerySelector("img");//京东品牌的缩略图  太大不好看 不用了
+                                    //if (null != imgDom)
+                                    //{
+                                    //    model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
+                                    //}
 
 
                                     lstBrands.Add(model);

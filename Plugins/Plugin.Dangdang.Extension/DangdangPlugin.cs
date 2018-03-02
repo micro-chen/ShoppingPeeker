@@ -243,11 +243,11 @@ namespace Plugin.Dangdang.Extension
                                     }
                                     model.CharIndex = PinYin.GetFirstLetter(model.BrandName);//定位字符
 
-                                    var imgDom = itemADom.QuerySelector("img");
-                                    if (null != imgDom)
-                                    {
-                                        model.IconUrl = imgDom.GetAttribute("src");
-                                    }
+                                    //var imgDom = itemADom.QuerySelector("img");
+                                    //if (null != imgDom)
+                                    //{
+                                    //    model.IconUrl = imgDom.GetAttribute("src");
+                                    //}
 
 
                                     lstBrands.Add(model);

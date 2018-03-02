@@ -209,163 +209,146 @@
             
             <div class="common-wid filter-options">
                 <div class="filter-nav">
-                    <a href="javascript:;" class="active common-xCtJ-count">
+                    @*<a href="javascript:;" class="active common-xCtJ-count">
                         全部结果            <span class="0"></span>
-                    </a>
-                   
-                    <div  class="filtered">
+                    </a>*@
+
+                    @*<div class="filtered">
                         <div id="container_filtered">
                             <div class="fl filter-item">
-            <a href="/qingsou" class="filter-title">66 <em></em></a>
-        </div>
+                                <a href="/qingsou" class="filter-title">66 <em></em></a>
+                            </div>
                         </div>
-                      
+
                         <div class="fr clear-all-filter"><a id="btn_clear_all_filter" href="javascript:;"><em></em> 清除所有条件</a></div>
+                    </div>*@
+
+                </div>
+
+                <div class="nSearchWarp nSearch-facets searchFacet">
+
+                    <!--brand begin -->
+                    <div id="facets-category-brand" class="facets-category clearfix">
+                        <div class="fc-option">
+                            @*<span class="fc-option-multiple">多选</span>*@
+                            @*<span class="fc-option-more" style="visibility: visible"><i></i>更多</span>*@
+                        </div>
+                        <span class="fc-key"><b>品牌：</b></span>
+                        <div class="fc-content">
+                            <ul id="category-brand-f-letter" class="category-brand-f-letter clearfix" style="">
+                                <li class="all cur" brand-key="all">所有品牌</li>
+                                <li brand-key="A">A</li>
+                                <li brand-key="B">B</li>
+                                <li brand-key="H">H</li>
+                                <li brand-key="I">I</li>
+                                <li brand-key="J">J</li>
+                                <li brand-key="K">K</li>
+                                <li brand-key="L">L</li>
+                                <li brand-key="M">M</li>
+                                <li brand-key="O">O</li>
+                                <li brand-key="Q">Q</li>
+                                <li brand-key="S">S</li>
+                                <li brand-key="T">T</li>
+                                <li brand-key="W">W</li>
+                                <li brand-key="X">X</li>
+                                <li brand-key="Y">Y</li>
+                                <li brand-key="Z">Z</li>
+                            </ul>
+                            <ul id="container_category_brand" class="category-brand clearfix" style="position: relative;">
+                                @*<li class="c-brand " brand-value="H">
+                                    <a id="brandID2hqq" data-code="9000000200-0" facetsid="2hqq" href="//search.gome.com.cn/search?question=%E5%A4%A7%E8%A1%A3&amp;deliv=0&amp;market=10&amp;facets=2hqq&amp;pzpq=0&amp;pzin=v3" class="facet" name="花花公子贵宾" style="background-image:url(//gfs13.gomein.net.cn/T1G.LvBX_T1RCvBVdK.jpg)">花花公子贵宾<i></i></a>
+                                </li>
+                               
+                                <li class="c-brand brand-hide" brand-value="Z">
+                                    <a id="brandID2fbZ" data-code="9000000200-16" facetsid="2fbZ" href="//search.gome.com.cn/search?question=%E5%A4%A7%E8%A1%A3&amp;deliv=0&amp;market=10&amp;facets=2fbZ&amp;pzpq=0&amp;pzin=v3" class="facet" name="尊首(ZUNSHOU)" style="background-image:url(//gfs4.gomein.net.cn/T1ECWTBjKv1RCvBVdK)">尊首(ZUNSHOU)<i></i></a>
+                                </li>
+                                *@
+                            </ul>
+                            <ul class="category-brand-hasCheck clearfix" id="category-brand-hasCheck">
+                                <li class="hasCheckedTit">已选：</li>
+                            </ul>
+                            <div class="fc-btn-box">
+                                <a id="category-brand-fc-btn-ok" class="fc-btn-ok  fc-disable" href="javascript:void(0)">确定</a>
+                                <a id="category-brand-fc-btn-cancel" class="fc-btn-cancel" href="javascript:void(0)">取消</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--brand end -->
+
+                    <!--tags begin -->
+
+                    <div class="facets-category facets-category-common  clearfix">
+                        <div class="fc-option">
+                            @*<span class="fc-option-multiple">多选</span>*@
+                            <span class="fc-option-more" style="visibility: visible;"><i></i>更多</span>
+                        </div>
+                        <span class="fc-key fir" facetsid="10238">尺码：</span>
+                        <div class="fc-content">
+                            <div class="category-normal">
+                                <ul class="clearfix" modelid="">
+                                    @*<li><a class="facet " data-code="9000000500-0" href="//search.gome.com.cn/search?question=%E5%A4%A7%E8%A1%A3&amp;deliv=0&amp;market=10&amp;facets=16Yt&amp;pzpq=0&amp;pzin=v3" facetsid="16Yt"><i></i>S</a></li>
+                                    <li><a class="facet " data-code="9000000500-1" href="//search.gome.com.cn/search?question=%E5%A4%A7%E8%A1%A3&amp;deliv=0&amp;market=10&amp;facets=16UC&amp;pzpq=0&amp;pzin=v3" facetsid="16UC"><i></i>M</a></li>
+                                    <li><a class="facet " data-code="9000000500-2" href="//search.gome.com.cn/search?question=%E5%A4%A7%E8%A1%A3&amp;deliv=0&amp;market=10&amp;facets=16UB&amp;pzpq=0&amp;pzin=v3" facetsid="16UB"><i></i>L</a></li>
+                                    <li><a class="facet " data-code="9000000500-16" href="//search.gome.com.cn/search?question=%E5%A4%A7%E8%A1%A3&amp;deliv=0&amp;market=10&amp;facets=2dhT&amp;pzpq=0&amp;pzin=v3" facetsid="2dhT"><i></i>XS以下</a></li>*@
+                                </ul>
+                            </div>
+                            <div class="fc-btn-box">
+                                <a class="fc-btn-ok fc-disable" href="javascript:void(0)">确定</a>
+                                <a class="fc-btn-cancel" href="javascript:void(0)">取消</a>
+                            </div>
+                        </div>
                     </div>
 
+                    <!--tags end -->
                 </div>
+                    
+                    <!--平台icon 开始-->
+                    <div id="v3-nav" class="none-mt">
+                        <div class="common-wid v3-nav-area">
+                            <a class="active" href="http://www.huidangso.com/qingsou">商品库</a>
+                            <a class="" href="http://www.huidangso.com/baokuan">销量榜</a>
+                            <a class="" href="http://www.huidangso.com/realRank">实时爆款</a>
+                            <a class="" href="http://www.huidangso.com/activity">活动商品</a>
+                        </div>
 
-                <div class="filter-nav filter-brand">
-                    <a href="javascript:;" class="active common-xCtJ-count">
-                        品牌：<span class="0">
-                        </span>
-                    </a>
-
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=10&amp;is_all_selected=1" class="common-xCtJ-count">
-                        女装            <span class="10">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=11&amp;is_all_selected=1" class="common-xCtJ-count">
-                        内衣            <span class="11">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=12&amp;is_all_selected=1" class="common-xCtJ-count">
-                        男装            <span class="12">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=2&amp;is_all_selected=1" class="common-xCtJ-count">
-                        母婴            <span class="2">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=3&amp;is_all_selected=1" class="common-xCtJ-count">
-                        美妆            <span class="3">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=4&amp;is_all_selected=1" class="common-xCtJ-count">
-                        居家            <span class="4">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=5&amp;is_all_selected=1" class="common-xCtJ-count">
-                        鞋包配饰            <span class="5">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=6&amp;is_all_selected=1" class="common-xCtJ-count">
-                        美食            <span class="6">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=7&amp;is_all_selected=1" class="common-xCtJ-count">
-                        文体            <span class="7">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=8&amp;is_all_selected=1" class="common-xCtJ-count">
-                        家电数码            <span class="8">
-                        </span>
-                    </a>
-                </div>
-                <div class="filter-nav filter-tags">
-                    <a href="javascript:;" class="active common-xCtJ-count">
-                        筛选-1：<span class="0">
-                        </span>
-                    </a>
-
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=10&amp;is_all_selected=1" class="common-xCtJ-count">
-                        女装            <span class="10">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=11&amp;is_all_selected=1" class="common-xCtJ-count">
-                        内衣            <span class="11">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=12&amp;is_all_selected=1" class="common-xCtJ-count">
-                        男装            <span class="12">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=2&amp;is_all_selected=1" class="common-xCtJ-count">
-                        母婴            <span class="2">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=3&amp;is_all_selected=1" class="common-xCtJ-count">
-                        美妆            <span class="3">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=4&amp;is_all_selected=1" class="common-xCtJ-count">
-                        居家            <span class="4">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=5&amp;is_all_selected=1" class="common-xCtJ-count">
-                        鞋包配饰            <span class="5">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=6&amp;is_all_selected=1" class="common-xCtJ-count">
-                        美食            <span class="6">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=7&amp;is_all_selected=1" class="common-xCtJ-count">
-                        文体            <span class="7">
-                        </span>
-                    </a>
-                    <a href="http://www.qingtaoke.com/qingsou?s_type=1&amp;sort=1&amp;isAli=1&amp;cat=8&amp;is_all_selected=1" class="common-xCtJ-count">
-                        家电数码            <span class="8">
-                        </span>
-                    </a>
-                </div>
-                <!--平台icon 开始-->
-                <div id="v3-nav" class="none-mt">
-                    <div class="common-wid v3-nav-area">
-                        <a class="active" href="http://www.huidangso.com/qingsou">商品库</a>
-                        <a class="" href="http://www.huidangso.com/baokuan">销量榜</a>
-                        <a class="" href="http://www.huidangso.com/realRank">实时爆款</a>
-                        <a class="" href="http://www.huidangso.com/activity">活动商品</a>
                     </div>
+                    <!--平台icon 结束-->
+                    <div class="quick-filter">
+                        <div id="filterForm" class="fl sort">
+                            <a href="javascript:" class="active ad-filter-sort common-xCtJ-count" data-val="1">
+                                默认
+                            </a>
+                            <a href="javascript:" class="ad-filter-sort common-xCtJ-count" data-val="2">
+                                销量   <span class="common-icons icon-gray-down"></span>
+                            </a>
+                            <a href="javascript:" class="common-xCtJ-count" data-val="3" data-val-desc="4">
+                                价格 <span class="common-icons icon-gray-up"></span>
+                            </a>
+                            <a href="javascript:" class="common-xCtJ-count" data-val="5">
+                                人气  <span class="common-icons icon-gray-down"></span>
+                            </a>
+                            <a href="javascript:" class="common-xCtJ-count" data-val="6">
+                                评价  <span class="common-icons icon-gray-down"></span>
+                                @*评价  <span class="common-icons icon-gray-up"></span>*@
+                            </a>
 
-                </div>
-                <!--平台icon 结束-->
-                <div class="quick-filter">
-                    <div id="filterForm" class="fl sort">
-                        <a href="javascript:" class="active ad-filter-sort common-xCtJ-count" data-val="1">
-                            默认
-                        </a>
-                        <a href="javascript:" class="ad-filter-sort common-xCtJ-count" data-val="2">
-                            销量   <span class="common-icons icon-gray-down"></span>
-                        </a>
-                        <a href="javascript:" class="common-xCtJ-count" data-val="3" data-val-desc="4">
-                            价格 <span class="common-icons icon-gray-up"></span>
-                        </a>
-                        <a href="javascript:" class="common-xCtJ-count" data-val="5">
-                            人气  <span class="common-icons icon-gray-down"></span>
-                        </a>
-                        <a href="javascript:" class="common-xCtJ-count" data-val="6">
-                            评价  <span class="common-icons icon-gray-down"></span>
-                            @*评价  <span class="common-icons icon-gray-up"></span>*@
-                        </a>
+                            <div class="fl g-item">
+                                <span class="fl opt-tit">价格区间: &nbsp;</span>
+                                <span>
+                                    <input id="txt_min_price" class="fl input-is-number ipt-decimal" type="text" maxlength="9" name="min_price" placeholder="¥" value="">
+                                    <b class="fl">-</b>
+                                    <input id="txt_max_price" class="fl input-is-number ipt-decimal" type="text" maxlength="9" name="max_price" placeholder="¥" value="">
+                                </span>
 
-                        <div class="fl g-item">
-                            <span class="fl opt-tit">价格区间: &nbsp;</span>
-                            <span>
-                                <input id="txt_min_price" class="fl input-is-number ipt-decimal" type="text" maxlength="9" name="min_price" placeholder="¥" value="">
-                                <b class="fl">-</b>
-                                <input id="txt_max_price" class="fl input-is-number ipt-decimal" type="text" maxlength="9" name="max_price" placeholder="¥" value="">
-                            </span>
+                                <span href="javascript:;" id="btn_price_confim" class="btn cfm common-xCtJ-count">确定</span>
 
-                            <span href="javascript:;" id="btn_price_confim" class="btn cfm common-xCtJ-count">确定</span>
+                            </div>
 
                         </div>
 
                     </div>
-
                 </div>
             </div>
-        </div>
 
 
 

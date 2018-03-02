@@ -91,3 +91,12 @@ var BaseFetchWebPageArgument =function() {
     this.AttachParas = { "key-1": 1 };
 
 };
+
+/*查询商品的Data模型*/
+var SearchProductViewModel = function () {
+    this.KeyWord = '';
+    this.IsNeedResolveHeaderTags = true;
+    this.Brands = [];
+    this.Tags = [];
+    this.Products = [];
+};

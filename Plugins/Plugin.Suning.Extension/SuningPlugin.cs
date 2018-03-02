@@ -622,11 +622,11 @@ namespace Plugin.Suning.Extension
 
                         model.BrandName = itemADom.GetAttribute("title").Replace("\n", "").Replace("\t", "");
                         model.CharIndex = itemADom.GetAttribute("class")[0].ToString();//定位字符
-                        var imgDom = itemADom.QuerySelector("img");
-                        if (null != imgDom)
-                        {
-                            model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
-                        }
+                        //var imgDom = itemADom.QuerySelector("img");
+                        //if (null != imgDom)
+                        //{
+                        //    model.IconUrl = imgDom.GetAttribute("src").GetHttpsUrl();
+                        //}
 
                         lstBrands.Add(model);
                     }
@@ -744,50 +744,50 @@ namespace Plugin.Suning.Extension
                 }
 
 
-                //高级筛选 的解析
-                if (null != div_AttrsDom_AdvancedList)
-                {
-                    for (int i = 0; i < div_AttrsDom_AdvancedList.Length; i++)
-                    {
+                //高级筛选 的解析---不启用
+                ////////if (null != div_AttrsDom_AdvancedList)
+                ////////{
+                ////////    for (int i = 0; i < div_AttrsDom_AdvancedList.Length; i++)
+                ////////    {
 
-                        var itemSline = div_AttrsDom_AdvancedList[i];
-                        var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
-                        {
+                ////////        var itemSline = div_AttrsDom_AdvancedList[i];
+                ////////        var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
+                ////////        {
 
-                            var itemAdvancedCategory = paraItem as IElement;
+                ////////            var itemAdvancedCategory = paraItem as IElement;
 
-                        //找到归属的组
-                        string groupName = itemAdvancedCategory.QuerySelector("a.a-item>span").TextContent;
-                            if (groupName.Equals("全部分类"))
-                            {
-                                return;
-                            }
-                            var tagGroup = new KeyWordTagGroup(groupName);
+                ////////        //找到归属的组
+                ////////        string groupName = itemAdvancedCategory.QuerySelector("a.a-item>span").TextContent;
+                ////////            if (groupName.Equals("全部分类"))
+                ////////            {
+                ////////                return;
+                ////////            }
+                ////////            var tagGroup = new KeyWordTagGroup(groupName);
 
-                            var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("div.list-item>div>a");
-                            foreach (var itemADom in childLiADomArray)
-                            {
-                                var modelTag = new KeyWordTag();
-                                modelTag.Platform = SupportPlatformEnum.Suning;
-                                modelTag.TagName = itemADom.GetAttribute("title");//标签名称
-                                modelTag.GroupShowName = groupName;
+                ////////            var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("div.list-item>div>a");
+                ////////            foreach (var itemADom in childLiADomArray)
+                ////////            {
+                ////////                var modelTag = new KeyWordTag();
+                ////////                modelTag.Platform = SupportPlatformEnum.Suning;
+                ////////                modelTag.TagName = itemADom.GetAttribute("title");//标签名称
+                ////////                modelTag.GroupShowName = groupName;
 
-                                modelTag.FilterFiled = itemAdvancedCategory.GetAttribute("id");//根节点的筛选属性
-                                modelTag.Value = itemADom.GetAttribute("id");
+                ////////                modelTag.FilterFiled = itemAdvancedCategory.GetAttribute("id");//根节点的筛选属性
+                ////////                modelTag.Value = itemADom.GetAttribute("id");
 
-                                tagGroup.Tags.Add(modelTag);
+                ////////                tagGroup.Tags.Add(modelTag);
 
 
-                            }
-                        //----解析 a标签完毕-------
-                        blockList.Add(tagGroup);
+                ////////            }
+                ////////        //----解析 a标签完毕-------
+                ////////        blockList.Add(tagGroup);
 
-                        }, itemSline, TaskCreationOptions.None);
-                        //将并行任务放到数组
-                        taskArray.Add(taskResolveAEmelems);
+                ////////        }, itemSline, TaskCreationOptions.None);
+                ////////        //将并行任务放到数组
+                ////////        taskArray.Add(taskResolveAEmelems);
 
-                    }
-                }
+                ////////    }
+                ////////}
 
 
                 var safeTaskArray = taskArray.Where(x => null != x).ToArray();

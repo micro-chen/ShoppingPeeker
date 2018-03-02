@@ -17,6 +17,11 @@ namespace ShoppingPeeker.Web.ViewModels
         public string KeyWord { get; set; }
 
         /// <summary>
+        /// 是否需要处理tags
+        /// </summary>
+        public bool IsNeedResolveHeaderTags { get; set; }
+
+        /// <summary>
         /// 品牌集合
         /// </summary>
         public List<BrandTag> Brands { get; set; }

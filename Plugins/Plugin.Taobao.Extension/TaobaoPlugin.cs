@@ -463,16 +463,16 @@ namespace Plugin.Taobao.Extension
                             string groupName = itemNode.text;
                             ProcessTags(lstTags, itemNode.sub, groupName);
                         }
-                        if (null!= advNode)
-                        {
-                            //advNode 的解析
-                            foreach (var itemNode in advNode)
-                            {
-                                //找到归属的组
-                                string groupName = itemNode.text;
-                                ProcessTags(lstTags, itemNode.sub, groupName);
-                            }
-                        }
+                        ////////if (null!= advNode)----高级筛选不要了
+                        ////////{
+                        ////////    //advNode 的解析
+                        ////////    foreach (var itemNode in advNode)
+                        ////////    {
+                        ////////        //找到归属的组
+                        ////////        string groupName = itemNode.text;
+                        ////////        ProcessTags(lstTags, itemNode.sub, groupName);
+                        ////////    }
+                        ////////}
                       
                         resultBag.Add("Tags", lstTags);
 

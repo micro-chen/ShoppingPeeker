@@ -3,7 +3,7 @@
 /// <reference path="Extension/applicationCore.js" />
 /// <reference path="Extension/httpClient.js" />
 /// <reference path="Extension/compress/zib-string-full.js" />
-var js_lib_version = "1.1";
+var js_lib_version = "1.2";
 
 /*使用此boots 启动文件 将需要的脚本库 添加到页面*/
 document.write("<script src='/js/appObjects.js?v=" + js_lib_version + "'><\/script>");

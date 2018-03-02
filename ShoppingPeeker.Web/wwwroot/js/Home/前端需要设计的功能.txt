@@ -1,3 +1,110 @@
 ﻿1 自动完成的下拉 排版
 2 当有内容的时候 需要显示一个 x  ，方便清理掉内容
 3 移动到下拉选择的时候，显示小手光标
+
+
+
+     /*渲染品牌*/
+        renderBrandsHandler: function (lstBrands) {
+            if (isNullOrUndefined(lstBrands)) {
+                return;
+            }
+
+            //////////////1 检查本地是否有品牌集合对象
+            //////////////2 追加到品牌区域 并追加到本地集合对象
+            //////////////var maxShowCount = 16;
+            //////////////var isHiddenMode = false;
+            //////////////var currentBrandCount = homePage.container_category_brand.find("li.c-brand>a").length;
+            //////////////if (currentBrandCount >= maxShowCount) {
+            //////////////    isHiddenMode = true;
+            //////////////}
+
+            var sb_BrandHtml = new StringBuilder();
+            var conter_brand = 0;
+            lstBrands.forEach(function (itemBrand) {
+
+                //优先检索是否已经存在此名称的品牌
+                var filterExists = "li.c-brand>a[name='{0}']".format(itemBrand.BrandName);
+                var existsBrandDom = homePage.container_category_brand.find(filterExists);
+                var isHasExistBrand = existsBrandDom.length > 0 ? true : false;
+
+                if (!isHasExistBrand) {
+
+
+                    //if (isHiddenMode == false) {
+                    //显示模式
+                    sb_BrandHtml.Append('<li class="c-brand" brand-value="{0}">'.format(itemBrand.CharIndex));
+
+                    ////////} else {
+                    ////////    //隐藏模式
+                    ////////    sb_BrandHtml.Append(
+                    ////////        '<li class="c-brand brand-hide" brand-value="{0}">'.format(itemBrand.CharIndex));
+
+                    ////////}
+
+                    var content =
+                        '<a href="javascript:void(0)"    class="facet" name="{3}" {4}>{3}<i></i><dl class="brandBox"><dd data-id="{0}"  data-filter="{1}" data-platfom="{2}" data-name="{3}"></dd></dl></a>'
+                            .format(itemBrand.BrandId,
+                            itemBrand.FilterField,
+                            itemBrand.Platform,
+                            itemBrand.BrandName,
+                            "{0}");
+
+                    if (!isNullOrEmpty(itemBrand.IconUrl)) {
+                        //有图模式
+                        var imageMode = 'style ="background-image:url({0})" '.format(itemBrand.IconUrl);
+                        sb_BrandHtml.Append(
+                            content.format(imageMode)
+                        );
+                    } else {
+                        //无图模式
+                        sb_BrandHtml.Append(
+                            content.format('style ="text-indent:0;"')
+                        );
+                    }
+
+
+                    sb_BrandHtml.Append('</li>');
+
+                    //conter_brand += 1; //循环标识是否进入隐藏模式
+                    //if (conter_brand >= maxShowCount) {
+                    //    isHiddenMode = true;
+                    //}
+                } else {
+                    //针对已经存在同名的品牌，汇聚到同名节点中，并检查是否可以替换图
+                    var brandBox = existsBrandDom.find(".brandBox");
+
+                    var cellBrand = '<dd data-id="{0}"  data-filter="{1}" data-platfom="{2}" data-name="{3}"></dd>'.format(itemBrand.BrandId,
+                        itemBrand.FilterField,
+                        itemBrand.Platform,
+                        itemBrand.BrandName);
+                    //追加到容器
+                    brandBox.append(cellBrand);
+
+                    //是否有图
+                    if (!isNullOrEmpty(itemBrand.IconUrl)) {
+                        var hasImage = brandBox.parent().css("background-image").indexOf("url") < 0 ? false : true;
+                        if (!hasImage) {
+                            var imgValue = 'url({0})'.format(itemBrand.IconUrl);
+                            brandBox.parent().removeAttr("style");
+                            brandBox.parent().css("background-image", imgValue);
+                        }
+
+                    }
+                }
+
+
+            });
+
+            //追加品牌节点
+            homePage.container_category_brand.append(sb_BrandHtml.ToString());
+
+            //绑定事件
+            var allBrandDoms = homePage.container_category_brand.find("li.c-brand>a");
+            allBrandDoms.click(function () {
+                var sender = $(this);
+                console.log(sender.attr("name"));
+
+            });
+
+        },

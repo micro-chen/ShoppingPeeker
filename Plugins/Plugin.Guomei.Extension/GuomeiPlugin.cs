@@ -368,13 +368,13 @@ namespace Plugin.Guomei.Extension
                                         model.BrandName = itemADom.TextContent.Replace("\n", "").Replace("\t", "");
 
                                         model.CharIndex = itemLiDom.GetAttribute("brand-value");//定位字符
-                                        var imgDom = itemADom.GetAttribute("style");
-                                        if (null != imgDom && imgDom.Contains("background-image") && imgDom.Contains("//"))
-                                        {
-                                            int startPos = imgDom.IndexOf("//");
-                                            int endPos = imgDom.Length - startPos - 1;
-                                            model.IconUrl = imgDom.Substring(startPos, endPos).GetHttpsUrl();
-                                        }
+                                        //var imgDom = itemADom.GetAttribute("style");
+                                        //if (null != imgDom && imgDom.Contains("background-image") && imgDom.Contains("//"))
+                                        //{
+                                        //    int startPos = imgDom.IndexOf("//");
+                                        //    int endPos = imgDom.Length - startPos - 1;
+                                        //    model.IconUrl = imgDom.Substring(startPos, endPos).GetHttpsUrl();
+                                        //}
 
                                         lstBrands.Add(model);
                                     }
@@ -439,44 +439,44 @@ namespace Plugin.Guomei.Extension
 
                             }
 
-                            //高级筛选 的解析
-                            if (null != div_AttrsDom_AdvancedList)
-                            {
-                                for (int i = 0; i < div_AttrsDom_AdvancedList.Length; i++)
-                                {
+                            //////////////高级筛选 的解析--先不要高级的tags了
+                            ////////////if (null != div_AttrsDom_AdvancedList)
+                            ////////////{
+                            ////////////    for (int i = 0; i < div_AttrsDom_AdvancedList.Length; i++)
+                            ////////////    {
 
-                                    var itemSline = div_AttrsDom_AdvancedList[i];
-                                    var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
-                                    {
+                            ////////////        var itemSline = div_AttrsDom_AdvancedList[i];
+                            ////////////        var taskResolveAEmelems = Task.Factory.StartNew((paraItem) =>
+                            ////////////        {
 
-                                        var itemAdvancedCategory = paraItem as IElement;
-                                        //找到归属的组
-                                        string groupName = itemAdvancedCategory.QuerySelector("span.fc-key").TextContent;
-                                        var tagGroup = new KeyWordTagGroup(groupName);
-                                        var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("ul.category-syn-list>li>a");
-                                        foreach (var itemADom in childLiADomArray)
-                                        {
-                                            var modelTag = new KeyWordTag();
-                                            modelTag.Platform = SupportPlatformEnum.Guomei;
-                                            modelTag.TagName = itemADom.TextContent;//标签名称
-                                            modelTag.GroupShowName = groupName;
+                            ////////////            var itemAdvancedCategory = paraItem as IElement;
+                            ////////////            //找到归属的组
+                            ////////////            string groupName = itemAdvancedCategory.QuerySelector("span.fc-key").TextContent;
+                            ////////////            var tagGroup = new KeyWordTagGroup(groupName);
+                            ////////////            var childLiADomArray = itemAdvancedCategory.QuerySelectorAll("ul.category-syn-list>li>a");
+                            ////////////            foreach (var itemADom in childLiADomArray)
+                            ////////////            {
+                            ////////////                var modelTag = new KeyWordTag();
+                            ////////////                modelTag.Platform = SupportPlatformEnum.Guomei;
+                            ////////////                modelTag.TagName = itemADom.TextContent;//标签名称
+                            ////////////                modelTag.GroupShowName = groupName;
 
-                                            modelTag.FilterFiled = "facets";
-                                            modelTag.Value = itemADom.GetAttribute("facetsid");
+                            ////////////                modelTag.FilterFiled = "facets";
+                            ////////////                modelTag.Value = itemADom.GetAttribute("facetsid");
 
-                                            tagGroup.Tags.Add(modelTag);
-
-
-                                        }     //----解析 a标签完毕-------
-                                        blockList.Add(tagGroup);
+                            ////////////                tagGroup.Tags.Add(modelTag);
 
 
-                                    }, itemSline, TaskCreationOptions.None);
-                                    //将并行任务放到数组
-                                    taskArray.Add(taskResolveAEmelems);
+                            ////////////            }     //----解析 a标签完毕-------
+                            ////////////            blockList.Add(tagGroup);
 
-                                }
-                            }
+
+                            ////////////        }, itemSline, TaskCreationOptions.None);
+                            ////////////        //将并行任务放到数组
+                            ////////////        taskArray.Add(taskResolveAEmelems);
+
+                            ////////////    }
+                            ////////////}
 
 
                             var safeTaskArray = taskArray.Where(x => null != x).ToArray();

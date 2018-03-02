@@ -122,6 +122,7 @@ namespace ShoppingPeeker.Web.Framework.PlatformFecture.WebPageService
                     if (null != dataModel)
                     {
                         dataModel.KeyWord = webArgs.KeyWord;
+                        dataModel.IsNeedResolveHeaderTags = webArgs.IsNeedResolveHeaderTags;
                     }
                 }
 
