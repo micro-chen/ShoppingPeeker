@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShoppingPeeker.DbManage\ShoppingPeeker.DbManage.csproj" />
+    <ProjectReference Include="..\ShoppingPeeker.DomainEntity\ShoppingPeeker.DomainEntity.csproj" />
+    <ProjectReference Include="..\ShoppingPeeker.Utilities\ShoppingPeeker.Utilities.csproj" />
+  </ItemGroup>
+
+</Project>

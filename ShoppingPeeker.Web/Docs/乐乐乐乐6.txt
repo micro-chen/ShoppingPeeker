@@ -39,7 +39,7 @@ chenwenguang  密码是 Chenwenguang
 其他的你自己玩就行 。。安装soft的时候，要用yum
 
 
-
+ window.location.reload();//导入成功后 需要刷新页面
 
 淘鹊桥
 http://quan.meiquan8.com/
