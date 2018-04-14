@@ -289,14 +289,22 @@ Date.prototype.addYears = function (value) {
 //获取时间的间隔（天）
 Date.prototype.dateDiff = function (endDate) {
     var startDate = this;
-
-
     var startTime = new Date(Date.parse(startDate.replace(/-/g, "/"))).getTime();
     var endTime = new Date(Date.parse(endDate.replace(/-/g, "/"))).getTime();
     var days = Math.abs((startTime - endTime)) / (1000 * 60 * 60 * 24);
     return days;
 };
 
+//获取当前的日期的开始时间 格式“yyyy-MM-dd 00:00:00”
+Date.prototype.getTodayBegin = function () {
+    var now = new Date().Format("yyyy-MM-dd");
+    return now + " 00:00:00";
+}
+//获取当前的日期的终止时间 格式“yyyy-MM-dd 23:59:59”
+Date.prototype.getTodayEnd = function () {
+    var now = new Date().Format("yyyy-MM-dd");
+    return now + " 23:59:59";
+}
 /**
  * 自定义数据结构-C#方式的迭代
  */
