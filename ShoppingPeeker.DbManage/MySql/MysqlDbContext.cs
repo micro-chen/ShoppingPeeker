@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Data;
 using System.Linq.Expressions;
+using Dapper;
 using MySql.Data.MySqlClient;
 
 using ShoppingPeeker.DbManage.Utilities;
@@ -71,7 +72,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity, true, out tableInDbName, out propertys, out filelds, out paras);
 
             ///不含主键的属性
             var noIdentityPropertys = propertys.Remove(x => x.Name == EntityIdentityFiledName);
@@ -89,22 +90,24 @@ namespace ShoppingPeeker.DbManage
             sb_Sql.Append(string.Format("{0})", parasSplitString));
             sb_Sql.Append(";select @@IDENTITY;");
 
+            #region 无用代码 ---已经被Dapper 替代
 
-            MySqlParameter[] parameters = new MySqlParameter[noIdentityParas.Length];
 
-            var settedValueDic = entity.GetSettedValuePropertyDic();
-            for (int i = 0; i < noIdentityParas.Length; i++)
-            {
-                var colName = noIdentityParas[i];
-                string key = noIdentityPropertys[i].Name;
-                object value = null;//ReflectionHelper.GetPropertyValue(entity, noIdentityPropertys[i]);
-                settedValueDic.TryGetValue(key, out value);
-                var para = new MySqlParameter(colName, value);
+            //MySqlParameter[] parameters = new MySqlParameter[noIdentityParas.Length];
 
-                para.IsNullable = true;
+            //var settedValueDic = entity.GetSettedValuePropertyDic();
+            //for (int i = 0; i < noIdentityParas.Length; i++)
+            //{
+            //    var colName = noIdentityParas[i];
+            //    string key = noIdentityPropertys[i].Name;
+            //    object value = null;//ReflectionHelper.GetPropertyValue(entity, noIdentityPropertys[i]);
+            //    settedValueDic.TryGetValue(key, out value);
+            //    var para = new MySqlParameter(colName, value);
 
-                parameters[i] = para;
-            }
+            //    para.IsNullable = true;
+
+            //    parameters[i] = para;
+            //}
 
 
             //例子：以上代码  代替下面的代码
@@ -116,18 +119,21 @@ namespace ShoppingPeeker.DbManage
             //parameters[1].Value = model.ProvinceName;
             //parameters[2].Value = model.Submmary;
 
+            #endregion
+
             var sqlCmd = sb_Sql.ToString();
 
 
             ///清理掉字符串拼接构造器
             sb_Sql.Clear();
             sb_Sql = null;
-            var result = this.ExecuteScalar(sqlCmd, parameters);
-            if (null != result)
+
+            using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
-                return int.Parse(result.ToString());
+                var result = conn.ExecuteScalar<int>(sqlCmd, entity);
+                return result;
             }
-            return Error_Opeation_Result;
+             
         }
 
 
@@ -143,7 +149,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entities.First(), out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entities.First(), true, out tableInDbName, out propertys, out filelds, out paras);
 
             using (var bcp = new MysqlBuckCopy<TElement>(this.DbConfig.ConnString))
             {
@@ -171,7 +177,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity, true, out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 //除主键后 没有其他字段
@@ -180,15 +186,6 @@ namespace ShoppingPeeker.DbManage
             }
 
             StringBuilder sb_FiledParaPairs = new StringBuilder("");
-
-            //---废弃全更新，改造为设定值的更新，防止擦除字段---------
-            //for (int i = 0; i < filelds.Length; i++)
-            //{
-            //    if (filelds[i] != EntityIdentityFiledName)
-            //    {
-            //        sb_FiledParaPairs.AppendFormat("{0}=@{0},", filelds[i]);
-            //    }
-            //}
             var settedValueDic = entity.GetSettedValuePropertyDic();
 
             foreach (var item in settedValueDic)
@@ -209,28 +206,9 @@ namespace ShoppingPeeker.DbManage
             sb_Sql.Append(string.Format("update {0} set ", tableInDbName));//Set Table
             sb_Sql.Append(str_FiledParaPairs);//参数对
 
-            //sb_Sql.Append("ProvinceCode=@ProvinceCode,");
-            //sb_Sql.Append("ProvinceName=@ProvinceName,");
-            //sb_Sql.Append("Submmary=@Submmary");
+         
 
             sb_Sql.AppendFormat(" where {0}=@{0}", EntityIdentityFiledName);//主键
-
-            //设定参数值--------(字段一一映射)
-            MySqlParameter[] parameters = new MySqlParameter[settedValueDic.Count];
-            int counter = 0;
-            foreach (var item in settedValueDic)
-            {
-                var keyProperty = item.Key;
-                var value = item.Value;
-                var paraName = string.Format("@{0}", keyProperty);
-                var Parameter = new MySqlParameter(paraName, value);
-                Parameter.IsNullable = true;
-                parameters[counter] = Parameter;
-
-
-                counter++;
-            }
-
 
 
             var sqlCmd = sb_Sql.ToString();
@@ -239,7 +217,12 @@ namespace ShoppingPeeker.DbManage
             sb_FiledParaPairs = null;
             sb_Sql.Clear();
             sb_Sql = null;
-            return ExecuteNonQuery(sqlCmd, parameters);
+            using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
+            {
+                var result = conn.Execute(sqlCmd, entity);
+                return result;
+            }
+         
         }
 
 
@@ -259,7 +242,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity, true, out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 //除主键后 没有其他字段
@@ -299,24 +282,6 @@ namespace ShoppingPeeker.DbManage
             }
 
 
-
-
-            MySqlParameter[] parameters = new MySqlParameter[settedValueDic.Count];
-            int counter = 0;
-            foreach (var item in settedValueDic)
-            {
-                var keyProperty = item.Key;
-                var value = item.Value;
-                var paraName = string.Format("@{0}", keyProperty);
-                var Parameter = new MySqlParameter(paraName, value);
-                Parameter.IsNullable = true;
-                parameters[counter] = Parameter;
-
-
-                counter++;
-            }
-
-
             var sqlCmd = sb_Sql.ToString();
 
             ///清理字符串构建
@@ -326,7 +291,11 @@ namespace ShoppingPeeker.DbManage
             sb_Sql = null;
 
 
-            return ExecuteNonQuery(sqlCmd, parameters);
+            using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
+            {
+                var result = conn.Execute(sqlCmd, entity);
+                return result;
+            }
         }
 
 
@@ -349,7 +318,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity, false,out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 //除主键后 没有其他字段
@@ -361,44 +330,25 @@ namespace ShoppingPeeker.DbManage
             StringBuilder sb_Sql = new StringBuilder();
             sb_Sql.AppendFormat("select  {0} ", fieldSplitString);
             sb_Sql.AppendFormat(" from {0} ", tableInDbName);
-            sb_Sql.AppendFormat(" where {0}=@{0};", EntityIdentityFiledName);
-            MySqlParameter[] parameters = {
-                    new MySqlParameter()
-            };
-            parameters[0].ParameterName = string.Format("@{0)", EntityIdentityFiledName);
-            parameters[0].Value = id;
+            sb_Sql.AppendFormat(" where {0}={1};", EntityIdentityFiledName,id);
 
             var sqlCmd = sb_Sql.ToString();
 
             sb_Sql.Clear();
             sb_Sql = null;
 
-            System.Data.Common.DbDataReader reader = null;
-
             try
             {
-                reader = ExecuteReader(sqlCmd, parameters);
-                reader.Read();
-                entity = reader.ConvertDataReaderToEntity<TElement>();
+                using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
+                {
+                    entity = conn.QueryFirstOrDefault<TElement>(sqlCmd);
+                }
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
-            finally
-            {
-                //释放读取器
-                if (null != reader)
-                {
-                    reader.Close();
-                    reader.Dispose();
-                }
-
-            }
-
-
-
+ 
             return entity;
 
 
@@ -419,7 +369,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity, false,out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 //除主键后 没有其他字段
@@ -448,40 +398,20 @@ namespace ShoppingPeeker.DbManage
             sb_Sql.Clear();
             sb_Sql = null;
 
-            System.Data.Common.DbDataReader reader = null;
-            //解析DataReader  获取数据集合
-            List<TElement> dataLst = new List<TElement>();
-
+            List<TElement> dataLst = null;
             try
             {
-                reader = ExecuteReader(sqlCmd, null);
-                if (null == reader)
+                using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
-                    return null;
-                }
-
-                while (reader.Read())
-                {
-                    var model = reader.ConvertDataReaderToEntity<TElement>();
-                    dataLst.Add(model);
+                    dataLst = conn.Query<TElement>(sqlCmd).AsList();
                 }
 
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
-            finally
-            {
-                if (null != reader)
-                {
-                    reader.Close();
-                    reader.Dispose();
-                }
-            }
-
-
+ 
             return dataLst;
         }
 
@@ -501,18 +431,13 @@ namespace ShoppingPeeker.DbManage
         public List<TElement> GetElementsByPagerAndCondition(int pageIndex, int pageSize, out int totalRecords, out int totalPages, Expression<Func<TElement, bool>> predicate, string sortField, OrderRule rule = OrderRule.ASC)
         {
             List<TElement> dataLst = new List<TElement>();
-
-
             TElement entity = new TElement();
-
-
-
 
             string tableInDbName;
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity,false, out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 totalRecords = -1;
@@ -532,51 +457,40 @@ namespace ShoppingPeeker.DbManage
 
 
 
-            //调用分页存储过程--- 注意：7.0.7版本的驱动有bug 不能成功调用存储过程
+            //调用分页存储过程
             StringBuilder sb_Sql = new StringBuilder();
             sb_Sql.Append(Contanst.PageSql_Call_Name);
 
-
-            MySqlParameter[] parameters = {
-                    new MySqlParameter("@PageIndex",MySqlDbType.Int32,4 ),//页索引
-                    new MySqlParameter("@PageSize", MySqlDbType.Int32,4),//页大小
-                    new MySqlParameter("@TableName", MySqlDbType.VarChar,3000),//表名称
-                    new MySqlParameter("@SelectFields", MySqlDbType.Text),//查询的字段
-                    new MySqlParameter("@PrimaryKey", MySqlDbType.VarChar,50),//查询的表的主键
-                     new MySqlParameter("@ConditionWhere", MySqlDbType.Text), //查询条件      
-                    new MySqlParameter("@SortField", MySqlDbType.VarChar,50),//排序字段
-                    new MySqlParameter("@IsDesc", MySqlDbType.Int32,4),//倒排序 正排序
-                    new MySqlParameter("@TotalRecords", MySqlDbType.Int32,4),//总记录数（可选参数）
-                    new MySqlParameter("@TotalPageCount", MySqlDbType.Int32,4)//总页数（输出参数）
-                                        };
-            parameters[0].Value = pageIndex;
-            parameters[1].Value = pageSize;
-            parameters[2].Value = tableInDbName;
-            parameters[3].Value = fieldSplitString;
-            parameters[4].Value = EntityIdentityFiledName;
-            parameters[5].Value = whereStr;
-            parameters[6].Value = sortField;// String.Join(",", sortField.ContainerFileds.ToArray());
-            parameters[7].Value = (int)rule;//== OrderRule.ASC @ 0 : 1;
-            // parameters[8].Value = TotalRecords;
-            parameters[8].Direction = ParameterDirection.Output;
-            // parameters[9].Value = TotalPageCount;
-            parameters[9].Direction = ParameterDirection.Output;
             var sqlCmd = sb_Sql.ToString();
+
+            var sqlParas =   new DynamicParameters();
+            sqlParas.Add("@PageIndex", pageIndex);//页索引
+            sqlParas.Add("@PageSize", pageSize);//页大小
+            sqlParas.Add("@TableName", tableInDbName);//表名称
+            sqlParas.Add("@SelectFields", fieldSplitString);//查询的字段
+            sqlParas.Add("@PrimaryKey", EntityIdentityFiledName);//查询的表的主键
+            sqlParas.Add("@ConditionWhere", whereStr);//查询条件      
+            sqlParas.Add("@SortField", sortField);//排序字段
+            sqlParas.Add("@IsDesc", (int)rule);//倒排序 正排序
+            sqlParas.Add("@TotalRecords", DbType.Int32, direction: ParameterDirection.Output);//总记录数（可选参数）
+            sqlParas.Add("@TotalPageCount", DbType.Int32, direction: ParameterDirection.Output);//总页数（输出参数
 
 
             try
             {
+                using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
+                {
+                    dataLst = conn.Query<TElement>(sqlCmd,sqlParas,commandType: CommandType.StoredProcedure).AsList();
+                }
 
-                dataLst = this.ExecuteStoredProcedureList(sqlCmd, parameters);
                 //查询完毕后 根据输出参数 返回总记录数 总页数
-                totalRecords = Convert.ToInt32(parameters[8].Value);
-                totalPages = Convert.ToInt32(parameters[9].Value);
+                totalRecords = sqlParas.Get<int>("@TotalRecords");
+                totalPages = sqlParas.Get<int>("@TotalPageCount");
 
 
             }
             catch (Exception ex)
             {
-
                 //抛出Native 异常信息
                 throw ex;
             }
@@ -613,7 +527,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity,true, out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 //除主键后 没有其他字段
@@ -621,15 +535,12 @@ namespace ShoppingPeeker.DbManage
                 throw new Exception("未指定除主键后其他字段！");
             }
 
+            var primaryValue = ReflectionHelper.GetPropertyValue(entity, EntityIdentityFiledName); 
 
             StringBuilder sb_Sql = new StringBuilder();
             sb_Sql.AppendFormat("delete from {0} ", tableInDbName);
-            sb_Sql.AppendFormat(" where {0}=@{0};", EntityIdentityFiledName);
-            MySqlParameter[] parameters = {
-                    new MySqlParameter()
-            };
-            parameters[0].ParameterName = string.Format("@{0)", EntityIdentityFiledName);
-            parameters[0].Value = ReflectionHelper.GetPropertyValue(entity, EntityIdentityFiledName);
+            sb_Sql.AppendFormat(" where {0}={1};", EntityIdentityFiledName, primaryValue);
+            
 
             var sqlCmd = sb_Sql.ToString();
 
@@ -639,12 +550,15 @@ namespace ShoppingPeeker.DbManage
 
             try
             {
-                return Convert.ToInt32(ExecuteNonQuery(sqlCmd, parameters));
+                using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
+                {
+                    var result = conn.Execute(sqlCmd);
+                    return result;
+                }
 
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
 
@@ -666,7 +580,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity, true, out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 //除主键后 没有其他字段
@@ -678,11 +592,8 @@ namespace ShoppingPeeker.DbManage
             var whereStr = "1=1";
             if (null != predicate)
             {
-
                 whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
-
             }
-
 
             StringBuilder sb_Sql = new StringBuilder();
             sb_Sql.AppendFormat("delete from {0} ", tableInDbName);
@@ -691,17 +602,18 @@ namespace ShoppingPeeker.DbManage
                 sb_Sql.AppendFormat("where  {0}  ", whereStr);
             }
 
-
-
             var sqlCmd = sb_Sql.ToString();
             try
             {
-                return Convert.ToInt32(ExecuteNonQuery(sqlCmd, null));
-
+                using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
+                {
+                    var result = conn.Execute(sqlCmd);
+                    return result;
+                }
+              
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
 

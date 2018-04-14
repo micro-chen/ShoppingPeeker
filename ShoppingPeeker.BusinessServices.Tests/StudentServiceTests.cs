@@ -147,6 +147,20 @@ namespace ShoppingPeeker.BusinessServices.Services.Tests
 
         }
 
+
+        /// </summary>
+        [TestMethod()]
+        public void GetstudentsElementByIdTest()
+        {
+
+            var model = this.serviceOfStudents
+                .GetstudentsElementById(1);
+
+            Assert.IsTrue(null!= model);
+
+          
+        }
+
         /// <summary>
         /// 条件获取
         /// 或

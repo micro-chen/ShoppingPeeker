@@ -1,5 +1,4 @@
-﻿using ShoppingPeeker.DbManage.CommandTree;
-using ShoppingPeeker.DbManage.Utilities;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +6,11 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Reflection;
+using Dapper.Contrib.Extensions;
 using System.Threading.Tasks;
+using ShoppingPeeker.DbManage.CommandTree;
+using ShoppingPeeker.DbManage.Utilities;
 
 namespace ShoppingPeeker.DbManage
 {
@@ -22,7 +25,8 @@ namespace ShoppingPeeker.DbManage
         /// <summary>
         /// 数据库连接配置
         /// </summary>
-        public DbConnConfig DbConfig {
+        public DbConnConfig DbConfig
+        {
             get
             {
                 return this._dbConfig;
@@ -66,7 +70,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity,false, out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 //除主键后 没有其他字段
@@ -131,7 +135,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity, false,out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 //除主键后 没有其他字段
@@ -195,7 +199,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity,false, out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 //除主键后 没有其他字段
@@ -259,7 +263,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity,false, out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 //除主键后 没有其他字段
@@ -756,16 +760,17 @@ namespace ShoppingPeeker.DbManage
             }
         }
 
-
+         
         /// <summary>
         /// 解析实体   解析其中的关联的表+字段+字段参数
         /// </summary>
         /// <param name="entity"></param>
+        /// <param name="isWriteCmd">是否是写入命令生成sql参数</param>
         /// <param name="tableInDbName"></param>
         /// <param name="propertys"></param>
         /// <param name="filelds"></param>
         /// <param name="paras"></param>
-        protected void ResolveEntity(TElement entity, out string tableInDbName, out System.Reflection.PropertyInfo[] propertys, out string[] filelds, out string[] paras)
+        protected void ResolveEntity(TElement entity, bool isWriteCmd,out string tableInDbName, out System.Reflection.PropertyInfo[] propertys, out string[] filelds, out string[] paras)
         {
             tableInDbName = "";
             var targetAttributes = entity.GetType().GetCustomAttributes(typeof(TableAttribute), false);
@@ -775,19 +780,66 @@ namespace ShoppingPeeker.DbManage
             }
             tableInDbName = (targetAttributes[0] as TableAttribute).Name;
 
+            //----------尝试从静态字典中获取结构-----------
+            string cacheKey = string.Concat(tableInDbName, "-", Convert.ToInt32(isWriteCmd));
+            if (SqlFieldMappingManager.Mappings.ContainsKey(cacheKey))
+            {
+                var mapping = SqlFieldMappingManager.Mappings[cacheKey];
+                propertys = mapping.Propertys;
+                filelds = mapping.Filelds;
+                paras = mapping.SqlParas;
+                return;
+            }
+
+            #region 解析实体
+
+          
             //获取所有字段
-            propertys = entity.GetCurrentEntityProperties();//entity.CurrentModelPropertys;// entity.GetType().GetProperties();
-            filelds = new string[propertys.Length];
+            propertys = entity.GetCurrentEntityProperties();
+            var lstFilelds = new List<string>();//[propertys.Length];
             for (int i = 0; i < propertys.Length; i++)
             {
-                filelds[i] = propertys[i].Name;
+                var item = propertys[i];
+                //将有忽略db的字段 排除
+                if (item.GetCustomAttribute<IgnoreDbFieldAttribute>() != null)
+                {
+                    continue;//忽略属性
+                }
+                if (isWriteCmd==true)
+                {
+                    var writeAttr = item.GetCustomAttribute<WriteAttribute>();
+                    if (null!=writeAttr&&writeAttr.Write==false)
+                    {
+                        continue;//如果是非写入参数，那么忽略此属性作为sql 参数
+                    }
+                }
+                lstFilelds.Add(propertys[i].Name);
             }
+
+            //字段
+            filelds = lstFilelds.ToArray();
             //参数字段
             paras = filelds.Clone() as string[];
             for (int i = 0; i < paras.Length; i++)
             {
-                paras[i] = "@" + paras[i];
+                paras[i] = string.Concat("@" , paras[i]);
             }
+            #endregion
+
+            //保存到Mapping缓存
+            var modelMapping = new SqlFieldMapping
+            {
+                TableName = tableInDbName,
+                Propertys = propertys,
+                Filelds = filelds,
+                SqlParas = paras
+            };
+            if (!SqlFieldMappingManager.Mappings.ContainsKey(cacheKey))
+            {
+                SqlFieldMappingManager.Mappings.TryAdd(cacheKey, modelMapping);
+            }
+           
+            
         }
     }
 }

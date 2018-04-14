@@ -2,22 +2,25 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Dapper.Contrib.Extensions;
 using ShoppingPeeker.DbManage;
 using ShoppingPeeker.DbManage.Utilities;
 
 namespace ShoppingPeeker.DomainEntity
 {
-    [TableAttribute(Name = "students")]
+    [Table("students")]
     [PrimaryKey(Name = "Id")]
     [Serializable]
     public class StudentsModel : BaseEntity
     {
+        #region 表字段属性
 
         ///// <summary>
         /// auto_increment
         /// </summary>	
         private long _Id;
         [DataMember]
+      
         public long Id
         {
             get { return _Id; }
@@ -154,6 +157,18 @@ namespace ShoppingPeeker.DomainEntity
             }
         }
 
+
+        #endregion
+
+        #region 导航属性+字段
+
+        [IgnoreDbField]
+        [Write(false)]
+        public int Other_Id { get; set; }
+
+
+        #endregion
+
         #region  当前实体的属性/映射到表中的字段 CLR属性集合
         private static System.Reflection.PropertyInfo[] _CurrentModelPropertys;
 
@@ -184,6 +199,3 @@ namespace ShoppingPeeker.DomainEntity
         #endregion
     }
 }
-/*------ 代码生成时出现错误: ------
-D:\LearningManage\tools--代码生成\Codematic2\Template\TemplateFile\LearningManage.cmt\DomainEntity.cmt(0,0) : warning CS1668: Compiling transformation: “LIB 环境变量”中指定的搜索路径“%LIB%”无效 --“系统找不到指定的路径。 ”
-*/
