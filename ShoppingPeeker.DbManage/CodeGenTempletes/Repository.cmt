@@ -1,0 +1,38 @@
+﻿<#@ template language="c#" HostSpecific="True" #>
+<#@ output extension= ".cs" #>
+<#//format= "{0}Repository"//#>
+<#
+	TableHost host = (TableHost)(Host);	
+	string DbParaHead=host.DbParaHead;
+	string DbParaDbType=host.DbParaDbType;
+	string preParameter=host.preParameter;
+	string ModelSpace = host.NameSpace+".Model."+ host.GetModelClass(host.TableName);
+	ColumnInfo identityKey=host.IdentityKey;
+	string returnValue = "void";
+    if (identityKey!=null)
+    {         
+         returnValue = CodeCommon.DbTypeToCS(identityKey.TypeName);              
+    }
+#>
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Linq.Expressions;
+
+using ShoppingPeeker.DbManage;
+using ShoppingPeeker.DomainEntity;
+using ShoppingPeeker.Utilities.Interface;
+
+namespace ShoppingPeeker.Data.Repository
+{
+	<# if( host.TableDescription.Length > 0) {#>
+ 	//<#= host.TableDescription #>数据仓储管理
+	<# } #>public  class <#= host.TableName #>Repository: BaseRepository<<#= host.TableName #>Model>,IDbContext<<#= host.TableName #>Model>, IRepository
+	{
+		public <#= host.TableName #>Repository()
+	    {}		
+   
+	}
+}

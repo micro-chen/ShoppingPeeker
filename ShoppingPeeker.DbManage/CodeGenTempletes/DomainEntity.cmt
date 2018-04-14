@@ -1,0 +1,100 @@
+﻿<#@ template language="c#" HostSpecific="True" #>
+<#@ output extension= ".cs" #>
+<#
+	TableHost host = (TableHost)(Host);
+	host.Fieldlist.Sort(CodeCommon.CompareByintOrder);
+	ColumnInfo identityKey=null;
+	foreach (ColumnInfo c in host.Fieldlist){
+	 if(c.IsPrimaryKey==true){
+	 identityKey=c;
+	 break;
+	 }
+
+	}
+#>
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Dapper.Contrib.Extensions;
+using ShoppingPeeker.DbManage;
+using ShoppingPeeker.DbManage.Utilities;
+
+namespace ShoppingPeeker.DomainEntity
+{
+	<# if( host.TableDescription.Length > 0) {#>
+ 	//<#= host.TableDescription #>
+	<# } #>[Table("<#= host.GetModelClass(host.TableName) #>")]
+	[PrimaryKey(Name ="<#= identityKey.ColumnName #>")]
+    [Serializable]
+	public class <#= host.GetModelClass(host.TableName) #>Model:BaseEntity
+	{
+    #region 表字段属性
+	
+      	<# foreach (ColumnInfo c in host.Fieldlist)
+		{ #>//<# 
+		//if(c.ColumnName=="Id")continue;
+		#>/// <summary>
+		/// <#= string.IsNullOrEmpty(c.Description) ? c.ColumnName : c.Description #>
+        /// </summary>	
+       <# if(c.Nullable==false||CodeCommon.DbTypeToCS(c.TypeName)=="string") 
+       {#>private <#= CodeCommon.DbTypeToCS(c.TypeName) #> _<#= c.ColumnName.ToString() #>;
+       [DataMember]
+        public <#= CodeCommon.DbTypeToCS(c.TypeName) #> <#= c.ColumnName #>
+	<# }
+	else{#>private Nullable<<#= CodeCommon.DbTypeToCS(c.TypeName) #>> _<#= c.ColumnName.ToString() #>;
+	   [DataMember]
+        public Nullable<<#= CodeCommon.DbTypeToCS(c.TypeName) #>> <#= c.ColumnName #>
+	<# } 
+       #>
+        {
+            get{ return _<#= c.ColumnName.ToString()#>; }
+            set{ 
+			_<#= c.ColumnName.ToString() #> = value; 
+			NotifyPropertyChange("<#= c.ColumnName.ToString() #>",value);
+			}
+        }        
+		<# } #>
+   
+#endregion
+   
+   
+   #region 导航属性+字段
+
+        [IgnoreDbField]
+        [Write(false)]
+        public int Other_Id { get; set; }
+
+
+        #endregion
+		
+	 #region  当前实体的属性/映射到表中的字段 CLR属性集合
+        private static System.Reflection.PropertyInfo[] _CurrentModelPropertys;
+
+
+       [IgnoreDataMember]
+       public static System.Reflection.PropertyInfo[] CurrentModelPropertys
+        {
+            get
+            {
+                if (null == _CurrentModelPropertys)
+                {
+                    var propLst = typeof(<#= host.GetModelClass(host.TableName) #>Model).GetProperties();//this.GetType().GetProperties();
+                    var specilProperty = propLst.Where(x => !DbTypeAndCLRType.EntityPropertyClrTypeIsCollentionType(x));
+                    _CurrentModelPropertys = specilProperty.ToArray();
+                }
+
+                return _CurrentModelPropertys;
+            }
+        }
+          /// <summary>
+        /// 获取当前实体类的属性集合-暴漏给外部调用的方法
+        /// </summary>
+        /// <returns></returns>
+        public override System.Reflection.PropertyInfo[] GetCurrentEntityProperties()
+        {
+            return CurrentModelPropertys;
+        }
+         #endregion
+	}
+}

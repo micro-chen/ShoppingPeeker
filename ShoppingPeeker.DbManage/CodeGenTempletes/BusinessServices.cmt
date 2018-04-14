@@ -1,0 +1,292 @@
+﻿<#@ template language="c#" HostSpecific="True" #>
+<#@ output extension= ".cs" #>
+<#//format= "{0}Service"//#>
+<#
+	TableHost host = (TableHost)(Host);	
+	string DbParaHead=host.DbParaHead;
+	string DbParaDbType=host.DbParaDbType;
+	string preParameter=host.preParameter;
+	string ModelSpace = host.NameSpace+".Model."+ host.GetModelClass(host.TableName);
+	ColumnInfo identityKey=host.IdentityKey;
+	string returnValue = "void";
+    if (identityKey!=null)
+    {         
+         returnValue = CodeCommon.DbTypeToCS(identityKey.TypeName);              
+    }
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+
+using ShoppingPeeker.DomainEntity;
+using ShoppingPeeker.DbManage;
+using ShoppingPeeker.Data.Repository;
+using ShoppingPeeker.Utilities.Interface;
+
+namespace ShoppingPeeker.BusinessServices
+{
+	<# if( host.TableDescription.Length > 0) {#>
+ 	//<#= host.TableDescription #>业务方法服务管理
+	<# } #>public  class <#= host.TableName #>Service:BaseService,IBusinessBaseService
+	{
+	     #region 属性集合
+
+        #endregion
+
+        #region   字段集合
+ private <#= host.TableName #>Repository dal_<#= host.TableName #>;
+        #endregion
+
+        #region  构造函数
+
+        public <#= host.TableName #>Service()
+        {
+			this.dal_<#= host.TableName #>=Single<<#= host.TableName #>Repository>();
+        }
+
+        #endregion
+
+        #region   业务方法
+
+
+        #region  Insert操作
+
+        /// <summary>
+        /// 添加单个<#= host.TableName #>Model对象方法(可返回对应数据表中 的此实体ID)
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public bool AddOne<#= host.TableName #>Model(<#= host.TableName #>Model entity)
+        {
+            var result = false;
+
+            try
+            {
+                var entityID = dal_<#= host.TableName #>.Insert(entity);
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 批量插入<#= host.TableName #>Model对象方法(不能返回对应数据表中 的ID)
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns>返回操作结果</returns>
+        public bool AddMuliti<#= host.TableName #>Models(IEnumerable<<#= host.TableName #>Model> entities)
+        {
+            var result = false;
+            try
+            {
+                result = dal_<#= host.TableName #>.InsertMulitiEntities(entities);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+
+        #endregion
+
+
+        #region Update 更新操作
+        /// <summary>
+        /// 更新单个<#= host.TableName #>Model实体模型
+        /// </summary>
+        /// <typeparam name="TElement"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public bool UpdateOne<#= host.TableName #>Model(<#= host.TableName #>Model entity)
+        {
+            var result = false;
+
+            try
+            {
+                result = dal_<#= host.TableName #>.Update(entity) > 0 ? true : false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 更新<#= host.TableName #>Model元素 通过  符合条件的
+        /// </summary>
+        /// <param name="entity">携带值的载体</param>
+        /// <param name="predicate">条件</param>
+        /// <returns></returns>
+        public bool Update<#= host.TableName #>ModelsByCondition(<#= host.TableName #>Model entity, Expression<Func<<#= host.TableName #>Model, bool>> predicate)
+        {
+            var result = false;
+
+            try
+            {
+                result = dal_<#= host.TableName #>.UpdateByCondition(entity, predicate) > 0 ? true : false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        #endregion
+
+
+        #region Select   查询操作
+        /// <summary>
+        /// 通过主键获取单个<#= host.TableName #>Model元素
+        /// </summary>
+        /// <param name="id">Identifier</param>
+        /// <returns>Entity</returns>
+        public <#= host.TableName #>Model Get<#= host.TableName #>ElementById(Guid id)
+        {
+            <#= host.TableName #>Model result = null;
+
+            try
+            {
+                result = dal_<#= host.TableName #>.GetElementById(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+
+
+        /// <summary>
+        /// 通过特定的条件查询出<#= host.TableName #>Model元素集合
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public List<<#= host.TableName #>Model> Get<#= host.TableName #>ElementsByCondition(Expression<Func<<#= host.TableName #>Model, bool>> predicate)
+        {
+            List<<#= host.TableName #>Model> result = null;
+
+            try
+            {
+                result = dal_<#= host.TableName #>.GetElementsByCondition(predicate);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+         /// <summary>
+        /// 分页获取元素集合
+        /// </summary>
+        /// <param name="pageIndex">页索引</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="totalRecords">总记录数</param>
+        /// <param name="totalPages">总页数</param>
+        /// <param name="predicate">条件</param>
+        /// <param name="sortField">排序字段（如果不指定排序字段 那么默认按照id 排序）</param>
+        /// <param name="rule">排序规则</param>
+        /// <returns></returns>
+        /// <returns></returns>
+        public List<<#= host.TableName #>Model> Get<#= host.TableName #>ElementsByPagerAndCondition(int pageIndex, int pageSize, out int totalRecords, out int totalPages, Expression<Func<<#= host.TableName #>Model, bool>> predicate, Fields<<#= host.TableName #>Model >sortField=null, OrderRule rule = OrderRule.ASC)
+        {
+            List<<#= host.TableName #>Model> result = null;
+
+            try
+            {
+                result = dal_<#= host.TableName #>.GetElementsByPagerAndCondition(pageIndex, pageSize, out totalRecords,out totalPages,predicate, sortField, rule);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+   /// <summary>
+        /// 分页获取元素集合
+        /// </summary>
+        /// <param name="pageIndex">页索引</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="totalRecords">总记录数</param>
+        /// <param name="totalPages">总页数</param>
+        /// <param name="predicate">条件</param>
+        /// <param name="sortField">排序字段（如果不指定排序字段 那么默认按照id 排序）</param>
+        /// <param name="rule">排序规则</param>
+        /// <returns></returns>
+        /// <returns></returns>
+        public List<<#= host.TableName #>Model> Get<#= host.TableName #>ElementsByPagerAndCondition(int pageIndex, int pageSize, out int totalRecords, out int totalPages, Expression<Func<<#= host.TableName #>Model, bool>> predicate, string sortField=null, OrderRule rule = OrderRule.ASC)
+        {
+            List<<#= host.TableName #>Model> result = null;
+
+            try
+            {
+                result = dal_<#= host.TableName #>.GetElementsByPagerAndCondition(pageIndex, pageSize, out totalRecords,out totalPages,predicate, sortField, rule);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+
+        #endregion
+
+
+        #region Delete 删除操作
+        /// <summary>
+        /// 删除一个<#= host.TableName #>Model实体
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public bool DeleteOne<#= host.TableName #>Model(<#= host.TableName #>Model entity)
+        {
+            var result = false;
+
+            try
+            {
+                result = dal_<#= host.TableName #>.Delete(entity) > 0 ? true : false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+
+        // <summary>
+        /// 删除符合条件的<#= host.TableName #>Model实体
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public bool DeleteMuliti<#= host.TableName #>ByCondition(Expression<Func<<#= host.TableName #>Model, bool>> predicate)
+        {
+            var result = false;
+
+            try
+            {
+                result = dal_<#= host.TableName #>.DeleteByCondition(predicate) > 0 ? true : false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        #endregion
+
+        #endregion	
+   
+	}
+}
