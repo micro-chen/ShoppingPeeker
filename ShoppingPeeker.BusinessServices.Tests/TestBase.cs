@@ -28,10 +28,12 @@ namespace ShoppingPeeker.Tests
 			.AddJsonFile("appsettings.json");
 			ConfigHelper.AppSettingsConfiguration =  builder.Build();
 
-			//设置数据库连接
-			var connStringSection = ConfigHelper.GetConnectionStringSection();
-			var providerName = connStringSection.ProviderName;
-			InitDatabase.SetDatabaseConnection(connStringSection.ConnectionString, providerName);
+            //设置数据库连接
+            InitDatabase.Init();
+
+			//var connStringSection = ConfigHelper.GetConnectionStringSection();
+			//var providerName = connStringSection.ProviderName;
+			//InitDatabase.SetDatabaseConnection(connStringSection.ConnectionString, providerName);
 
 
 		}

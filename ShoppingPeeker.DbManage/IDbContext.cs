@@ -21,7 +21,7 @@ namespace ShoppingPeeker.DbManage
         /// <typeparam name="TElement"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        long Insert(TElement entity);
+        int Insert(TElement entity);
 
 
         /// <summary>
@@ -59,14 +59,14 @@ namespace ShoppingPeeker.DbManage
         #region Select   查询操作
 
         /// <summary>
-        /// 通过主键获取单个元素
+        ///通过主键获取单个元素
         /// </summary>
         /// <param name="id">Identifier</param>
         /// <returns>Entity</returns>
         TElement GetElementById(long id);
 
         /// <summary>
-        /// 通过特定的条件查询出元素集合
+        ///通过特定的条件查询出元素集合
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
@@ -74,7 +74,7 @@ namespace ShoppingPeeker.DbManage
 
 
         /// <summary>
-        /// 分页获取元素集合
+        ///分页获取元素集合
         /// </summary>
         /// <param name="pageIndex">页索引</param>
         /// <param name="pageSize">页大小</param>
@@ -113,7 +113,7 @@ namespace ShoppingPeeker.DbManage
         #region 聚合函数操作
 
         /// <summary>
-        /// 使用指定的条件 汇总列
+        ///使用指定的条件 汇总列
         /// </summary>
         /// <param name="predicate"></param>
         /// <param name="specialColumn"></param>
@@ -121,7 +121,7 @@ namespace ShoppingPeeker.DbManage
         int Sum(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn);
 
         /// <summary>
-        /// 统计 符合条件的行数
+        ///【读】 统计 符合条件的行数
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
@@ -129,7 +129,7 @@ namespace ShoppingPeeker.DbManage
 
 
         /// <summary>
-        /// 符合条件的行的 指定列的最大值
+        ///符合条件的行的 指定列的最大值
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="selector"></param>
@@ -137,7 +137,7 @@ namespace ShoppingPeeker.DbManage
         int Max(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn);
 
         /// <summary>
-        /// 符合条件的行的 指定列的最小值
+        ///符合条件的行的 指定列的最小值
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="predicate"></param>
@@ -148,10 +148,45 @@ namespace ShoppingPeeker.DbManage
 
 
         #region base ado.net 
-        DbDataReader ExecuteReader(string cmdText, CommandType cmdType = CommandType.Text, params DbParameter[] commandParameters);
+        /// <summary>
+        ///执行 CommandText 针对 Connection, ，并返回 DbDataReader。
+        /// </summary>
+        /// <returns></returns>
+        DbDataReader ExecuteReader(string cmdText, DbParameter[] commandParameters, CommandType cmdType = CommandType.Text);
 
-        object ExecuteScalar(string cmdText, CommandType cmdType, params DbParameter[] commandParameters);
-        int ExecuteNonQuery(string cmdText, CommandType cmdType = CommandType.Text, params DbParameter[] commandParameters);
+        /// <summary>
+        ///执行查询 返回 DataSet
+        /// </summary>
+        /// <returns></returns>
+        DataSet ExecuteDataSet(string cmdText, DbParameter[] commandParameters, CommandType cmdType = CommandType.Text);
+        /// <summary>
+        /// 执行查询，并返回由查询返回的结果集中的第一行的第一列。 其他列或行将被忽略。
+        /// </summary>
+        /// <returns></returns>
+        object ExecuteScalar(string cmdText, DbParameter[] commandParameters, CommandType cmdType = CommandType.Text);
+
+        /// <summary>
+        /// 对连接执行 Transact-SQL 语句并返回受影响的行数。
+        /// </summary>
+        /// <param name="cmdText"></param>
+        /// <param name="commandParameters"></param>
+        /// <param name="cmdType"></param>
+        /// <returns></returns>
+        int ExecuteNonQuery(string cmdText, DbParameter[] commandParameters, CommandType cmdType = CommandType.Text);
+
+        /// <summary>
+        /// 执行查询并返回 集合对象
+        /// </summary>
+        /// <param name="commandText"></param>
+        /// <param name="commandType"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        List<TElement> SqlQuery(string commandText, CommandType commandType, params DbParameter[] parameters);
+
+        #endregion
+
+        #region Sql 语句批量执行
+        bool SqlBatchExcute(Dictionary<string, DbParameter[]> SqlCmdList);
 
         #endregion
 

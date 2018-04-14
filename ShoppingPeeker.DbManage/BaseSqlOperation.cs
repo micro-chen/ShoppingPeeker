@@ -11,30 +11,41 @@ using System.Threading.Tasks;
 
 namespace ShoppingPeeker.DbManage
 {
-   public abstract class BaseSqlOperation<TElement> where TElement : BaseEntity, new()
+    public abstract class BaseSqlOperation<TElement> where TElement : BaseEntity, new()
     {
+        /// <summary>
+        /// 由于ADO.NET  最多可以传递2100参数 我们设置阈值略小于这个值
+        /// </summary>
+        protected const int MAX_SQL_PARAS_LIMIT = 2000;
 
+        private DbConnConfig _dbConfig;
+        /// <summary>
+        /// 数据库连接配置
+        /// </summary>
+        public DbConnConfig DbConfig {
+            get
+            {
+                return this._dbConfig;
+            }
+            set
+            {
+                this._dbConfig = value;
+            }
+        }
 
         public BaseSqlOperation()
         {
-      
+
         }
 
-        /// <summary>
-        /// 数据库连接字符串-虚属性
-        /// </summary>
-        public virtual string CurrentDBConnectionString { get; set; }
+ 
 
         /// <summary>
         /// 错误的数据操作结果标志
         /// </summary>
-        public const long Error_Opeation_Result = -1;
+        public const int Error_Opeation_Result = -1;
 
 
-        public abstract DbDataReader ExecuteReader(string cmdText, CommandType cmdType = CommandType.Text, params DbParameter[] commandParameters);
-
-        public abstract object ExecuteScalar(string cmdText, CommandType cmdType, params DbParameter[] commandParameters);
-        public abstract int ExecuteNonQuery(string cmdText, CommandType cmdType = CommandType.Text, params DbParameter[] commandParameters);
 
 
 
@@ -86,7 +97,17 @@ namespace ShoppingPeeker.DbManage
             sb_Sql = null;
             try
             {
-                return Convert.ToInt32(ExecuteScalar(sqlCmd, CommandType.Text));
+                var reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
+                if (reader.Read())
+                {
+                    var colValue = Convert.ToInt32(reader[0]);
+                    return colValue;
+                }
+                else
+                {
+                    throw new Exception("can not  excute sql cmd: " + sqlCmd);
+                }
+
 
             }
             catch (Exception ex)
@@ -139,8 +160,17 @@ namespace ShoppingPeeker.DbManage
             sb_Sql = null;
             try
             {
-                return Convert.ToInt32(ExecuteScalar(sqlCmd, CommandType.Text));
-
+                // return Convert.ToInt32(ExecuteScalar(sqlCmd, CommandType.Text));
+                var reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
+                if (reader.Read())
+                {
+                    var colValue = Convert.ToInt32(reader[0]);
+                    return colValue;
+                }
+                else
+                {
+                    throw new Exception("can not  excute sql cmd: " + sqlCmd);
+                }
             }
             catch (Exception ex)
             {
@@ -194,8 +224,17 @@ namespace ShoppingPeeker.DbManage
             sb_Sql = null;
             try
             {
-                return Convert.ToInt32(ExecuteScalar(sqlCmd, CommandType.Text));
-
+                //return Convert.ToInt32(ExecuteScalar(sqlCmd, CommandType.Text));
+                var reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
+                if (reader.Read())
+                {
+                    var colValue = Convert.ToInt32(reader[0]);
+                    return colValue;
+                }
+                else
+                {
+                    throw new Exception("can not  excute sql cmd: " + sqlCmd);
+                }
             }
             catch (Exception ex)
             {
@@ -249,8 +288,17 @@ namespace ShoppingPeeker.DbManage
             sb_Sql = null;
             try
             {
-                return Convert.ToInt32(ExecuteScalar(sqlCmd, CommandType.Text));
-
+                // return Convert.ToInt32(ExecuteScalar(sqlCmd, CommandType.Text));
+                var reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
+                if (reader.Read())
+                {
+                    var colValue = Convert.ToInt32(reader[0]);
+                    return colValue;
+                }
+                else
+                {
+                    throw new Exception("can not  excute sql cmd: " + sqlCmd);
+                }
             }
             catch (Exception ex)
             {
@@ -261,6 +309,300 @@ namespace ShoppingPeeker.DbManage
 
         #endregion
 
+        #region ADO.NET 相关
+
+
+        /// <summary>
+        /// 执行查询 返回 DataSet
+        /// </summary>
+        /// <param name="cmdText"></param>
+        /// <param name="commandParameters"></param> 
+        /// <param name="cmdType"></param>
+        /// <returns></returns>
+        public DataSet ExecuteDataSet(string cmdText, DbParameter[] commandParameters, CommandType cmdType = CommandType.Text)
+        {
+
+            DataSet resultData = new DataSet();
+
+            using (DbConnection conn = DatabaseFactory.GetDbConnection(this._dbConfig))
+            {
+                if (conn.State != ConnectionState.Open)
+                {
+                    conn.Open();
+                }
+                using (DbCommand cmd = DatabaseFactory.GetDbDbCommand(this._dbConfig))
+                {
+
+
+                    try
+                    {
+                        PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
+                        var dataAdapter = DatabaseFactory.GetDbDataAdapter(cmd, this._dbConfig);
+                        dataAdapter.Fill(resultData);
+                        cmd.Parameters.Clear();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                    return resultData;
+                }
+
+            }
+        }
+
+
+
+        /// <summary>
+        /// 执行命令 并返回影响行数
+        /// </summary>
+        /// <param name="cmdText"></param>
+        /// <param name="commandParameters"></param>  
+        /// <param name="cmdType"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery(string cmdText, DbParameter[] commandParameters, CommandType cmdType = CommandType.Text)
+        {
+
+            using (DbConnection conn = DatabaseFactory.GetDbConnection(this._dbConfig))
+            {
+                if (conn.State != ConnectionState.Open)
+                {
+                    conn.Open();
+                }
+                using (DbCommand cmd = DatabaseFactory.GetDbDbCommand(this._dbConfig))
+                {
+
+                    int val = -1;
+                    try
+                    {
+                        PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
+                        val = cmd.ExecuteNonQuery();
+                        cmd.Parameters.Clear();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                    return val;
+                }
+
+            }
+
+
+        }
+
+
+
+        /// <summary>
+        ///  执行命令  并返回一个可读的Reader
+        /// </summary>
+        /// <param name="cmdText"></param>
+        /// <param name="commandParameters"></param>
+        /// <param name="cmdType"></param>
+        /// <returns></returns>
+        public DbDataReader ExecuteReader(string cmdText, DbParameter[] commandParameters, CommandType cmdType = CommandType.Text)
+        {
+
+            try
+            {
+                DbConnection conn = DatabaseFactory.GetDbConnection(this._dbConfig);
+
+                if (conn.State != ConnectionState.Open)
+                {
+                    conn.Open();
+                }
+                DbCommand cmd = DatabaseFactory.GetDbDbCommand(this._dbConfig);
+
+                PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
+                DbDataReader rdr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                return rdr;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+
+
+
+        }
+
+
+
+        /// <summary>
+        ///执行命令 并返回首列结果
+        /// </summary>
+        /// <param name="cmdText"></param>
+        /// <param name="commandParameters"></param>
+        /// <param name="cmdType"></param>
+        /// <returns></returns>
+        public object ExecuteScalar(string cmdText, DbParameter[] commandParameters, CommandType cmdType = CommandType.Text)
+        {
+            object val = null;
+
+            using (DbConnection conn = DatabaseFactory.GetDbConnection(this._dbConfig))
+
+            {
+                DbCommand cmd = DatabaseFactory.GetDbDbCommand(this._dbConfig);
+                try
+                {
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+
+
+                    PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
+                    val = cmd.ExecuteScalar();
+                    cmd.Parameters.Clear();
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    cmd.Dispose();
+                    conn.Close();
+                    conn.Dispose();
+                }
+            }
+
+            return val;
+        }
+
+
+
+
+        #endregion
+
+
+        #region Sql 语句批量执行
+
+
+
+
+
+        /// <summary>
+        ///  Sql 语句批量执行
+        /// </summary>
+        /// <param name="SqlCmdList"></param>
+        /// <returns></returns>
+        public bool SqlBatchExcute(Dictionary<string, DbParameter[]> sqlCmdList)
+        {
+
+            bool result = false;
+            if (null == sqlCmdList || sqlCmdList.Count <= 0)
+            {
+                return result;
+            }
+
+            using (DbConnection conn = DatabaseFactory.GetDbConnection(this._dbConfig))
+            {
+                conn.Open();
+                using (DbTransaction trans = conn.BeginTransaction())
+                {
+
+                    try
+                    {
+
+                        var entor = sqlCmdList.GetEnumerator();
+
+                        StringBuilder sbSqlCmdBagList = new StringBuilder();
+                        var sqlParasBagList = new List<DbParameter>();
+                        int pos = 0;
+                        while (entor.MoveNext() || pos >= sqlCmdList.Count)
+                        {
+                            //到达sql参数上限或者达到命令列表边界  执行sql 包
+                            if (sqlParasBagList.Count >= MAX_SQL_PARAS_LIMIT || pos >= sqlCmdList.Count)
+                            {
+
+                                using (DbCommand cmd = conn.CreateCommand())
+                                {
+                                    //到达最大参数临界的时候 执行sql 批语句
+                                    cmd.Transaction = trans;
+                                    cmd.CommandText = sbSqlCmdBagList.ToString();
+                                    cmd.Parameters.AddRange(sqlParasBagList.ToArray());
+                                    cmd.ExecuteNonQuery();
+                                }
+                                //重置
+                                sbSqlCmdBagList.Clear();
+                                sqlParasBagList.Clear();
+
+                                if (pos >= sqlCmdList.Count)
+                                {
+                                    break;//超出临界  跳出循环
+                                }
+                            }
+
+                            var cmdPair = entor.Current;
+                            if (string.IsNullOrEmpty(cmdPair.Key))
+                            {
+                                continue;
+                            }
+
+                            string sqlCmd = cmdPair.Key;
+                            DbParameter[] sqlParas = cmdPair.Value;
+                            if (!sqlCmd.TrimEnd().EndsWith(";"))
+                            {
+                                sqlCmd += ";";
+                            }
+                            //处理sql 命令，和参数，对sql命令中的@ 和参数中的@的进行匹配识别
+                            if (null == sqlParas || sqlParas.Length <= 0)
+                            {
+                                sbSqlCmdBagList.Append(sqlCmd);
+                            }
+                            else
+                            {
+                                //按照计数游标 对参数进行处理
+                                foreach (DbParameter itemDbPara in sqlParas)
+                                {
+                                    var paraName = itemDbPara.ParameterName;
+                                    string nameWithPos = string.Concat(paraName, pos);
+                                    itemDbPara.ParameterName = nameWithPos;
+                                    sqlCmd = sqlCmd.Replace(paraName, nameWithPos);
+                                }
+
+                                sbSqlCmdBagList.Append(sqlCmd);//追加格式化 后缀的sql 命令
+                                sqlParasBagList.AddRange(sqlParas);
+                            }
+
+                            pos += 1;//计数后移
+
+                        }
+                        trans.Commit();
+                        result = true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //EMPLogHelper.EMPLogHelper.WriteLog(typeof(SqlHelper), ex.ToString(),
+                        //    " ExecuteSqlTran(Dictionary<string, object> SQLStringList)");
+                        result = false;
+                        trans.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            return result;
+
+
+        }
+
+        #endregion
 
         /// <summary>
         ///  执行一个SQL查询语句，进行参数化查询
@@ -278,7 +620,7 @@ namespace ShoppingPeeker.DbManage
             DbDataReader reader = null;
             try
             {
-                reader = this.ExecuteReader(commandText, commandType, parameters);
+                reader = this.ExecuteReader(commandText, parameters, commandType);
                 if (null == reader)
                 {
                     return null;
@@ -333,9 +675,9 @@ namespace ShoppingPeeker.DbManage
         private bool IsValidParamedSqlQuery(DbConnection conn, string inputSql, IEnumerable<DbParameter> cmdParms)
         {
             var result = false;
-        //    MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
-        //conn.ConnectionString);
-        //    bool sqlServerMode = cb.SqlServerMode;
+            //    MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
+            //conn.ConnectionString);
+            //    bool sqlServerMode = cb.SqlServerMode;
 
             SqlStatementTokenizer statementTokenizer = new SqlStatementTokenizer(inputSql);
             statementTokenizer.ReturnComments = true;
@@ -381,7 +723,6 @@ namespace ShoppingPeeker.DbManage
 
 
 
-
             if (conn.State != ConnectionState.Open)
                 conn.Open();
 
@@ -424,7 +765,7 @@ namespace ShoppingPeeker.DbManage
         /// <param name="propertys"></param>
         /// <param name="filelds"></param>
         /// <param name="paras"></param>
-        protected  void ResolveEntity(TElement entity, out string tableInDbName, out System.Reflection.PropertyInfo[] propertys, out string[] filelds, out string[] paras)
+        protected void ResolveEntity(TElement entity, out string tableInDbName, out System.Reflection.PropertyInfo[] propertys, out string[] filelds, out string[] paras)
         {
             tableInDbName = "";
             var targetAttributes = entity.GetType().GetCustomAttributes(typeof(TableAttribute), false);

@@ -15,29 +15,54 @@ namespace ShoppingPeeker.Data
     public class BaseRepository<TElement> where TElement : BaseEntity, new()
     {
 
-        protected IDbContext<TElement> dbContext;
-
-        public BaseRepository()
+        private IDbContext<TElement> dbContext;
+        private const string Default_ConnName = "Default";
+        /// <summary>
+        /// 构造数据仓储对象
+        /// </summary>
+        /// <param name="connName">连接字符串Name，默认为：Default；为空将返回默认第一个数据库连接</param>
+        public BaseRepository(string connName= Default_ConnName)
         {
-            this.dbContext = this.GetDbContext();
+            this.dbContext = GetDbContext(connName);
         }
 
+
         /// <summary>
+        /// /// <summary>
         /// 获取当前数据库上下文
+        /// 根据写库的类型进行数据库类型的判断
         /// 支持多数据库类型-工厂拆分
         /// </summary>
+        /// </summary>
+        /// <param name="connName"></param>
         /// <returns></returns>
-        protected IDbContext<TElement> GetDbContext()
+        public static IDbContext<TElement> GetDbContext(string connName = Default_ConnName)
         {
             IDbContext<TElement> dbContext = null;
 
-            switch (GlobalDBConnection.CurrentDbType)
+            DbConnConfig dbConfig = null;
+            if (string.IsNullOrEmpty(connName))
+            {
+                //必须有连接配置，如果没有 那么抛出异常
+                dbConfig = GlobalDBConnection.AllDbConnConfigs.FirstOrDefault().Value;
+            }else
+            {
+                //检测是否有name
+                if (!GlobalDBConnection.AllDbConnConfigs.ContainsKey(connName))
+                {
+                    throw new Exception("指定的数据库连接名称不存在配置中！Name："+connName);
+                }
+                dbConfig = GlobalDBConnection.AllDbConnConfigs[connName];
+
+            }
+
+            switch (dbConfig.DbType)
             {
                 case SupportDbType.Sqlserver:
-                    dbContext = new SqlDbContext<TElement>();
+                    dbContext = new SqlDbContext<TElement>(dbConfig);
                     break;
                 case SupportDbType.Mysql:
-                    dbContext = new MysqlDbContext<TElement>();
+                    dbContext = new MySqlDbContext<TElement>(dbConfig);
                     break;
                 case SupportDbType.PostgreSQL:
                 case SupportDbType.Oracle:
@@ -50,7 +75,7 @@ namespace ShoppingPeeker.Data
 
         #region entity  orm 
 
-       
+
 
         #region 查询实体
 
@@ -101,7 +126,7 @@ namespace ShoppingPeeker.Data
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public long Insert(TElement entity)
+        public int Insert(TElement entity)
         {
             return this.dbContext.Insert(entity);
         }
@@ -218,7 +243,15 @@ namespace ShoppingPeeker.Data
 
         #endregion
 
-
+        /// <summary>
+        /// 批量执行SQL命令
+        /// </summary>
+        /// <param name="SqlCmdList"></param>
+        /// <returns></returns>
+        public bool SqlBatchExcute(Dictionary<string, DbParameter[]> SqlCmdList)
+        {
+            return this.dbContext.SqlBatchExcute(SqlCmdList);
+        }
 
 
 
@@ -226,20 +259,34 @@ namespace ShoppingPeeker.Data
 
         #region base ado.net 
 
-
-        public DbDataReader ExecuteReader(string cmdText, CommandType cmdType = CommandType.Text, params DbParameter[] commandParameters)
+        /// <summary>
+        /// 【读】执行查询 返回 DataSet
+        /// </summary>
+        /// <returns></returns>
+        public DataSet ExecuteDataSet(string cmdText, DbParameter[] commandParameters = null, CommandType cmdType = CommandType.Text)
         {
-            return this.dbContext.ExecuteReader(cmdText, cmdType, commandParameters);
+            return this.dbContext.ExecuteDataSet(cmdText, commandParameters, cmdType);
         }
 
-        public  object ExecuteScalar(string cmdText, CommandType cmdType, params DbParameter[] commandParameters)
+        public DbDataReader ExecuteReader(string cmdText, DbParameter[] commandParameters = null, CommandType cmdType = CommandType.Text)
         {
-            return this.dbContext.ExecuteScalar( cmdText, cmdType, commandParameters);
+            return this.dbContext.ExecuteReader(cmdText, commandParameters, cmdType);
         }
 
-        public  int ExecuteNonQuery(string cmdText, CommandType cmdType = CommandType.Text, params DbParameter[] commandParameters)
+        public object ExecuteScalar(string cmdText, DbParameter[] commandParameters = null, CommandType cmdType = CommandType.Text)
         {
-            return this.dbContext.ExecuteNonQuery( cmdText,  cmdType,  commandParameters);
+            return this.dbContext.ExecuteScalar(cmdText, commandParameters, cmdType);
+        }
+
+        public int ExecuteNonQuery(string cmdText, DbParameter[] commandParameters = null, CommandType cmdType = CommandType.Text)
+        {
+            return this.dbContext.ExecuteNonQuery(cmdText, commandParameters, cmdType);
+        }
+
+        public List<TElement> SqlQuery(string commandText, CommandType commandType, params DbParameter[] parameters)
+        {
+            return this.dbContext.SqlQuery(commandText, commandType, parameters);
+
         }
 
         #endregion

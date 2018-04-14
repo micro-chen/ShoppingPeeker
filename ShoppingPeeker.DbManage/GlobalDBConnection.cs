@@ -1,92 +1,90 @@
 ﻿using System;
-using ShoppingPeeker.DbManage.Utilities;
 using System.Threading.Tasks;
-
+using System.Collections.Generic;
+using System.Collections.Specialized;
 namespace ShoppingPeeker.DbManage
 {
     /// <summary>
-    /// 使用此全局数据库连接字符串定义与数据库进行交互 的数据连接，
-    /// 在整个应用程序生命周期都使用此字符串
+    /// 全部数据库连接配置
     /// </summary>
-    public static class GlobalDBConnection
+    public  class GlobalDBConnection: Dictionary<string,DbConnConfig>
     {
 
-
-        public static DbState DataBaseState { get; set; }
-
         /// <summary>
-        /// 当前选择的数据库
+        /// 构造函数
         /// </summary>
-        public static SupportDbType CurrentDbType { get; set; }
+        public GlobalDBConnection()
+        {
+        }
 
 
-        private static string _DBConnectionString;
+
+        private static GlobalDBConnection _AllDbConnConfigs;
         /// <summary>
-        /// 全局数据库连接字符串
+        /// 所有的数据库连接配置
         /// </summary>
-        public static string DBConnectionString
+        public static GlobalDBConnection AllDbConnConfigs
         {
             get
             {
-                return _DBConnectionString;
+                if (null==_AllDbConnConfigs)
+                {
+                    _AllDbConnConfigs = new GlobalDBConnection();
+                }
+                return _AllDbConnConfigs;
             }
-            set
-            {
-
-                _DBConnectionString = value;
 
 
-                //设置好连接字符串后  初始化数据库  
-                InitDataBase();
-            }
         }
 
-        private static void InitDataBase()
+
+       
+
+
+        internal static void InitDataBase(Dictionary<string,DbConnConfig> dbConfigs)
         {
 
 
-            //异步初始化
-            Task.Factory.StartNew(() =>
-            {
+          
                 try
                 {
-
-                    switch (GlobalDBConnection.CurrentDbType)
+                    foreach (var itemConfig in dbConfigs.Values)
                     {
-                        case SupportDbType.Sqlserver:
-                            //1 创建必须的分页存储过程等全局操作
-                            PagerSQLProcedure.CheckAndCreatePagerSQLProcedure();
-                            break;
-                        case SupportDbType.Mysql:
-                            //1 创建必须的分页存储过程等全局操作
-                            MysqlPagerSQLProcedure.CheckAndCreatePagerSQLProcedure();
-                            break;
-                        case SupportDbType.PostgreSQL:
+                        switch (itemConfig.DbType)
+                        {
+                            case SupportDbType.Sqlserver:
+                                //1 创建必须的分页存储过程等全局操作
+                                PagerSQLProcedure.CheckAndCreatePagerSQLProcedure(itemConfig);
+                                break;
+                            case SupportDbType.Mysql:
+                                //1 创建必须的分页存储过程等全局操作
+                                MySqlPagerSQLProcedure.CheckAndCreatePagerSQLProcedure(itemConfig);
+                                break;
+                            case SupportDbType.PostgreSQL:
 
-                            break;
-                        case SupportDbType.Oracle:
+                                break;
+                            case SupportDbType.Oracle:
 
-                            break;
-                        default:
-                            throw new NotImplementedException();
+                                break;
+                            default:
+                                throw new NotImplementedException();
 
+                        }
                     }
 
-                    DataBaseState = DbState.Opened;
+
+
                     //2 Other Need Initial Operations....
 
                 }
                 catch (Exception ex)
                 {
-                    DataBaseState = DbState.Closed;
+
                     throw ex;
                 }
 
 
-            }).ConfigureAwait(false).GetAwaiter();
-
-          
-
+         
 
         }
     }

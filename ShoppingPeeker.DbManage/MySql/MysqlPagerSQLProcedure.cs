@@ -9,7 +9,7 @@ namespace ShoppingPeeker.DbManage
     /// <summary>
     /// 检测是否存在需要的分页存储过程
     /// </summary>
-    public static class MysqlPagerSQLProcedure
+    public static class MySqlPagerSQLProcedure
     {
 
         //检查存储过程存在--命令
@@ -19,18 +19,18 @@ namespace ShoppingPeeker.DbManage
         and `name`='{1}'";
 
 
-        internal static void CheckAndCreatePagerSQLProcedure()
+        internal static void CheckAndCreatePagerSQLProcedure(DbConnConfig dbConfig)
         {
-            var connStr = GlobalDBConnection.DBConnectionString;
+            var connStr = dbConfig.ConnString;
 
             //1检查数据库是否存在存储过程   //2创建
             //分页调用入口
             var isHasExist = CheckIsHasExistProcedure(connStr, Contanst.PageSql_Call_Name);
-            if (isHasExist==true)
+            if (isHasExist == true)
             {
                 return;
             }
-            CreateSQLProcedure(connStr,PageSql_Call_MySqlCommand);
+            CreateSQLProcedure(connStr, PageSql_Call_MySqlCommand);
 
         }
 
@@ -79,7 +79,7 @@ namespace ShoppingPeeker.DbManage
 
 
 
-        private static void CreateSQLProcedure(string connStr,string MySqlCommand)
+        private static void CreateSQLProcedure(string connStr, string MySqlCommand)
         {
             if (string.IsNullOrEmpty(connStr))
             {
@@ -98,7 +98,7 @@ namespace ShoppingPeeker.DbManage
                 cmdScript.Query = MySqlCommand;
                 cmdScript.Delimiter = "??";//设定结束符
 
-                int result= cmdScript.Execute();
+                int result = cmdScript.Execute();
             }
         }
 
@@ -163,7 +163,7 @@ namespace ShoppingPeeker.DbManage
                                 END??
 ";
 
-#endregion
+        #endregion
 
     }
 }

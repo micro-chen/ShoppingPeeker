@@ -24,30 +24,13 @@ namespace ShoppingPeeker.DbManage
     /// <summary>
     /// 连接数据库的  上下文  用来执行与数据库进行交互
     /// </summary>
-    public class SqlDbContext<TElement> :SQLOperationCore<TElement>, IDbContext<TElement>, IDisposable
+    public class SqlDbContext<TElement> :BaseSqlOperation<TElement>, IDbContext<TElement>, IDisposable
         where TElement : BaseEntity, new()
     {
         #region Construction and fields
 
 
 
-        private string _CurrentDBConnectionString;
-        // 数据库连接字符串--覆盖基类中的属性
-        public override string CurrentDBConnectionString
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(this._CurrentDBConnectionString))
-                {
-                    this._CurrentDBConnectionString = GlobalDBConnection.DBConnectionString;
-                }
-                return this._CurrentDBConnectionString;
-            }
-            set
-            {
-                this._CurrentDBConnectionString = value;
-            }
-        }
 
         /// <summary>
         /// 实体的主键名称
@@ -57,19 +40,15 @@ namespace ShoppingPeeker.DbManage
 
 
         /// <summary>
-        /// 继承类-采用默认全局的数据库连接字符串
+        /// 数据上下文 构造函数
         /// </summary>
-        public SqlDbContext()
+        /// <param name="dbConfig"></param>
+        public SqlDbContext(DbConnConfig dbConfig)
         {
-            Check.NotEmpty(GlobalDBConnection.DBConnectionString, "GlobalDBConnection.DBConnectionString");
+            this.DbConfig = dbConfig;
         }
 
 
-        public SqlDbContext(string connString)
-        {
-            Check.NotEmpty(connString, "User Custom DBConnectionString");
-            this._CurrentDBConnectionString = connString;
-        }
 
         #endregion
 
@@ -84,7 +63,7 @@ namespace ShoppingPeeker.DbManage
         /// <typeparam name="TElement"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public long Insert(TElement entity)
+        public int Insert(TElement entity)
         {
             string tableInDbName;
             System.Reflection.PropertyInfo[] propertys;
@@ -138,10 +117,10 @@ namespace ShoppingPeeker.DbManage
             ///清理掉字符串拼接构造器
             sb_Sql.Clear();
             sb_Sql = null;
-            var result=this.ExecuteScalar(sqlCmd, CommandType.Text, parameters);
-            if (null!=result)
+            var result = this.ExecuteScalar(sqlCmd, parameters);
+            if (null != result)
             {
-                return long.Parse(result.ToString());
+                return int.Parse(result.ToString());
             }
             return Error_Opeation_Result;
         }
@@ -154,7 +133,6 @@ namespace ShoppingPeeker.DbManage
         /// <param name="entities"></param>
         public bool InsertMulitiEntities(IEnumerable<TElement> entities)
         {
-            //注意： SQL Server 过程最多可以有 2100 个参数。 必须使用服务器端逻辑才能将这些单个值组合到表变量或临时表中以进行处理。
             var result = -1;
 
 
@@ -178,7 +156,7 @@ namespace ShoppingPeeker.DbManage
                 var noIdentityPropertys = propertys.Remove(x => x.Name == EntityIdentityFiledName);
 
 
-                using (var bulk = new SqlBulkCopy(this.CurrentDBConnectionString, SqlBulkCopyOptions.UseInternalTransaction))
+                using (var bulk = new SqlBulkCopy(this.DbConfig.ConnString, SqlBulkCopyOptions.UseInternalTransaction))
                 {
                     bulk.BulkCopyTimeout = 60;//命令超时时间
                     //bulk.BatchSize = 1000;
@@ -198,8 +176,7 @@ namespace ShoppingPeeker.DbManage
                     DataTable dt = SqlDataTableExtensions.ConvertListToDataTable<TElement>(entities, ref noIdentityPropertys);//数据源数据
 
                     DbDataReader reader = dt.CreateDataReader();
-
-                    bulk.WriteToServerAsync(reader).ConfigureAwait(false).GetAwaiter();
+                    bulk.WriteToServer(dt);
                 }
 
 
@@ -271,7 +248,7 @@ namespace ShoppingPeeker.DbManage
 
             //移除最后一个逗号
             var str_FiledParaPairs = sb_FiledParaPairs.ToString();
-            str_FiledParaPairs= str_FiledParaPairs.Remove(str_FiledParaPairs.Length - 1);
+            str_FiledParaPairs = str_FiledParaPairs.Remove(str_FiledParaPairs.Length - 1);
 
             StringBuilder sb_Sql = new StringBuilder();
             sb_Sql.Append(string.Format("update {0} set ", tableInDbName));//Set Table
@@ -327,7 +304,7 @@ namespace ShoppingPeeker.DbManage
             sb_FiledParaPairs = null;
             sb_Sql.Clear();
             sb_Sql = null;
-            return ExecuteNonQuery(sqlCmd, CommandType.Text, parameters);
+            return ExecuteNonQuery(sqlCmd, parameters);
         }
 
         /// <summary>
@@ -367,7 +344,7 @@ namespace ShoppingPeeker.DbManage
             }
             //移除最后一个逗号
             var str_FiledParaPairs = sb_FiledParaPairs.ToString();
-            str_FiledParaPairs=str_FiledParaPairs.Remove(str_FiledParaPairs.Length - 1);
+            str_FiledParaPairs = str_FiledParaPairs.Remove(str_FiledParaPairs.Length - 1);
 
             StringBuilder sb_Sql = new StringBuilder();
             sb_Sql.Append(string.Format("update {0} set ", tableInDbName));//Set Table
@@ -382,7 +359,7 @@ namespace ShoppingPeeker.DbManage
                 sb_Sql.Append(where);//条件中带有参数=值的  拼接字符串
             }
 
-            
+
 
 
             SqlParameter[] parameters = new SqlParameter[settedValueDic.Count];
@@ -399,7 +376,7 @@ namespace ShoppingPeeker.DbManage
 
                 counter++;
             }
-           
+
 
             var sqlCmd = sb_Sql.ToString();
 
@@ -410,7 +387,7 @@ namespace ShoppingPeeker.DbManage
             sb_Sql = null;
 
 
-            return ExecuteNonQuery(sqlCmd, CommandType.Text, parameters);
+            return ExecuteNonQuery(sqlCmd, parameters);
         }
 
         #endregion
@@ -458,7 +435,7 @@ namespace ShoppingPeeker.DbManage
             System.Data.Common.DbDataReader reader = null;
             try
             {
-                 reader = ExecuteReader(sqlCmd, CommandType.Text, parameters);
+                reader = ExecuteReader(sqlCmd, parameters);
                 reader.Read();
                 entity = reader.ConvertDataReaderToEntity<TElement>();
             }
@@ -504,11 +481,11 @@ namespace ShoppingPeeker.DbManage
             var fieldSplitString = String.Join(",", filelds);//返回逗号分隔的字符串 例如：ProvinceCode,ProvinceName,Submmary
             //解析查询条件
             string whereStr = "1=1";
-            if (null!=predicate)
+            if (null != predicate)
             {
                 whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
             }
-                
+
 
 
             StringBuilder sb_Sql = new StringBuilder();
@@ -527,13 +504,13 @@ namespace ShoppingPeeker.DbManage
             List<TElement> dataLst = new List<TElement>();
             try
             {
-                 reader = ExecuteReader(sqlCmd, CommandType.Text, null);
+                reader = ExecuteReader(sqlCmd, null);
                 if (null == reader)
                 {
                     return null;
                 }
 
-           
+
 
 
                 while (reader.Read())
@@ -560,7 +537,7 @@ namespace ShoppingPeeker.DbManage
             return dataLst;
         }
 
-    
+
 
         /// <summary>
         /// 分页获取元素集合
@@ -573,7 +550,7 @@ namespace ShoppingPeeker.DbManage
         /// <param name="sortField">排序字段（如果不指定排序字段 那么默认按照id 排序）</param>
         /// <param name="rule">排序规则</param>
         /// <returns></returns>
-        public List<TElement> GetElementsByPagerAndCondition(int pageIndex, int pageSize, out int totalRecords, out int totalPages, Expression<Func<TElement, bool>> predicate, string sortField= null, OrderRule rule = OrderRule.ASC)
+        public List<TElement> GetElementsByPagerAndCondition(int pageIndex, int pageSize, out int totalRecords, out int totalPages, Expression<Func<TElement, bool>> predicate, string sortField = null, OrderRule rule = OrderRule.ASC)
         {
             TElement entity = new TElement();
 
@@ -590,7 +567,7 @@ namespace ShoppingPeeker.DbManage
                 return null;
                 throw new Exception("未指定除主键后其他字段！");
             }
-           
+
             //获取字段
             var fieldSplitString = String.Join(",", filelds);//返回逗号分隔的字符串 例如：ProvinceCode,ProvinceName,Submmary
             //解析查询条件
@@ -679,8 +656,8 @@ namespace ShoppingPeeker.DbManage
             sb_Sql.AppendFormat("delete from {0} ", tableInDbName);
             sb_Sql.Append(" where Id=@Id");
             SqlParameter[] parameters = {
-					new SqlParameter("@Id", entity.GetIdentityValue())
-			};
+                    new SqlParameter("@Id", entity.GetIdentityValue())
+            };
 
             var sqlCmd = sb_Sql.ToString();
             //清理构建器
@@ -689,7 +666,7 @@ namespace ShoppingPeeker.DbManage
 
             try
             {
-                return Convert.ToInt32(ExecuteNonQuery(sqlCmd, CommandType.Text, parameters));
+                return Convert.ToInt32(ExecuteNonQuery(sqlCmd, parameters));
 
             }
             catch (Exception ex)
@@ -723,10 +700,10 @@ namespace ShoppingPeeker.DbManage
 
             //解析查询条件
             var whereStr = "1=1";
-            if (null!=predicate)
+            if (null != predicate)
             {
 
-                 whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
+                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
 
             }
 
@@ -743,7 +720,7 @@ namespace ShoppingPeeker.DbManage
             var sqlCmd = sb_Sql.ToString();
             try
             {
-                return Convert.ToInt32(ExecuteNonQuery(sqlCmd, CommandType.Text));
+                return Convert.ToInt32(ExecuteNonQuery(sqlCmd, null));
 
             }
             catch (Exception ex)
@@ -762,7 +739,6 @@ namespace ShoppingPeeker.DbManage
 
 
 
-
         #region Disposable
 
 
@@ -771,8 +747,6 @@ namespace ShoppingPeeker.DbManage
         public void Dispose()
         {
 
-            //置空连接字符串
-            this.CurrentDBConnectionString = null;
             Dispose(true);
             // This class has no unmanaged resources but it is possible that somebody could add some in a subclass.
             GC.SuppressFinalize(this);
@@ -796,9 +770,6 @@ namespace ShoppingPeeker.DbManage
 
 
         #endregion
-
-
-
 
     }
 }

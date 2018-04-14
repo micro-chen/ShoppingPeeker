@@ -1,4 +1,5 @@
 ﻿
+using ShoppingPeeker.Utilities;
 using System;
 using System.Configuration;
 using System.Threading.Tasks;
@@ -11,24 +12,58 @@ namespace ShoppingPeeker.DbManage
     /// </summary>
     public class InitDatabase
     {
-        public static void SetDatabaseConnection(string connStr, string providerName)
+        /// <summary>
+        ///  初始化数据库连接配置，从 配置文件：ConnectionStringSection节点
+        /// </summary>
+        /// <param name="isNeedConfigDb">是否需要配置数据库</param>
+        /// <param name="isAsync">是否异步模式配置数据库</param>
+        public static void Init(bool isNeedConfigDb = true, bool isAsync = true)
         {
-            if (string.IsNullOrEmpty(connStr))
+
+            //设置数据库连接
+            var connStringSection = ConfigHelper.GetConnectionStringSection();
+            if (null == connStringSection)
             {
-                throw new ArgumentNullException("连接字符串设置不能为空！");
+                throw new Exception("未发现数据库连接配置节点：ConnectionStringSection");
             }
 
-            //默认为SqlServer数据库
-            if (string.IsNullOrEmpty(providerName))
+            //将数据库连接节点装载到静态集合
+            foreach (var itemConnString in connStringSection)
             {
-                providerName = SupportDbType.Sqlserver.ToString();
+                if (itemConnString.ConnectionString.Contains(@".\SQLEXPRESS"))
+                {
+                    continue;
+                }
+                var config = new DbConnConfig
+                {
+                    Name = itemConnString.Name,
+                    ConnString = itemConnString.ConnectionString,
+                    ProviderName = itemConnString.ProviderName
+
+                };
+
+                GlobalDBConnection.AllDbConnConfigs.Add(config.Name, config);
             }
 
-            GlobalDBConnection.CurrentDbType = (SupportDbType)Enum.Parse(typeof(SupportDbType), providerName);
+            if (isNeedConfigDb == true)
+            {
+                //初始化-数据库
+                //异步初始化
+                var tsk_init = Task.Factory.StartNew(() =>
+                  {
+                      GlobalDBConnection.InitDataBase(GlobalDBConnection.AllDbConnConfigs);
+                  });
 
-            GlobalDBConnection.DBConnectionString = connStr;
+                if (isAsync == false
+                    && null != tsk_init
+                    && tsk_init.IsCompleted == false)
+                {
+                    tsk_init.Wait();//等待此任务完成
+                }
+            }
 
 
         }
+
     }
 }

@@ -15,24 +15,29 @@ namespace ShoppingPeeker.DbManage
 
         private static string PageSql_Core_Name = "DbManage_GetRecordsByPageSQLString";//执行分页的核心
 
+        private static object _locker = new object();
+        internal static void CheckAndCreatePagerSQLProcedure(DbConnConfig dbConfig)
+        {
 
-        internal static void CheckAndCreatePagerSQLProcedure()
-        {
-            //1检查数据库是否存在存储过程   //2创建
-            //分页核心
-            if (!IsExistSQLProcedure(PageSql_Core_Name))
+            lock (_locker)
             {
-                  CreateSQLProcedure(PageSql_Core_SQLCommand);
+                //1检查数据库是否存在存储过程   //2创建
+                //分页核心
+                if (!IsExistSQLProcedure(dbConfig, PageSql_Core_Name))
+                {
+                    CreateSQLProcedure(dbConfig, PageSql_Core_SQLCommand);
+                }
+                //分页调用入口
+                if (!IsExistSQLProcedure(dbConfig, Contanst.PageSql_Call_Name))
+                {
+                    CreateSQLProcedure(dbConfig, PageSql_Call_SQLCommand);
+                }
             }
-            //分页调用入口
-            if (!IsExistSQLProcedure(Contanst.PageSql_Call_Name))
-            {
-                CreateSQLProcedure(PageSql_Call_SQLCommand);
-            }
+
         }
-        private static bool IsExistSQLProcedure(string procName)
+        private static bool IsExistSQLProcedure(DbConnConfig dbConfig, string procName)
         {
-            var conStr = GlobalDBConnection.DBConnectionString;
+            var conStr = dbConfig.ConnString;
             if (string.IsNullOrEmpty(conStr))
             {
                 throw new Exception("全局数据库连接未设定！");
@@ -62,9 +67,9 @@ namespace ShoppingPeeker.DbManage
                 }
             }
         }
-        private static void CreateSQLProcedure(string sqlCommand)
+        private static void CreateSQLProcedure(DbConnConfig dbConfig, string sqlCommand)
         {
-            var conStr = GlobalDBConnection.DBConnectionString;
+            var conStr = dbConfig.ConnString;
             if (string.IsNullOrEmpty(conStr))
             {
                 throw new Exception("全局数据库连接未设定！");
@@ -89,21 +94,21 @@ namespace ShoppingPeeker.DbManage
 
 
         //调用入口sql存储过程
-        private static string PageSql_Call_SQLCommand = @"CREATE PROCEDURE [DbManage_GetRecordsByPage]
+        private static string PageSql_Call_SQLCommand = @"CREATE PROCEDURE [dbo].[DbManage_GetRecordsByPage]
 	                                    @PageIndex int,
 	                                    @PageSize int,
-	                                    @TableName varchar(256),
+	                                    @TableName varchar(8000),
 	                                    @SelectFields varchar(8000) = '*', --查询字段，默认为 *
-	                                    @ConditionWhere nvarchar(4000) = N'',     --条件例如  DirectoryID=4
-	                                    @SortField varchar(256) = '[SortOrder]',
-	                                    @IsDesc bit = 1, --是否倒序
+	                                    @ConditionWhere varchar(8000) = N'',     --条件例如  DirectoryID=4
+	                                    @SortField varchar(256) = '1',
+	                                    @IsDesc bit = 0, --是否倒序
 	                                    @TotalRecords int = -1 OUTPUT,
 	                                   @TotalPageCount INT OUTPUT
                                     AS
                                     BEGIN
 
 	                                    SET NOCOUNT ON;
-	                                    DECLARE @SQLString nvarchar(4000),@ResetOrder bit----------- 1表示读取数据的时候 排序要反过来
+	                                    DECLARE @SQLString varchar(8000),@ResetOrder bit----------- 1表示读取数据的时候 排序要反过来
 	                                    EXECUTE DbManage_GetRecordsByPageSQLString
 						                                    @PageIndex,
 						                                    @PageSize,
@@ -116,31 +121,33 @@ namespace ShoppingPeeker.DbManage
 						                                    @TotalPageCount  OUTPUT,--输出总页数,
 						                                    @ResetOrder OUTPUT,
 						                                    @SQLString OUTPUT
+						print @SQLString;
 	                                    EXEC (@SQLString);
 	                                    RETURN @ResetOrder
-                                    END";
+                                    END;
+";
 
 
         //执行分页的核心SQL 存储过程
-        private static string PageSql_Core_SQLCommand = @"CREATE PROCEDURE [DbManage_GetRecordsByPageSQLString]
+        private static string PageSql_Core_SQLCommand = @"CREATE PROCEDURE [dbo].[DbManage_GetRecordsByPageSQLString]
 	                                @PageIndex int,
 	                                @PageSize int,
-	                                @TableName varchar(256),
+	                                @TableName varchar(8000),
 	                                @SelectFields varchar(8000) = '*', --查询字段，默认为 *
-	                                @ConditionWhere nvarchar(4000) = N'',     --条件例如  DirectoryID=4
-	                                @SortField varchar(256) = '[SortOrder]',
-	                                @IsDesc bit = 1, --是否倒序
+	                                @ConditionWhere varchar(8000) = N'',     --条件例如  DirectoryID=4
+	                                @SortField varchar(256) = '',
+	                                @IsDesc bit = 0, --是否倒序
 	                                @TotalRecords int = -1 OUTPUT,
 	                                @TotalPageCount int OUTPUT,--输出总页数
 	                                @ResetOrder bit output,----------- 1表示读取数据的时候 排序要反过来
-	                                @SQLString  nvarchar(4000) output
+	                                @SQLString  varchar(8000) output
                                 AS
                                 BEGIN
 	                                SET NOCOUNT ON;
 
 -------------------------第一步 ：查询限制条件的组合
-	                                DECLARE @WhereString1 nvarchar(4000);
-	                                DECLARE @WhereString2 nvarchar(4000);
+	                                DECLARE @WhereString1 varchar(8000);
+	                                DECLARE @WhereString2 varchar(8000);
 	                                IF @ConditionWhere IS NULL OR @ConditionWhere = N'' BEGIN
 		                                SELECT @WhereString1 = N'';
 		                                SELECT @WhereString2 = N'WHERE ';
@@ -151,7 +158,7 @@ namespace ShoppingPeeker.DbManage
 	                                END
 	                                
 	                                -----------设置完毕查询条件后  查询本次符合条件的记录数 页数
-	                              DECLARE @sqlCmd   NVARCHAR(300)
+	                              DECLARE @sqlCmd   nvarchar(4000)
 	                                  
 	                               IF @ConditionWhere IS NULL OR @ConditionWhere = N'' 
 	                                BEGIN
@@ -180,8 +187,8 @@ namespace ShoppingPeeker.DbManage
 	                                IF @PageIndex = 0 BEGIN
 		                                SELECT @SQLString = N'SELECT TOP ' + STR(@PageSize)
 			                                + N' ' + @SelectFields
-			                                + N' FROM ' + @TableName + ' WITH (NOLOCK)
-			                                ' + @WhereString1 + '
+			                                + N' FROM ' + @TableName 
+			                                 + @WhereString1 + '
 			                                ORDER BY ' + @SortField;
 		                                IF @IsDesc = 1
 			                                SELECT @SQLString = @SQLString + ' DESC';
@@ -209,8 +216,8 @@ namespace ShoppingPeeker.DbManage
 						                                SET @ResidualCount=@PageSize;
 					                                SELECT @SQLString = N'SELECT top ' + STR(@ResidualCount)
 						                                + N' ' + @SelectFields
-						                                + N' FROM ' + @TableName + ' WITH (NOLOCK)
-						                                ' + @WhereString1 + '
+						                                + N' FROM ' + @TableName
+						                                + @WhereString1 + '
 						                                ORDER BY ' + @SortField;
 					                                IF @IsDesc = 0--反过来
 						                                SELECT @SQLString = @SQLString + ' DESC';
@@ -218,7 +225,7 @@ namespace ShoppingPeeker.DbManage
 				                                END 
 				                                ELSE IF  @PageIndex>@TotalPage-1 BEGIN --已经超过最大页数
 					                                SELECT @SQLString = N'SELECT ' + @SelectFields
-						                                + N' FROM ' + @TableName + ' WITH (NOLOCK) WHERE 1=2'
+						                                + N' FROM ' + @TableName + ' WHERE 1=2'
 					                                SET @ResetOrder=0
 				                                END
 				                                ELSE BEGIN
@@ -255,7 +262,6 @@ namespace ShoppingPeeker.DbManage
 												+@SelectFields
 												+' FROM ' 
 											    +@TableName
-												+' WITH (NOLOCK) '
 												+@WhereString1
 												 +') AS TMP '
 												 +'WHERE TMP.RowNumber > '
@@ -270,7 +276,6 @@ namespace ShoppingPeeker.DbManage
 												+@SelectFields
 												+' FROM ' 
 											    +@TableName
-												+' WITH (NOLOCK) '
 												+@WhereString1
 												 +') AS TMP '
 												 +'WHERE TMP.RowNumber > '
@@ -278,6 +283,6 @@ namespace ShoppingPeeker.DbManage
 		                                END
 	                                END
 
-                                END";
+                                END ";
     }
 }

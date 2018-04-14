@@ -16,8 +16,8 @@ using ShoppingPeeker.Utilities;
 
 namespace ShoppingPeeker.DbManage
 {
-    public class MysqlDbContext<TElement> : MySqlOperationCore<TElement>, IDbContext<TElement>, IDisposable
-        where TElement : BaseEntity, new()
+    public class MySqlDbContext<TElement> : BaseSqlOperation<TElement>, IDbContext<TElement>, IDisposable
+       where TElement : BaseEntity, new()
     {
 
 
@@ -26,23 +26,6 @@ namespace ShoppingPeeker.DbManage
 
 
 
-        private string _CurrentDBConnectionString;
-        // 数据库连接字符串--覆盖基类中的属性
-        public override string CurrentDBConnectionString
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(this._CurrentDBConnectionString))
-                {
-                    this._CurrentDBConnectionString = GlobalDBConnection.DBConnectionString;
-                }
-                return this._CurrentDBConnectionString;
-            }
-            set
-            {
-                this._CurrentDBConnectionString = value;
-            }
-        }
 
         /// <summary>
         /// 实体的主键名称
@@ -50,20 +33,22 @@ namespace ShoppingPeeker.DbManage
         private string EntityIdentityFiledName = new TElement().GetIdentity().IdentityKeyName;
 
 
+
         /// <summary>
-        /// 继承类-采用默认全局的数据库连接字符串
+        /// 数据上下文构造函数
         /// </summary>
-        public MysqlDbContext()
+        /// <param name="dbConfig"></param>
+        public MySqlDbContext(DbConnConfig dbConfig)
         {
-            Check.NotEmpty(GlobalDBConnection.DBConnectionString, "GlobalDBConnection.DBConnectionString");
+            this.DbConfig = dbConfig;
         }
 
 
-        public MysqlDbContext(string connString)
-        {
-            Check.NotEmpty(connString, "User Custom DBConnectionString");
-            this._CurrentDBConnectionString = connString;
-        }
+        //public MysqlDbContext(string connString)
+        //{
+        //    Check.NotEmpty(connString, "User Custom DBConnectionString");
+        //    this._CurrentDBConnectionString = connString;
+        //}
 
         #endregion
 
@@ -80,7 +65,7 @@ namespace ShoppingPeeker.DbManage
         /// <typeparam name="TElement"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public long Insert(TElement entity)
+        public int Insert(TElement entity)
         {
             string tableInDbName;
             System.Reflection.PropertyInfo[] propertys;
@@ -137,10 +122,10 @@ namespace ShoppingPeeker.DbManage
             ///清理掉字符串拼接构造器
             sb_Sql.Clear();
             sb_Sql = null;
-            var result = this.ExecuteScalar(sqlCmd, CommandType.Text, parameters);
+            var result = this.ExecuteScalar(sqlCmd, parameters);
             if (null != result)
             {
-                return long.Parse(result.ToString());
+                return int.Parse(result.ToString());
             }
             return Error_Opeation_Result;
         }
@@ -160,7 +145,7 @@ namespace ShoppingPeeker.DbManage
             string[] paras;
             ResolveEntity(entities.First(), out tableInDbName, out propertys, out filelds, out paras);
 
-            using (var bcp = new MysqlBuckCopy<TElement>(this.CurrentDBConnectionString))
+            using (var bcp = new MysqlBuckCopy<TElement>(this.DbConfig.ConnString))
             {
                 return bcp.WriteToServer(entities, tableInDbName);
             }
@@ -254,7 +239,7 @@ namespace ShoppingPeeker.DbManage
             sb_FiledParaPairs = null;
             sb_Sql.Clear();
             sb_Sql = null;
-            return ExecuteNonQuery(sqlCmd, CommandType.Text, parameters);
+            return ExecuteNonQuery(sqlCmd, parameters);
         }
 
 
@@ -341,7 +326,7 @@ namespace ShoppingPeeker.DbManage
             sb_Sql = null;
 
 
-            return ExecuteNonQuery(sqlCmd, CommandType.Text, parameters);
+            return ExecuteNonQuery(sqlCmd, parameters);
         }
 
 
@@ -392,7 +377,7 @@ namespace ShoppingPeeker.DbManage
 
             try
             {
-                reader = ExecuteReader(sqlCmd, CommandType.Text, parameters);
+                reader = ExecuteReader(sqlCmd, parameters);
                 reader.Read();
                 entity = reader.ConvertDataReaderToEntity<TElement>();
             }
@@ -469,7 +454,7 @@ namespace ShoppingPeeker.DbManage
 
             try
             {
-                reader = ExecuteReader(sqlCmd, CommandType.Text, null);
+                reader = ExecuteReader(sqlCmd, null);
                 if (null == reader)
                 {
                     return null;
@@ -654,7 +639,7 @@ namespace ShoppingPeeker.DbManage
 
             try
             {
-                return Convert.ToInt32(ExecuteNonQuery(sqlCmd, CommandType.Text, parameters));
+                return Convert.ToInt32(ExecuteNonQuery(sqlCmd, parameters));
 
             }
             catch (Exception ex)
@@ -711,7 +696,7 @@ namespace ShoppingPeeker.DbManage
             var sqlCmd = sb_Sql.ToString();
             try
             {
-                return Convert.ToInt32(ExecuteNonQuery(sqlCmd, CommandType.Text));
+                return Convert.ToInt32(ExecuteNonQuery(sqlCmd, null));
 
             }
             catch (Exception ex)
@@ -726,8 +711,6 @@ namespace ShoppingPeeker.DbManage
 
 
         #endregion
-
-
 
 
         #endregion
@@ -749,8 +732,6 @@ namespace ShoppingPeeker.DbManage
         public void Dispose()
         {
 
-            //置空连接字符串
-            this.CurrentDBConnectionString = null;
             Dispose(true);
             // This class has no unmanaged resources but it is possible that somebody could add some in a subclass.
             GC.SuppressFinalize(this);
@@ -776,7 +757,5 @@ namespace ShoppingPeeker.DbManage
 
 
     }
-
-
 
 }

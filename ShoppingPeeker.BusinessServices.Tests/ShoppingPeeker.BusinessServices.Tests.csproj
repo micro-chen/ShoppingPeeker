@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ShoppingPeeker.BusinessServices\ShoppingPeeker.BusinessServices.csproj" />
+    <ProjectReference Include="..\ShoppingPeeker.Data\ShoppingPeeker.Data.csproj" />
+    <ProjectReference Include="..\ShoppingPeeker.DbManage\ShoppingPeeker.DbManage.csproj" />
+    <ProjectReference Include="..\ShoppingPeeker.DomainEntity\ShoppingPeeker.DomainEntity.csproj" />
     <ProjectReference Include="..\ShoppingPeeker.Utilities\ShoppingPeeker.Utilities.csproj" />
   </ItemGroup>
 
