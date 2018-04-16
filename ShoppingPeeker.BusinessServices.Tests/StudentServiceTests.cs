@@ -1,16 +1,16 @@
-﻿using ShoppingPeeker.BusinessServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ShoppingPeeker.BusinessServices.Services;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using ShoppingPeeker.DbManage;
-
 using ShoppingPeeker.DomainEntity;
+using ShoppingPeeker.BusinessServices;
 using ShoppingPeeker.Tests;
-
+using ShoppingPeeker.BusinessServices.Services;
 
 using System.Linq.Expressions;
 
