@@ -206,7 +206,7 @@ namespace ShoppingPeeker.BusinessServices.Services.Tests
         {
             //组合条件
             var predicate = PredicateBuilder.CreatNew<StudentsModel>();
-
+           
             string id = "55";
             if (!string.IsNullOrEmpty(id) && id.ToInt() > 0)
             {

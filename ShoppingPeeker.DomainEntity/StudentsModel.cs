@@ -33,9 +33,9 @@ namespace ShoppingPeeker.DomainEntity
         ///// <summary>
         /// Age
         /// </summary>	
-        private Nullable<int> _Age;
+        private int? _Age;
         [DataMember]
-        public Nullable<int> Age
+        public int? Age
         {
             get { return _Age; }
             set
@@ -61,9 +61,9 @@ namespace ShoppingPeeker.DomainEntity
         ///// <summary>
         /// Sex
         /// </summary>	
-        private Nullable<bool> _Sex;
+        private bool? _Sex;
         [DataMember]
-        public Nullable<bool> Sex
+        public bool? Sex
         {
             get { return _Sex; }
             set
@@ -75,9 +75,9 @@ namespace ShoppingPeeker.DomainEntity
         ///// <summary>
         /// on update CURRENT_TIMESTAMP
         /// </summary>	
-        private Nullable<DateTime> _AddTime;
+        private DateTime? _AddTime;
         [DataMember]
-        public Nullable<DateTime> AddTime
+        public DateTime? AddTime
         {
             get { return _AddTime; }
             set
@@ -89,9 +89,9 @@ namespace ShoppingPeeker.DomainEntity
         ///// <summary>
         /// Score
         /// </summary>	
-        private Nullable<decimal> _Score;
+        private decimal? _Score;
         [DataMember]
-        public Nullable<decimal> Score
+        public decimal? Score
         {
             get { return _Score; }
             set
@@ -103,9 +103,9 @@ namespace ShoppingPeeker.DomainEntity
         ///// <summary>
         /// Longitude
         /// </summary>	
-        private Nullable<double> _Longitude;
+        private double? _Longitude;
         [DataMember]
-        public Nullable<double> Longitude
+        public double? Longitude
         {
             get { return _Longitude; }
             set
@@ -117,9 +117,9 @@ namespace ShoppingPeeker.DomainEntity
         ///// <summary>
         /// Latitude
         /// </summary>	
-        private Nullable<double> _Latitude;
+        private double? _Latitude;
         [DataMember]
-        public Nullable<double> Latitude
+        public double? Latitude
         {
             get { return _Latitude; }
             set
@@ -131,9 +131,9 @@ namespace ShoppingPeeker.DomainEntity
         ///// <summary>
         /// HasPay
         /// </summary>	
-        private Nullable<decimal> _HasPay;
+        private decimal? _HasPay;
         [DataMember]
-        public Nullable<decimal> HasPay
+        public decimal? HasPay
         {
             get { return _HasPay; }
             set
@@ -145,9 +145,9 @@ namespace ShoppingPeeker.DomainEntity
         ///// <summary>
         /// HomeNumber
         /// </summary>	
-        private Nullable<int> _HomeNumber;
+        private int? _HomeNumber;
         [DataMember]
-        public Nullable<int> HomeNumber
+        public int? HomeNumber
         {
             get { return _HomeNumber; }
             set

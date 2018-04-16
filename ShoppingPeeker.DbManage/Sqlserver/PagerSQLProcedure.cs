@@ -188,7 +188,7 @@ namespace ShoppingPeeker.DbManage
 		                                SELECT @SQLString = N'SELECT TOP ' + STR(@PageSize)
 			                                + N' ' + @SelectFields
 			                                + N' FROM ' + @TableName 
-			                                 + @WhereString1 + '
+			                                + N' '+ @WhereString1 + '
 			                                ORDER BY ' + @SortField;
 		                                IF @IsDesc = 1
 			                                SELECT @SQLString = @SQLString + ' DESC';
@@ -217,7 +217,7 @@ namespace ShoppingPeeker.DbManage
 					                                SELECT @SQLString = N'SELECT top ' + STR(@ResidualCount)
 						                                + N' ' + @SelectFields
 						                                + N' FROM ' + @TableName
-						                                + @WhereString1 + '
+						                                + N' '+ @WhereString1 + '
 						                                ORDER BY ' + @SortField;
 					                                IF @IsDesc = 0--反过来
 						                                SELECT @SQLString = @SQLString + ' DESC';

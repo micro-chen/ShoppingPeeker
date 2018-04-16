@@ -772,74 +772,88 @@ namespace ShoppingPeeker.DbManage
         /// <param name="paras"></param>
         protected void ResolveEntity(TElement entity, bool isWriteCmd,out string tableInDbName, out System.Reflection.PropertyInfo[] propertys, out string[] filelds, out string[] paras)
         {
-            tableInDbName = "";
-            var targetAttributes = entity.GetType().GetCustomAttributes(typeof(TableAttribute), false);
-            if (null == targetAttributes)
-            {
-                throw new Exception("the model class has not mapping table!");
-            }
-            tableInDbName = (targetAttributes[0] as TableAttribute).Name;
+            //调用实体的解析实体
+           
+            var mapping=entity.ResolveEntity(isWriteCmd);
+            tableInDbName = mapping.TableName;
+            propertys = mapping.Propertys;
+            filelds = mapping.Filelds;
+            paras = mapping.SqlParas;
+            return;
 
-            //----------尝试从静态字典中获取结构-----------
-            string cacheKey = string.Concat(tableInDbName, "-", Convert.ToInt32(isWriteCmd));
-            if (SqlFieldMappingManager.Mappings.ContainsKey(cacheKey))
-            {
-                var mapping = SqlFieldMappingManager.Mappings[cacheKey];
-                propertys = mapping.Propertys;
-                filelds = mapping.Filelds;
-                paras = mapping.SqlParas;
-                return;
-            }
+            //---------note:不再此进行解析，采用实体解析-------
+            #region 废弃代码
 
-            #region 解析实体
 
-          
-            //获取所有字段
-            propertys = entity.GetCurrentEntityProperties();
-            var lstFilelds = new List<string>();//[propertys.Length];
-            for (int i = 0; i < propertys.Length; i++)
-            {
-                var item = propertys[i];
-                //将有忽略db的字段 排除
-                if (item.GetCustomAttribute<IgnoreDbFieldAttribute>() != null)
-                {
-                    continue;//忽略属性
-                }
-                if (isWriteCmd==true)
-                {
-                    var writeAttr = item.GetCustomAttribute<WriteAttribute>();
-                    if (null!=writeAttr&&writeAttr.Write==false)
-                    {
-                        continue;//如果是非写入参数，那么忽略此属性作为sql 参数
-                    }
-                }
-                lstFilelds.Add(propertys[i].Name);
-            }
+            //tableInDbName = "";
+            //var targetAttributes = entity.GetType().GetCustomAttributes(typeof(TableAttribute), false);
+            //if (null == targetAttributes)
+            //{
+            //    throw new Exception("the model class has not mapping table!");
+            //}
+            //tableInDbName = (targetAttributes[0] as TableAttribute).Name;
 
-            //字段
-            filelds = lstFilelds.ToArray();
-            //参数字段
-            paras = filelds.Clone() as string[];
-            for (int i = 0; i < paras.Length; i++)
-            {
-                paras[i] = string.Concat("@" , paras[i]);
-            }
+            ////----------尝试从静态字典中获取结构-----------
+            //string cacheKey = string.Concat(tableInDbName, "-", Convert.ToInt32(isWriteCmd));
+            //if (SqlFieldMappingManager.Mappings.ContainsKey(cacheKey))
+            //{
+            //    var mapping = SqlFieldMappingManager.Mappings[cacheKey];
+            //    propertys = mapping.Propertys;
+            //    filelds = mapping.Filelds;
+            //    paras = mapping.SqlParas;
+            //    return;
+            //}
+
+            //#region 解析实体
+
+
+            ////获取所有字段
+            //propertys = entity.GetCurrentEntityProperties();
+            //var lstFilelds = new List<string>();//[propertys.Length];
+            //for (int i = 0; i < propertys.Length; i++)
+            //{
+            //    var item = propertys[i];
+            //    //将有忽略db的字段 排除
+            //    if (item.GetCustomAttribute<IgnoreDbFieldAttribute>() != null)
+            //    {
+            //        continue;//忽略属性
+            //    }
+            //    if (isWriteCmd==true)
+            //    {
+            //        var writeAttr = item.GetCustomAttribute<WriteAttribute>();
+            //        if (null!=writeAttr&&writeAttr.Write==false)
+            //        {
+            //            continue;//如果是非写入参数，那么忽略此属性作为sql 参数
+            //        }
+            //    }
+            //    lstFilelds.Add(propertys[i].Name);
+            //}
+
+            ////字段
+            //filelds = lstFilelds.ToArray();
+            ////参数字段
+            //paras = filelds.Clone() as string[];
+            //for (int i = 0; i < paras.Length; i++)
+            //{
+            //    paras[i] = string.Concat("@" , paras[i]);
+            //}
+            //#endregion
+
+            ////保存到Mapping缓存
+            //var modelMapping = new SqlFieldMapping
+            //{
+            //    TableName = tableInDbName,
+            //    Propertys = propertys,
+            //    Filelds = filelds,
+            //    SqlParas = paras
+            //};
+            //if (!SqlFieldMappingManager.Mappings.ContainsKey(cacheKey))
+            //{
+            //    SqlFieldMappingManager.Mappings.TryAdd(cacheKey, modelMapping);
+            //}
+
             #endregion
 
-            //保存到Mapping缓存
-            var modelMapping = new SqlFieldMapping
-            {
-                TableName = tableInDbName,
-                Propertys = propertys,
-                Filelds = filelds,
-                SqlParas = paras
-            };
-            if (!SqlFieldMappingManager.Mappings.ContainsKey(cacheKey))
-            {
-                SqlFieldMappingManager.Mappings.TryAdd(cacheKey, modelMapping);
-            }
-           
-            
         }
     }
 }

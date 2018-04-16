@@ -26,14 +26,14 @@ namespace ShoppingPeeker.DbManage
 
             switch (dbConnConfig.DbType)
             {
-                case SupportDbType.Sqlserver:
+                case SupportDbType.SQLSERVER:
                     conn = new SqlConnection(dbConnConfig.ConnString);
                     break;
-                case SupportDbType.Mysql:
+                case SupportDbType.MYSQL:
                     conn = new MySqlConnection(dbConnConfig.ConnString);
                     break;
-                case SupportDbType.PostgreSQL:
-                case SupportDbType.Oracle:
+                case SupportDbType.POSTGRESQL:
+                case SupportDbType.ORACLE:
                 default: throw new NotImplementedException();
             }
 
@@ -57,15 +57,15 @@ namespace ShoppingPeeker.DbManage
 
             switch (dbConnConfig.DbType)
             {
-                case SupportDbType.Sqlserver:
+                case SupportDbType.SQLSERVER:
 
                     cmd = new SqlCommand();
                     break;
-                case SupportDbType.Mysql:
+                case SupportDbType.MYSQL:
                     cmd = new MySqlCommand();
                     break;
-                case SupportDbType.PostgreSQL:
-                case SupportDbType.Oracle:
+                case SupportDbType.POSTGRESQL:
+                case SupportDbType.ORACLE:
                 default: throw new NotImplementedException();
 
 
@@ -90,14 +90,14 @@ namespace ShoppingPeeker.DbManage
 
             switch (dbConnConfig.DbType)
             {
-                case SupportDbType.Sqlserver:
+                case SupportDbType.SQLSERVER:
                     dataAdapter = new SqlDataAdapter((SqlCommand)selectCommand);
                     break;
-                case SupportDbType.Mysql:
+                case SupportDbType.MYSQL:
                     dataAdapter = new MySqlDataAdapter((MySqlCommand)selectCommand);
                     break;
-                case SupportDbType.PostgreSQL:
-                case SupportDbType.Oracle:
+                case SupportDbType.POSTGRESQL:
+                case SupportDbType.ORACLE:
                 default: throw new NotImplementedException();
 
             }

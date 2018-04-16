@@ -32,7 +32,7 @@ namespace ShoppingPeeker.DbManage
             {
                 if (string.IsNullOrEmpty(_ProviderName))
                 {
-                    _ProviderName = SupportDbType.Sqlserver.ToString();
+                    _ProviderName = SupportDbType.SQLSERVER.ToString();
                 }
                 return _ProviderName;
             }
@@ -58,7 +58,7 @@ namespace ShoppingPeeker.DbManage
                 {
                     throw new Exception("请为连接字符串添加 providerName 配置。sqlserver or mysql?");
                 }
-                return (SupportDbType)Enum.Parse(typeof(SupportDbType), ProviderName);
+                return (SupportDbType)Enum.Parse(typeof(SupportDbType), ProviderName.ToUpper());
             }
         }
 

@@ -13,8 +13,10 @@ namespace ShoppingPeeker.Data.Repository
 {
     public class StudentsRepository : BaseRepository<StudentsModel>, IDbContext<StudentsModel>, IRepository
     {
-        public StudentsRepository()
-        { }
+        public StudentsRepository()//:base("Db_SqlServer")
+        {
+            this.dbContext = GetDbContext("Db_SqlServer");
+        }
 
        
     }

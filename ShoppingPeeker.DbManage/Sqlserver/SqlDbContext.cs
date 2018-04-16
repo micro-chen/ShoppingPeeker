@@ -471,9 +471,9 @@ namespace ShoppingPeeker.DbManage
             sqlParas.Add("@PageSize", pageSize);//页大小
             sqlParas.Add("@TableName", tableInDbName);//表名称
             sqlParas.Add("@SelectFields", fieldSplitString);//查询的字段
-            sqlParas.Add("@PrimaryKey", EntityIdentityFiledName);//查询的表的主键
+            //sqlParas.Add("@PrimaryKey", EntityIdentityFiledName);//查询的表的主键
             sqlParas.Add("@ConditionWhere", whereStr);//查询条件      
-            sqlParas.Add("@SortField", sortField);//排序字段
+            sqlParas.Add("@SortField", sortField?? EntityIdentityFiledName);//排序字段
             sqlParas.Add("@IsDesc", (int)rule);//倒排序 正排序
             sqlParas.Add("@TotalRecords", DbType.Int32, direction: ParameterDirection.Output);//总记录数（可选参数）
             sqlParas.Add("@TotalPageCount", DbType.Int32, direction: ParameterDirection.Output);//总页数（输出参数

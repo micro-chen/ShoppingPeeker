@@ -12,19 +12,24 @@ namespace ShoppingPeeker.DbManage
     /// </summary>
     public enum SupportDbType
     {
+        /// <summary>
+        /// MS SQLServer
+        /// </summary>
+        SQLSERVER = 1,
 
-        Sqlserver=1,
-
-        Mysql=2,
+        /// <summary>
+        /// Mysql
+        /// </summary>
+        MYSQL=2,
         /// <summary>
         /// 暂未支持 PostgreSQL
         /// </summary>
-        PostgreSQL = 3,
+        POSTGRESQL = 3,
 
         /// <summary>
         /// 暂未支持 Oracle
         /// </summary>
-        Oracle = 4
+        ORACLE = 4
 
     }
 }

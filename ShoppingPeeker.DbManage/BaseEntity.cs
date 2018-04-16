@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
 using System.ComponentModel;
-
+using Dapper.Contrib.Extensions;
 
 namespace ShoppingPeeker.DbManage
 {
@@ -205,6 +205,91 @@ namespace ShoppingPeeker.DbManage
         /// 虚属性--当前实体的属性数组(注：实现此抽象类的实体类，必须重写此属性)
         /// </summary>
         public abstract PropertyInfo[] GetCurrentEntityProperties();
+
+
+        /// <summary>
+        /// 解析实体   解析其中的关联的表+字段+字段参数
+        /// </summary>
+        /// <param name="isWriteCmd">是否是写入命令生成sql参数</param>
+        internal SqlFieldMapping ResolveEntity( bool isWriteCmd)
+        {
+            SqlFieldMapping mapping = null;
+
+            var entity = this;
+
+             
+            var targetAttributes = entity.GetType().GetCustomAttributes(typeof(TableAttribute), false);
+            if (null == targetAttributes)
+            {
+                throw new Exception("the model class has not mapping table!");
+            }
+            mapping = new SqlFieldMapping();
+
+            mapping.TableName = (targetAttributes[0] as TableAttribute).Name;
+
+            //----------尝试从静态字典中获取结构-----------
+            string cacheKey = string.Concat(mapping.TableName, "-", Convert.ToInt32(isWriteCmd));
+            if (SqlFieldMappingManager.Mappings.ContainsKey(cacheKey))
+            {
+                var mappingAtCache = SqlFieldMappingManager.Mappings[cacheKey];
+                //propertys = mapping.Propertys;
+                //filelds = mapping.Filelds;
+                //paras = mapping.SqlParas;
+                
+                return mappingAtCache;
+            }
+
+            #region 解析实体
+
+
+            //获取所有字段
+            var fullPropertys = entity.GetCurrentEntityProperties();
+            //有效的db属性
+            var lstDbUsedPropertys = new List<PropertyInfo>();
+
+            var lstFilelds = new List<string>();//[propertys.Length];
+            for (int i = 0; i < fullPropertys.Length; i++)
+            {
+                var item = fullPropertys[i];
+                //将有忽略db的字段 排除
+                if (item.GetCustomAttribute<IgnoreDbFieldAttribute>() != null)
+                {
+                    continue;//忽略属性
+                }
+                if (isWriteCmd == true)
+                {
+                    var writeAttr = item.GetCustomAttribute<WriteAttribute>();
+                    if (null != writeAttr && writeAttr.Write == false)
+                    {
+                        continue;//如果是非写入参数，那么忽略此属性作为sql 参数
+                    }
+                }
+                lstDbUsedPropertys.Add(item);
+                lstFilelds.Add(item.Name);
+            }
+            //db 字段CLR 属性
+            mapping.Propertys = lstDbUsedPropertys.ToArray();
+            //字段
+            mapping.Filelds = lstFilelds.ToArray();
+            //参数字段
+            mapping.SqlParas= mapping.Filelds.Clone() as string[];
+            for (int i = 0; i < mapping.SqlParas.Length; i++)
+            {
+                mapping.SqlParas[i] = string.Concat("@", mapping.SqlParas[i]);
+            }
+            #endregion
+
+            //保存到Mapping缓存
+            
+            if (!SqlFieldMappingManager.Mappings.ContainsKey(cacheKey))
+            {
+                SqlFieldMappingManager.Mappings.TryAdd(cacheKey, mapping);
+            }
+
+            return mapping;
+
+        }
+
 
         public override bool Equals(object obj)
         {

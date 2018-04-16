@@ -22,14 +22,14 @@ namespace ShoppingPeeker.DbManage
 
 
 
-        /// <summary>
-        /// 生成 true 筛选语句
-        /// 防止多条件中的判断  导致无条件 ；实现类似sql 拼接条件的where 1=1
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        private static Expression<Func<T, bool>> True<T>() { return f => true; }
-        // public static Expression<Func<T, bool>> False<T>() { return f => false; }
+        ///////////// <summary>
+        ///////////// 生成 true 筛选语句
+        ///////////// 防止多条件中的判断  导致无条件 ；实现类似sql 拼接条件的where 1=1
+        ///////////// </summary>
+        ///////////// <typeparam name="T"></typeparam>
+        ///////////// <returns></returns>
+        //////////private static Expression<Func<T, bool>> True<T>() { return f => true; }
+        //////////// public static Expression<Func<T, bool>> False<T>() { return f => false; }
 
         /// <summary>
         /// 创建新的条件表达式容器实例
@@ -38,7 +38,9 @@ namespace ShoppingPeeker.DbManage
         /// <returns></returns>
         public static Expression<Func<T, bool>> CreatNew<T>()
         {
-            return True<T>();
+            var a=new Dictionary<int,int>();
+            a[1] = 1;//用来生成1=1
+            return f => a.Keys.First()== 1; ;
         }
 
         /// <summary>

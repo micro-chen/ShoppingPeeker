@@ -52,18 +52,18 @@ namespace ShoppingPeeker.DbManage
                     {
                         switch (itemConfig.DbType)
                         {
-                            case SupportDbType.Sqlserver:
+                            case SupportDbType.SQLSERVER:
                                 //1 创建必须的分页存储过程等全局操作
                                 PagerSQLProcedure.CheckAndCreatePagerSQLProcedure(itemConfig);
                                 break;
-                            case SupportDbType.Mysql:
+                            case SupportDbType.MYSQL:
                                 //1 创建必须的分页存储过程等全局操作
                                 MySqlPagerSQLProcedure.CheckAndCreatePagerSQLProcedure(itemConfig);
                                 break;
-                            case SupportDbType.PostgreSQL:
+                            case SupportDbType.POSTGRESQL:
 
                                 break;
-                            case SupportDbType.Oracle:
+                            case SupportDbType.ORACLE:
 
                                 break;
                             default:

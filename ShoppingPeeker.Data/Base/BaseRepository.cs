@@ -15,7 +15,8 @@ namespace ShoppingPeeker.Data
     public class BaseRepository<TElement> where TElement : BaseEntity, new()
     {
 
-        private IDbContext<TElement> dbContext;
+        protected IDbContext<TElement> dbContext;
+
         private const string Default_ConnName = "Default";
         /// <summary>
         /// 构造数据仓储对象
@@ -36,7 +37,7 @@ namespace ShoppingPeeker.Data
         /// </summary>
         /// <param name="connName"></param>
         /// <returns></returns>
-        public static IDbContext<TElement> GetDbContext(string connName = Default_ConnName)
+        protected static IDbContext<TElement> GetDbContext(string connName = Default_ConnName)
         {
             IDbContext<TElement> dbContext = null;
 
@@ -58,14 +59,14 @@ namespace ShoppingPeeker.Data
 
             switch (dbConfig.DbType)
             {
-                case SupportDbType.Sqlserver:
+                case SupportDbType.SQLSERVER:
                     dbContext = new SqlDbContext<TElement>(dbConfig);
                     break;
-                case SupportDbType.Mysql:
+                case SupportDbType.MYSQL:
                     dbContext = new MySqlDbContext<TElement>(dbConfig);
                     break;
-                case SupportDbType.PostgreSQL:
-                case SupportDbType.Oracle:
+                case SupportDbType.POSTGRESQL:
+                case SupportDbType.ORACLE:
                 default: throw new NotImplementedException();
 
             }

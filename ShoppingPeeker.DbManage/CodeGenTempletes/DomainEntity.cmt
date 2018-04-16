@@ -42,9 +42,9 @@ namespace ShoppingPeeker.DomainEntity
        [DataMember]
         public <#= CodeCommon.DbTypeToCS(c.TypeName) #> <#= c.ColumnName #>
 	<# }
-	else{#>private Nullable<<#= CodeCommon.DbTypeToCS(c.TypeName) #>> _<#= c.ColumnName.ToString() #>;
+	else{#>private <#= CodeCommon.DbTypeToCS(c.TypeName) #>? _<#= c.ColumnName.ToString() #>;
 	   [DataMember]
-        public Nullable<<#= CodeCommon.DbTypeToCS(c.TypeName) #>> <#= c.ColumnName #>
+        public <#= CodeCommon.DbTypeToCS(c.TypeName) #>? <#= c.ColumnName #>
 	<# } 
        #>
         {

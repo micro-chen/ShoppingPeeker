@@ -5,6 +5,7 @@ using System.Data;
 using System.Reflection;
 using System.Linq;
 using ShoppingPeeker.Utilities.TypeFinder;
+using Dapper.Contrib.Extensions;
 
 namespace ShoppingPeeker.DbManage.Utilities
 {
@@ -18,7 +19,7 @@ namespace ShoppingPeeker.DbManage.Utilities
         /// <param name="list">集合</param>    
         /// <param name="propertys">列名 属性集合</param>    
         /// <returns>数据集(表)</returns>    
-        public static DataTable ConvertListToDataTable<T>(IEnumerable<T> list, ref PropertyInfo[] propertys)
+        public static DataTable ConvertListToDataTable<T>(IEnumerable<T> list, ref PropertyInfo[] propertys) where T:BaseEntity
         {
 
             DataTable result = new DataTable();
@@ -28,13 +29,27 @@ namespace ShoppingPeeker.DbManage.Utilities
                 //如果未传递属性 那么属性Property  反射出来
                 if (null == propertys || propertys.Length <= 0)
                 {
-                    propertys = list.ElementAt(0).GetType().GetProperties();
+                    //propertys = list.ElementAt(0).GetType().GetProperties();
+                    var mapping = list.ElementAt(0).ResolveEntity(true);
+                    propertys = mapping.Propertys;
                 }
 
 
                 foreach (PropertyInfo pi in propertys)
                 {
-                    result.Columns.Add(pi.Name, pi.PropertyType);
+                    if (pi.PropertyType.IsGenericType
+                        && pi.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        //泛型 Nullable 属性
+                        var realType = pi.PropertyType.GetGenericArguments()[0];
+                        result.Columns.Add(pi.Name, realType);
+                    }
+                    else
+                    {
+                        //普通属性
+                        result.Columns.Add(pi.Name, pi.PropertyType);
+                    }
+
 
                 }
 
@@ -90,7 +105,7 @@ namespace ShoppingPeeker.DbManage.Utilities
                     if (row[p.Name] != null && row[p.Name].ToString() != "")
                     {
                         var filedValue = row[p.Name];
-                        ReflectionHelper.SetPropertyValue( model, p, filedValue);
+                        ReflectionHelper.SetPropertyValue(model, p, filedValue);
                         //p.SetValue(model, filedValue, null);
                     }
                     else
