@@ -88,7 +88,7 @@ namespace ShoppingPeeker.BusinessServices.Services.Tests
             var lstData = new List<StudentsModel>();
             var rand = new Random(DateTime.Now.Millisecond);
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 var model = new StudentsModel
                 {
