@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\Client\ConnectionState.cs" Link="Client\ConnectionState.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\Client\INTCPConnection.cs" Link="Client\INTCPConnection.cs" />
+    <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\Client\ISingleConnectionCable.cs" Link="Client\ISingleConnectionCable.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\Client\SoapTcpConnection.cs" Link="Client\SoapTcpConnection.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\Client\SoapTcpPool.cs" Link="Client\SoapTcpPool.cs" />
     <Compile Include="..\..\..\ShoppingWebCrawler\ScoketLibrary\NTCPMSG\Client\WebCrawlerCollection.cs" Link="Client\WebCrawlerCollection.cs" />
