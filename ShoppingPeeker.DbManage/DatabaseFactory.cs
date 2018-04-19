@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -6,11 +7,51 @@ using MySql.Data.MySqlClient;
 
 namespace ShoppingPeeker.DbManage
 {
-    internal static class DatabaseFactory
+    public static class DatabaseFactory
     {
+
+        public const string Default_ConnName = "Default";
+
         #region Db 交互实例 工厂
 
 
+        /// <summary>
+        /// 根据连接字符串名称  获取连接字符串配置
+        /// </summary>
+        /// <param name="connName"></param>
+        /// <returns></returns>
+        public static DbConnConfig GetDbConfig(string connName = Default_ConnName)
+        {
+            DbConnConfig dbConfig = null;
+            if (string.IsNullOrEmpty(connName))
+            {
+                //必须有连接配置，如果没有 那么抛出异常
+                dbConfig = GlobalDBConnection.AllDbConnConfigs.FirstOrDefault().Value;
+            }
+            else
+            {
+                //检测是否有name
+                if (!GlobalDBConnection.AllDbConnConfigs.ContainsKey(connName))
+                {
+                    throw new Exception("指定的数据库连接名称不存在配置中！Name：" + connName);
+                }
+                dbConfig = GlobalDBConnection.AllDbConnConfigs[connName];
+
+            }
+
+            return dbConfig;
+        }
+
+        /// <summary>
+        /// 根据连接字符串名称获取DbConnection，db连接对象
+        /// </summary>
+        /// <param name="connName"></param>
+        /// <returns></returns>
+        public static DbConnection GetDbConnection(string connName = Default_ConnName)
+        {
+            var dbConfig = GetDbConfig(connName);
+            return GetDbConnection(dbConfig);
+        }
         /// <summary>
         /// 获取数据连接
         /// </summary>

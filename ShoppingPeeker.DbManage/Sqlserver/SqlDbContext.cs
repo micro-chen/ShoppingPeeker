@@ -21,7 +21,7 @@ namespace ShoppingPeeker.DbManage
     /// <summary>
     /// 连接数据库的  上下文  用来执行与数据库进行交互
     /// </summary>
-    public class SqlDbContext<TElement> :BaseSqlOperation<TElement>, IDbContext<TElement>, IDisposable
+    public class SqlDbContext<TElement> : BaseSqlOperation<TElement>, IDbContext<TElement>, IDisposable
         where TElement : BaseEntity, new()
     {
         #region Construction and fields
@@ -57,16 +57,16 @@ namespace ShoppingPeeker.DbManage
         /// <summary>
         /// 插入 实体
         /// </summary>
-        /// <typeparam name="TElement"></typeparam>
         /// <param name="entity"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public int Insert(TElement entity)
+        public int Insert(TElement entity, IDbTransaction transaction = null)
         {
             string tableInDbName;
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity,true, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity, true, out tableInDbName, out propertys, out filelds, out paras);
 
             ///不含主键的属性
             var noIdentityPropertys = propertys.Remove(x => x.Name == EntityIdentityFiledName);
@@ -94,10 +94,11 @@ namespace ShoppingPeeker.DbManage
 
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
-                var result = conn.ExecuteScalar<int>(sqlCmd, entity);
+                var result = conn.ExecuteScalar<int>(sqlCmd, entity, transaction);
                 return result;
             }
         }
+
 
 
         /// <summary>
@@ -105,7 +106,9 @@ namespace ShoppingPeeker.DbManage
         /// (注意：sqlbuck插入，高效率sqlbuck方式插入)
         /// </summary>
         /// <param name="entities"></param>
-        public bool InsertMulitiEntities(IEnumerable<TElement> entities)
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public bool InsertMulitiEntities(IEnumerable<TElement> entities, IDbTransaction transaction = null)
         {
             var result = -1;
 
@@ -129,37 +132,61 @@ namespace ShoppingPeeker.DbManage
                 ///不含主键的属性
                 var noIdentityPropertys = propertys.Remove(x => x.Name == EntityIdentityFiledName);
 
-
-                using (var bulk = new SqlBulkCopy(this.DbConfig.ConnString, SqlBulkCopyOptions.UseInternalTransaction))
+                using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
-                    bulk.BulkCopyTimeout = 60;//命令超时时间
-                    //bulk.BatchSize = 1000;
-                    //指定写入的目标表
-                    bulk.DestinationTableName = tableInDbName;
-                    //数据源中的列名与目标表的属性的映射关系
-                    //bulk.ColumnMappings.Add("ip", "ip");
-                    //bulk.ColumnMappings.Add("port", "port");
-                    //bulk.ColumnMappings.Add("proto_name", "proto_name");
-                    //bulk.ColumnMappings.Add("strategy_id", "strategy_id");
-                    //init mapping
-                    foreach (var pi in noIdentityPropertys)
+                    if (conn.State!= ConnectionState.Open)
                     {
-                        bulk.ColumnMappings.Add(pi.Name, pi.Name);
+                        conn.Open();
                     }
 
-                    DataTable dt = SqlDataTableExtensions.ConvertListToDataTable<TElement>(entities, ref noIdentityPropertys);//数据源数据
+               
 
-                    //DbDataReader reader = dt.CreateDataReader();
-                    bulk.WriteToServer(dt);
+                    if (null == transaction)
+                    {
+                        transaction = conn.BeginTransaction();
+                    }
+               
+                    using (var bulk = new SqlBulkCopy(conn as SqlConnection, SqlBulkCopyOptions.Default, (SqlTransaction)transaction))
+                    {
+                        bulk.BulkCopyTimeout = 120;//命令超时时间
+                        bulk.BatchSize = 1000;
+                        //指定写入的目标表
+                        bulk.DestinationTableName = tableInDbName;
+                        //数据源中的列名与目标表的属性的映射关系
+                        //bulk.ColumnMappings.Add("ip", "ip");
+                        //bulk.ColumnMappings.Add("port", "port");
+                        //bulk.ColumnMappings.Add("proto_name", "proto_name");
+                        //bulk.ColumnMappings.Add("strategy_id", "strategy_id");
+                        //init mapping
+                        foreach (var pi in noIdentityPropertys)
+                        {
+                            bulk.ColumnMappings.Add(pi.Name, pi.Name);
+                        }
+
+                        DataTable dt = SqlDataTableExtensions.ConvertListToDataTable<TElement>(entities, ref noIdentityPropertys);//数据源数据
+
+                        //DbDataReader reader = dt.CreateDataReader();
+                        bulk.WriteToServer(dt);
+
+                        if (null!=transaction)
+                        {
+                            transaction.Commit();
+                        }
+                    }
+
                 }
 
-
+   
                 result = 1;
 
             }
             catch (Exception ex)
             {
 
+                if (null != transaction)
+                {
+                    transaction.Rollback();
+                }
                 //抛出Native 异常信息
                 throw ex;
             }
@@ -177,14 +204,15 @@ namespace ShoppingPeeker.DbManage
 
 
         #region Update 更新操作
+
         /// <summary>
         /// 更新单个模型
         /// （更新机制为，模型载体设置的值的字段会被更新掉，不设置值 不更新）
         /// </summary>
-        /// <typeparam name="TElement"></typeparam>
         /// <param name="entity"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public int Update(TElement entity)
+        public int Update(TElement entity, IDbTransaction transaction = null)
         {
             string tableInDbName;
             System.Reflection.PropertyInfo[] propertys;
@@ -200,7 +228,7 @@ namespace ShoppingPeeker.DbManage
 
             StringBuilder sb_FiledParaPairs = new StringBuilder("");
 
-     
+
             var settedValueDic = entity.GetSettedValuePropertyDic();
 
             foreach (var item in settedValueDic)
@@ -232,7 +260,7 @@ namespace ShoppingPeeker.DbManage
             sb_Sql = null;
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
-                var result = conn.Execute(sqlCmd, entity);
+                var result = conn.Execute(sqlCmd, entity,transaction);
                 return result;
             }
         }
@@ -243,8 +271,9 @@ namespace ShoppingPeeker.DbManage
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="predicate"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public int UpdateByCondition(TElement entity, Expression<Func<TElement, bool>> predicate)
+        public int UpdateByCondition(TElement entity, Expression<Func<TElement, bool>> predicate, IDbTransaction transaction = null)
         {
             string tableInDbName;
             System.Reflection.PropertyInfo[] propertys;
@@ -301,7 +330,7 @@ namespace ShoppingPeeker.DbManage
 
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
-                var result = conn.Execute(sqlCmd, entity);
+                var result = conn.Execute(sqlCmd, entity,transaction);
                 return result;
             }
         }
@@ -473,7 +502,7 @@ namespace ShoppingPeeker.DbManage
             sqlParas.Add("@SelectFields", fieldSplitString);//查询的字段
             //sqlParas.Add("@PrimaryKey", EntityIdentityFiledName);//查询的表的主键
             sqlParas.Add("@ConditionWhere", whereStr);//查询条件      
-            sqlParas.Add("@SortField", sortField?? EntityIdentityFiledName);//排序字段
+            sqlParas.Add("@SortField", sortField ?? EntityIdentityFiledName);//排序字段
             sqlParas.Add("@IsDesc", (int)rule);//倒排序 正排序
             sqlParas.Add("@TotalRecords", DbType.Int32, direction: ParameterDirection.Output);//总记录数（可选参数）
             sqlParas.Add("@TotalPageCount", DbType.Int32, direction: ParameterDirection.Output);//总页数（输出参数
@@ -521,9 +550,10 @@ namespace ShoppingPeeker.DbManage
         /// <summary>
         /// 删除一个实体
         /// </summary>
-        /// <param name="?"></param>
+        /// <param name="entity"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public int Delete(TElement entity)
+        public int Delete(TElement entity, IDbTransaction transaction = null)
         {
             string tableInDbName;
             System.Reflection.PropertyInfo[] propertys;
@@ -554,7 +584,7 @@ namespace ShoppingPeeker.DbManage
             {
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
-                    var result = conn.Execute(sqlCmd);
+                    var result = conn.Execute(sqlCmd,transaction);
                     return result;
                 }
 
@@ -569,8 +599,9 @@ namespace ShoppingPeeker.DbManage
         /// 删除符合条件的实体
         /// </summary>
         /// <param name="predicate"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public int DeleteByCondition(Expression<Func<TElement, bool>> predicate)
+        public int DeleteByCondition(Expression<Func<TElement, bool>> predicate, IDbTransaction transaction = null)
         {
             TElement entity = new TElement();
 
@@ -579,7 +610,7 @@ namespace ShoppingPeeker.DbManage
             System.Reflection.PropertyInfo[] propertys;
             string[] filelds;
             string[] paras;
-            ResolveEntity(entity,true, out tableInDbName, out propertys, out filelds, out paras);
+            ResolveEntity(entity, true, out tableInDbName, out propertys, out filelds, out paras);
             if (filelds.Length <= 1)
             {
                 //除主键后 没有其他字段
@@ -605,7 +636,7 @@ namespace ShoppingPeeker.DbManage
             {
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
-                    var result = conn.Execute(sqlCmd);
+                    var result = conn.Execute(sqlCmd, transaction);
                     return result;
                 }
 

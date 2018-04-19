@@ -45,12 +45,6 @@ namespace ShoppingPeeker.DbManage
         }
 
 
-        //public MysqlDbContext(string connString)
-        //{
-        //    Check.NotEmpty(connString, "User Custom DBConnectionString");
-        //    this._CurrentDBConnectionString = connString;
-        //}
-
         #endregion
 
 
@@ -64,9 +58,10 @@ namespace ShoppingPeeker.DbManage
         /// 插入 实体
         /// </summary>
         /// <typeparam name="TElement"></typeparam>
-        /// <param name="entity"></param>
+        /// <param name="entity">实体对象</param>
+        /// <param name="transaction">db事务</param>
         /// <returns></returns>
-        public int Insert(TElement entity)
+        public int Insert(TElement entity, IDbTransaction transaction = null)
         {
             string tableInDbName;
             System.Reflection.PropertyInfo[] propertys;
@@ -130,7 +125,7 @@ namespace ShoppingPeeker.DbManage
 
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
-                var result = conn.ExecuteScalar<int>(sqlCmd, entity);
+                var result = conn.ExecuteScalar<int>(sqlCmd, entity, transaction);
                 return result;
             }
              
@@ -139,10 +134,10 @@ namespace ShoppingPeeker.DbManage
 
         /// <summary>
         /// 单次批量多次插入多个实体,并返回执行的记录数目---参数化的形式
-        /// 不提供db事务  请使用代码事务 using(var tran=new TranstionScope()){ your  code.......}
+        /// 第二种使用db事务  ，使用代码事务 using(var tran=new TranstionScope()){ your  code.......}
         /// </summary>
         /// <param name="entities">实体集合</param>
-        public bool InsertMulitiEntities(IEnumerable<TElement> entities)
+        public bool InsertMulitiEntities(IEnumerable<TElement> entities, IDbTransaction transaction = null)
         {
 
             string tableInDbName;
@@ -153,7 +148,7 @@ namespace ShoppingPeeker.DbManage
 
             using (var bcp = new MysqlBuckCopy<TElement>(this.DbConfig.ConnString))
             {
-                return bcp.WriteToServer(entities, tableInDbName);
+                return bcp.WriteToServer(entities, tableInDbName, transaction);
             }
 
 
@@ -168,10 +163,10 @@ namespace ShoppingPeeker.DbManage
         /// <summary>
         /// 更新单个模型
         /// </summary>
-        /// <typeparam name="TElement"></typeparam>
         /// <param name="entity"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public int Update(TElement entity)
+        public int Update(TElement entity, IDbTransaction transaction = null)
         {
             string tableInDbName;
             System.Reflection.PropertyInfo[] propertys;
@@ -219,7 +214,7 @@ namespace ShoppingPeeker.DbManage
             sb_Sql = null;
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
-                var result = conn.Execute(sqlCmd, entity);
+                var result = conn.Execute(sqlCmd, entity, transaction);
                 return result;
             }
          
@@ -231,12 +226,11 @@ namespace ShoppingPeeker.DbManage
         /// <summary>
         /// 更新元素 通过  符合条件的
         /// </summary>
-        /// <param name="trans">事务</param>
         /// <param name="entity"></param>
-        /// <param name="hopeUpdateColumns"></param>
         /// <param name="predicate"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public int UpdateByCondition(TElement entity, Expression<Func<TElement, bool>> predicate)
+        public int UpdateByCondition(TElement entity, Expression<Func<TElement, bool>> predicate, IDbTransaction transaction = null)
         {
             string tableInDbName;
             System.Reflection.PropertyInfo[] propertys;
@@ -293,7 +287,7 @@ namespace ShoppingPeeker.DbManage
 
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
-                var result = conn.Execute(sqlCmd, entity);
+                var result = conn.Execute(sqlCmd, entity, transaction);
                 return result;
             }
         }
@@ -519,8 +513,9 @@ namespace ShoppingPeeker.DbManage
         /// 删除一个实体
         /// </summary>
         /// <param name="entity"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public int Delete(TElement entity)
+        public int Delete(TElement entity, IDbTransaction transaction = null)
         {
 
             string tableInDbName;
@@ -552,7 +547,7 @@ namespace ShoppingPeeker.DbManage
             {
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
-                    var result = conn.Execute(sqlCmd);
+                    var result = conn.Execute(sqlCmd,null,transaction);
                     return result;
                 }
 
@@ -571,7 +566,7 @@ namespace ShoppingPeeker.DbManage
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public int DeleteByCondition(Expression<Func<TElement, bool>> predicate)
+        public int DeleteByCondition(Expression<Func<TElement, bool>> predicate, IDbTransaction transaction = null)
         {
             TElement entity = new TElement();
 
@@ -607,7 +602,7 @@ namespace ShoppingPeeker.DbManage
             {
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
-                    var result = conn.Execute(sqlCmd);
+                    var result = conn.Execute(sqlCmd,null, transaction);
                     return result;
                 }
               

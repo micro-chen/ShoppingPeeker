@@ -21,7 +21,7 @@ namespace ShoppingPeeker.DbManage
         /// <typeparam name="TElement"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        int Insert(TElement entity);
+        int Insert(TElement entity, IDbTransaction transaction = null);
 
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace ShoppingPeeker.DbManage
         /// </summary>
         /// <param name="entities"></param>
         /// <returns>返回操作结果</returns>
-        bool InsertMulitiEntities(IEnumerable<TElement> entities);
+        bool InsertMulitiEntities(IEnumerable<TElement> entities, IDbTransaction transaction = null);
 
         #endregion
 
@@ -42,7 +42,7 @@ namespace ShoppingPeeker.DbManage
         /// <typeparam name="TElement"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        int Update(TElement entity);
+        int Update(TElement entity, IDbTransaction transaction = null);
 
         /// <summary>
         /// 更新元素 通过  符合条件的
@@ -51,7 +51,7 @@ namespace ShoppingPeeker.DbManage
         /// <typeparam name="TElement"></typeparam>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        int UpdateByCondition(TElement entity, Expression<Func<TElement, bool>> predicate);
+        int UpdateByCondition(TElement entity, Expression<Func<TElement, bool>> predicate, IDbTransaction transaction = null);
 
         #endregion
 
@@ -96,14 +96,14 @@ namespace ShoppingPeeker.DbManage
         /// </summary>
         /// <param name="?"></param>
         /// <returns></returns>
-        int Delete(TElement entity);
+        int Delete(TElement entity, IDbTransaction transaction = null);
 
         /// <summary>
         /// 删除符合条件的实体
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        int DeleteByCondition(Expression<Func<TElement, bool>> predicate);
+        int DeleteByCondition(Expression<Func<TElement, bool>> predicate, IDbTransaction transaction = null);
 
 
 

@@ -17,17 +17,21 @@ namespace ShoppingPeeker.Data
 
         protected IDbContext<TElement> dbContext;
 
-        private const string Default_ConnName = "Default";
+
         /// <summary>
         /// 构造数据仓储对象
         /// </summary>
         /// <param name="connName">连接字符串Name，默认为：Default；为空将返回默认第一个数据库连接</param>
-        public BaseRepository(string connName= Default_ConnName)
+        public BaseRepository(string connName = DatabaseFactory.Default_ConnName)
         {
             this.dbContext = GetDbContext(connName);
         }
 
 
+        protected IDbConnection GetDbConnection(string connName = DatabaseFactory.Default_ConnName)
+        {
+            return DatabaseFactory.GetDbConnection(connName);
+        }
         /// <summary>
         /// /// <summary>
         /// 获取当前数据库上下文
@@ -37,7 +41,7 @@ namespace ShoppingPeeker.Data
         /// </summary>
         /// <param name="connName"></param>
         /// <returns></returns>
-        protected static IDbContext<TElement> GetDbContext(string connName = Default_ConnName)
+        protected static IDbContext<TElement> GetDbContext(string connName = DatabaseFactory.Default_ConnName)
         {
             IDbContext<TElement> dbContext = null;
 
@@ -46,12 +50,13 @@ namespace ShoppingPeeker.Data
             {
                 //必须有连接配置，如果没有 那么抛出异常
                 dbConfig = GlobalDBConnection.AllDbConnConfigs.FirstOrDefault().Value;
-            }else
+            }
+            else
             {
                 //检测是否有name
                 if (!GlobalDBConnection.AllDbConnConfigs.ContainsKey(connName))
                 {
-                    throw new Exception("指定的数据库连接名称不存在配置中！Name："+connName);
+                    throw new Exception("指定的数据库连接名称不存在配置中！Name：" + connName);
                 }
                 dbConfig = GlobalDBConnection.AllDbConnConfigs[connName];
 
@@ -126,19 +131,21 @@ namespace ShoppingPeeker.Data
         /// 单个插入
         /// </summary>
         /// <param name="entity"></param>
+        ///<param name="transaction"></param> 
         /// <returns></returns>
-        public int Insert(TElement entity)
+        public int Insert(TElement entity, IDbTransaction transaction = null)
         {
-            return this.dbContext.Insert(entity);
+            return this.dbContext.Insert(entity, transaction);
         }
         /// <summary>
         /// 批量插入
         /// </summary>
         /// <param name="entities"></param>
+        ///<param name="transaction"></param> 
         /// <returns></returns>
-        public bool InsertMulitiEntities(IEnumerable<TElement> entities)
+        public bool InsertMulitiEntities(IEnumerable<TElement> entities, IDbTransaction transaction = null)
         {
-            return this.dbContext.InsertMulitiEntities(entities);
+            return this.dbContext.InsertMulitiEntities(entities, transaction);
         }
         #endregion
 
@@ -148,19 +155,21 @@ namespace ShoppingPeeker.Data
         /// 单个删除
         /// </summary>
         /// <param name="entity"></param>
+        ///<param name="transaction"></param> 
         /// <returns></returns>
-        public int Delete(TElement entity)
+        public int Delete(TElement entity, IDbTransaction transaction = null)
         {
-            return this.dbContext.Delete(entity);
+            return this.dbContext.Delete(entity, transaction);
         }
         /// <summary>
         /// 条件删除
         /// </summary>
         /// <param name="predicate"></param>
+        ///<param name="transaction"></param> 
         /// <returns></returns>
-        public int DeleteByCondition(Expression<Func<TElement, bool>> predicate)
+        public int DeleteByCondition(Expression<Func<TElement, bool>> predicate, IDbTransaction transaction = null)
         {
-            return this.dbContext.DeleteByCondition(predicate);
+            return this.dbContext.DeleteByCondition(predicate, transaction);
         }
 
         #endregion
@@ -171,11 +180,12 @@ namespace ShoppingPeeker.Data
         /// 单个更新
         /// </summary>
         /// <param name="entity"></param>
+        ///<param name="transaction"></param> 
         /// <returns></returns>
 
-        public int Update(TElement entity)
+        public int Update(TElement entity, IDbTransaction transaction = null)
         {
-            return this.dbContext.Update(entity);
+            return this.dbContext.Update(entity, transaction);
         }
 
 
@@ -184,10 +194,11 @@ namespace ShoppingPeeker.Data
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="predicate"></param>
+        ///<param name="transaction"></param> 
         /// <returns></returns>
-        public int UpdateByCondition(TElement entity, Expression<Func<TElement, bool>> predicate)
+        public int UpdateByCondition(TElement entity, Expression<Func<TElement, bool>> predicate, IDbTransaction transaction = null)
         {
-            return this.dbContext.UpdateByCondition(entity, predicate);
+            return this.dbContext.UpdateByCondition(entity, predicate, transaction);
         }
 
         #endregion
@@ -261,7 +272,7 @@ namespace ShoppingPeeker.Data
         #region base ado.net 
 
         /// <summary>
-        /// 【读】执行查询 返回 DataSet
+        /// 执行查询 返回 DataSet
         /// </summary>
         /// <returns></returns>
         public DataSet ExecuteDataSet(string cmdText, DbParameter[] commandParameters = null, CommandType cmdType = CommandType.Text)

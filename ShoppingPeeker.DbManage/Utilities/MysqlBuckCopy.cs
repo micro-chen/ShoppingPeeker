@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using ShoppingPeeker.DbManage;
 using ShoppingPeeker.Utilities.TypeFinder;
+using System.Data;
 
 namespace MySql.Data.MySqlClient
 {
@@ -105,13 +106,13 @@ namespace MySql.Data.MySqlClient
 
 
         /// <summary>
-        /// 将列表数据批量写入数据库
+        ///  将列表数据批量写入数据库
         /// </summary>
-        /// <typeparam name="TElement"></typeparam>
         /// <param name="dataList"></param>
         /// <param name="tableName"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public bool WriteToServer(IEnumerable<TElement> dataList, string tableName, string primaryKey = "") 
+        public bool WriteToServer(IEnumerable<TElement> dataList, string tableName, IDbTransaction transaction = null) 
         {
             bool result = false;
             if (string.IsNullOrEmpty(tableName))
@@ -132,7 +133,7 @@ namespace MySql.Data.MySqlClient
                 string dataFile = this.CreateCSVFile(ref dataList, tableName);
 
                 //等待返回异步任务结果
-                var operateResult = this.ImportDataFromFile(dataFile);
+                var operateResult = this.ImportDataFromFile(dataFile, transaction);
                 if (operateResult > 0)
                 {
                     result = true;
@@ -154,8 +155,9 @@ namespace MySql.Data.MySqlClient
         /// 将文本数据 导入到库
         /// </summary>
         /// <param name="filePath"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        private int ImportDataFromFile(string filePath)
+        private int ImportDataFromFile(string filePath,IDbTransaction transaction = null)
         {
             if (!File.Exists(filePath))
             {
@@ -170,10 +172,13 @@ namespace MySql.Data.MySqlClient
                     conn.Open();
                 }
 
-                MySqlTransaction dbTran = null;
-                try
+                IDbTransaction dbTran = transaction;
+                if (null==dbTran)
                 {
                     dbTran = conn.BeginTransaction();
+                }
+                try
+                {
                     //step 1 load data to db
                     MySqlBulkLoader bcp = new MySqlBulkLoader(conn);
                     bcp.TableName = this.TableName;
