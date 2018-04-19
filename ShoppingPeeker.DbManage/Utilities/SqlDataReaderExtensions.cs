@@ -24,8 +24,8 @@ namespace ShoppingPeeker.DbManage.Utilities
 
             var model = new TElement();
             //1 获取实体中所有的属性Property  
-            var propertys = model.GetCurrentEntityProperties();
-
+            var propertys = model.ResolveEntity(true).Propertys;
+          
             //2  判断属性类型 转化成对应 的数据类型  赋值
             foreach (var p in propertys)
             {

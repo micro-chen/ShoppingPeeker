@@ -337,6 +337,12 @@ namespace ShoppingPeeker.DbManage
                 {
                     entity = conn.QueryFirstOrDefault<TElement>(sqlCmd);
                 }
+
+                #region ADO.NET 的方式，性能比较
+                //////reader = ExecuteReader(sqlCmd, parameters, CommandType.Text);
+                //////reader.Read();
+                //////entity = reader.ConvertDataReaderToEntity<TElement>();
+                #endregion
             }
             catch (Exception ex)
             {

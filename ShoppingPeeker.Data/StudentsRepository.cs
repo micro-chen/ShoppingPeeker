@@ -17,7 +17,7 @@ namespace ShoppingPeeker.Data.Repository
         {
             /*示范代码：*/
             //1 切换数据库上下文
-            this.dbContext = GetDbContext("Db_SqlServer");
+            //this.dbContext = GetDbContext("Db_SqlServer");
 
             //2 dapper orm
             //var model = new StudentsModel();
