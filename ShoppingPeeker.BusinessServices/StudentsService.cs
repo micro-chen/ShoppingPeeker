@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Transactions;
 
 using ShoppingPeeker.DomainEntity;
 using ShoppingPeeker.DbManage;
@@ -45,8 +46,33 @@ namespace ShoppingPeeker.BusinessServices
 
             try
             {
-                var entityID = dal_students.Insert(entity);
-                result = entityID;
+
+                //事务代码-附加模式
+                using (var tran = new TransactionScope())//TransactionScopeOption.
+                {
+                    var entityID = dal_students.Insert(entity);
+                    result = entityID;
+
+                    tran.Complete();
+                }
+
+                //------------db  事务----
+                //using (var conn=DatabaseFactory.GetDbConnection())
+                //{
+                //    if (conn.State!= System.Data.ConnectionState.Open)
+                //    {
+                //        conn.Open();
+
+                //    }
+
+                //    var tran = conn.BeginTransaction();
+
+                //    var entityID = dal_students.Insert(entity,tran);
+                //    result = entityID;
+
+                //    tran.Commit();
+                //}
+
             }
             catch (Exception ex)
             {

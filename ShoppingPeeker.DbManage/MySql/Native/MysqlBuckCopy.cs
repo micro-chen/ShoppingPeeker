@@ -33,31 +33,6 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         public string TableName { get; set; }
 
-        private string _primaryKey;
-        /// <summary>
-        /// 主键名
-        /// </summary>
-        public string PrimaryKey
-        {
-            get
-            {
-
-                if (string.IsNullOrEmpty(this._primaryKey))
-                {
-                    try
-                    {
-                        _primaryKey = new TElement().GetIdentity().IdentityKeyName;
-                    }
-                    catch { }
-                }
-                return _primaryKey;
-
-            }
-            set
-            {
-                this._primaryKey = value;
-            }
-        }
 
         /// <summary>
         /// 超时时间 （秒）
@@ -173,9 +148,11 @@ namespace MySql.Data.MySqlClient
                 }
 
                 IDbTransaction dbTran = transaction;
+                bool isInnerTran = false;
                 if (null==dbTran)
                 {
                     dbTran = conn.BeginTransaction();
+                    isInnerTran = true;
                 }
                 try
                 {
@@ -190,7 +167,7 @@ namespace MySql.Data.MySqlClient
                     bcp.FileName = filePath;
                     bcp.NumberOfLinesToSkip = 0;
 
-                    int result = bcp.LoadAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                    int result = bcp.Load();
 
 
                     //批量插入模式的 自增id不连续 这是mysql 的设计  预留不确定的自增数  反正自增不连续不影响业务
@@ -214,8 +191,15 @@ namespace MySql.Data.MySqlClient
                      */
 
                     #endregion
-                    dbTran.Commit();
-
+                    if (isInnerTran==true)
+                    {
+                        //内部事务，完毕后提交
+                       dbTran.Commit();
+                    }
+                    //异步删除文件
+                    Task.Factory.StartNew(()=> {
+                        File.Delete(filePath);
+                    }); 
                     return result;
 
                 }
