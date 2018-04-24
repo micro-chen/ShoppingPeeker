@@ -1,9 +1,5 @@
 首先-第一期，先做一个全网商品比价的搜索页面？ 价格不一定要最低 ，但是多方位的对比
 
-
-C:\Java1.8
-C:\Program Files (x86)\Android\android-sdk
-
 Xamarin.forms 官方例子
 https://github.com/xamarin
 https://developer.xamarin.com/samples/xamarin-forms/all/
@@ -32,6 +28,21 @@ https://university.xamarin.com/profile
 简书
 https://www.jianshu.com/p/cae9078c3ecf
 
+Xamarin Android 设备管理器
+https://docs.microsoft.com/zh-cn/xamarin/android/get-started/installation/android-emulator/xamarin-device-manager?tabs=vswin
+
+Xamarin.Forms 的 Xamarin 实时 Player
+https://docs.microsoft.com/zh-cn/xamarin/tools/live-player/
+有一些限制可以运行实时的 Xamarin Player，包括以下各项的事情上：
+Xamarin.Forms
+
+不支持自定义呈现器。
+不支持效果。
+不支持使用自定义可绑定属性的自定义控件。
+不支持嵌入的资源 (即。 在 PCL 中嵌入图像或其他资源)。
+第三方 MVVM 框架不支持 (ie。Prism、 Mvvm 跨、 Mvvm Light，等等。）。
+不支持在 iOS 上的资产目录。
+
 
 简单例子：
 https://msdn.microsoft.com/en-us/library/mt679501.aspx
@@ -49,30 +60,28 @@ https://docs.microsoft.com/zh-cn/xamarin/android/get-started/installation/androi
 
 
 Google Play上获取apk。在google paly上安装应用后，点击分享，可以把该apk分享给别人，简单方便。
-4.直接去apkpure上下载，地址：https://apkpure.com/ 
+4.直接去apkpure上下载，地址：https://apkpure.com/cn/
 
 添加环境变量 JAVA_HOME：
-    C:\Program Files\Java\jdk1.8.0_51
+    C:\Program Files (x86)\Java\jdk1.8.0_172
     添加环境变量 CLASSPATH：
     %JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar
     修改环境变量 Path，在最前面加入以下值：
     %JAVA_HOME%\bin;%JAVA_HOME%\jre\bin;
-	
-
 	
 设置Android SDK环境变量
     1) 新建环境变量
     （步骤：在计算机的桌面上右击“我的电脑”，点击“属性”-“高级”-“环境变量”）
 
     变量名：ANDROID_SDK_HOME
-    变量值：D:\Android\android-sdk    （SDK安装目录）
+    变量值：C:\Program Files (x86)\Android\android-sdk   （SDK安装目录）
 
     变量名：Path
-    变量值： ;%ANDROID_SDK_HOME%\tools;%ANDROID_SDK_HOME%\platform-tools （注意前面的分号）
+    变量值：  ;%ANDROID_SDK_HOME%\tools;%ANDROID_SDK_HOME%\platform-tools  （注意前面的分号）
 
 	
 	变量名： ANDROID_NDK_PATH
-    变量值：D:\android-ndk\android-ndk-r10e
+    变量值：C:\Program Files (x86)\Android\android-sdk\ndk-bundle
 	
 
 	
