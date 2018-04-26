@@ -31,17 +31,23 @@ https://www.jianshu.com/p/cae9078c3ecf
 Xamarin Android 设备管理器
 https://docs.microsoft.com/zh-cn/xamarin/android/get-started/installation/android-emulator/xamarin-device-manager?tabs=vswin
 
+
+Intel 硬件加速支持
+https://software.intel.com/en-us/articles/intel-hardware-accelerated-execution-manager-intel-haxm
+
 Xamarin.Forms 的 Xamarin 实时 Player
 https://docs.microsoft.com/zh-cn/xamarin/tools/live-player/
 有一些限制可以运行实时的 Xamarin Player，包括以下各项的事情上：
 Xamarin.Forms
-
 不支持自定义呈现器。
 不支持效果。
 不支持使用自定义可绑定属性的自定义控件。
 不支持嵌入的资源 (即。 在 PCL 中嵌入图像或其他资源)。
 第三方 MVVM 框架不支持 (ie。Prism、 Mvvm 跨、 Mvvm Light，等等。）。
 不支持在 iOS 上的资产目录。
+
+Xamarin.Forms 最新版本发布说明
+https://developer.xamarin.com/releases/xamarin-forms/xamarin-forms-3.0/3.0.0-pre3/
 
 
 简单例子：
@@ -57,6 +63,67 @@ https://docs.microsoft.com/zh-cn/xamarin/android/app-fundamentals/android-api-le
 Android 仿真器硬件加速
 https://docs.microsoft.com/zh-cn/xamarin/android/get-started/installation/android-emulator/hardware-acceleration?tabs=vswin
 因为如果不进行硬件加速，Android SDK 仿真器的运行速度会过于缓慢，所以推荐使用 Intel 的 HAXM（硬件加速执行管理器）大幅提升 Android SDK 仿真器的性能。
+
+ViewModel设计
+public class PersonViewModel : INotifyPropertyChanged
+{
+    string name;
+    double age;
+    string skills;
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public string Name
+    {
+        set { SetProperty(ref name, value); }
+        get { return name; }
+    }
+
+    public double Age
+    {
+        set { SetProperty(ref age, value); }
+        get { return age; }
+    }
+
+    public string Skills
+    {
+        set { SetProperty(ref skills, value); }
+        get { return skills; }
+    }
+
+    public override string ToString()
+    {
+        return Name + ", age " + Age;
+    }
+
+    bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+    {
+        if (Object.Equals(storage, value))
+            return false;
+
+        storage = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
+
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+
+
+#if __IOS__
+        var wrapper = (Xamarin.Forms.Platform.iOS.NativeViewWrapper)contentViewButtonParent.Content;
+        var button = (UIKit.UIButton)wrapper.NativeView;
+        button.SetTitle("Scale and Rotate Text", UIKit.UIControlState.Normal);
+        button.SetTitleColor(UIKit.UIColor.Black, UIKit.UIControlState.Normal);
+#endif
+#if __ANDROID__
+        var wrapper = (Xamarin.Forms.Platform.Android.NativeViewWrapper)contentViewTextParent.Content;
+        var textView = (Android.Widget.TextView)wrapper.NativeView;
+        textView.SetTextColor(Android.Graphics.Color.Red);
+#endif
 
 
 Google Play上获取apk。在google paly上安装应用后，点击分享，可以把该apk分享给别人，简单方便。
@@ -83,6 +150,49 @@ Google Play上获取apk。在google paly上安装应用后，点击分享，可�
 	变量名： ANDROID_NDK_PATH
     变量值：C:\Program Files (x86)\Android\android-sdk\ndk-bundle
 	
+xamarin-forms 扩展标记
+
+x:Static – 引用静态属性、 字段或枚举成员。
+x:Reference – 名为页面上的元素的引用。
+x:Type – 将属性设置为System.Type对象。
+x:Array – 构造特定类型的对象的数组。
+x:Null – 将属性设置为null值。
+
+ResourceDictionary 是 Xamarin.Forms 应用程序使用的资源的存储库。 存储中的典型资源ResourceDictionary包括样式，控件模板，数据模板，颜色、 和转换器。
+
+
+开源的 Xamrin.Forms 组件
+https://github.com/xamarin/XamarinComponents
+
+
+API 27 (Android 8.1) – _Oreo_自 2017 年 12 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.OMr1
+API 26 (Android 8.0) – _Oreo_自 2017 年 8 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.O
+API 25 (Android 7.1) – _Nougat_2016 年 12 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.NMr1
+API 24 (Android 7.0) – _Nougat_2016 年 8 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.N
+API 23 (Android 6.0) – _Marshmallow_2015 年 8 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.M
+API 22 (Android 5.1) – _棒糖形_2015 年 3 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.LollipopMr1
+API 21 (Android 5.0) – _棒糖形_2014 年 11 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.Lollipop
+API 20 (Android 4.4W) – _Kitkat 监视_2014 年 6 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.KitKatWatch
+API 19 (Android 4.4) – _Kitkat_2013 年 10 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.KitKat
+API 18 (Android 4.3) – _果冻 Bean_2013 年 7 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.JellyBeanMr2
+API 17 (Android 4.2-4.2.2) – _果冻 Bean_2012 年 11 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.JellyBeanMr1
+API 16 (Android 4.1-4.1.1) – _果冻 Bean_2012 年 6 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.JellyBean
+API 15 (Android 4.0.3-4.0.4) – _冰激凌德桑威奇_2011 年 12 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.IceCreamSandwichMr1
+API 14 (Android 4.0 4.0.2) – _冰激凌德桑威奇_2011 年 10 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.IceCreamSandwich
+API 13 (Android 3.2) – _Honeycomb_2011 年 6 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.HoneyCombMr2
+API 12 (Android 3.1.x) – _Honeycomb_2011 年 5 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.HoneyCombMr1
+API 11 (Android 3.0.x) – _Honeycomb_2011 年 2 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.HoneyComb
+API 10 (Android 2.3.3-2.3.4) – _小玩偶_2011 年 2 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.GingerBreadMr1
+API 9 (Android 2.3-2.3.2) – _小玩偶_2010 年 11 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.GingerBread
+API 8 (Android 2.2.x) – _Froyo_2010 年 6 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.Froyo
+API 7 (Android 2.1.x) – _Eclair_2010 年 1 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.EclairMr1
+API 6 (Android 2.0.1) – _Eclair_2009 年 12 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.Eclair01
+API 5 (Android 2.0) – _Eclair_2009 年 11 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.Eclair
+API 4 (Android 1.6) – _圆环图_2009 年 9 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.Donut
+API 3 (Android 1.5) – _Cupcake_2009 年 5 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.Cupcake
+API 2 (Android 1.1) – _基_2009 年 2 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.Base11
+API 1 (Android 1.0) – _基_2008 年 10 月发布。 生成版本的代码 Android.OS.BuildVersionCodes.Base
+
 
 	
 https://www.visualstudio.com/zh-hans/vs/msft-android-emulator/

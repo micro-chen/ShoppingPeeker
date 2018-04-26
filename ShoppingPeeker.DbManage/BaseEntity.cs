@@ -55,7 +55,7 @@ namespace ShoppingPeeker.DbManage
     /// Base class for entities
     /// </summary>
     [Serializable]
-    public abstract class BaseEntity : IEntityObject
+    public abstract class BaseEntity : IEntityObject, INotifyPropertyChanged
     {
         ///// <summary>
         ///// 实体的主键名称
@@ -80,7 +80,7 @@ namespace ShoppingPeeker.DbManage
         #region 数据更新事件通知
 
 
-        private event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChange(string propertyName, object value)
         {
             if (PropertyChanged != null)
