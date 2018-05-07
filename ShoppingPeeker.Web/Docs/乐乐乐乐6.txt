@@ -8,6 +8,9 @@ https://github.com/xamarin/xamarin-forms-samples
 Xamarin
 一览资源相关-旧
 http://wilsonmar.github.io/xamarin/
+一个商城项目
+https://github.com/xamarinhq/app-myshoppe
+
 云测试
 https://appcenter.ms/settings/billing
 https://docs.microsoft.com/zh-cn/appcenter/
@@ -63,6 +66,10 @@ https://docs.microsoft.com/zh-cn/xamarin/android/app-fundamentals/android-api-le
 Android 仿真器硬件加速
 https://docs.microsoft.com/zh-cn/xamarin/android/get-started/installation/android-emulator/hardware-acceleration?tabs=vswin
 因为如果不进行硬件加速，Android SDK 仿真器的运行速度会过于缓慢，所以推荐使用 Intel 的 HAXM（硬件加速执行管理器）大幅提升 Android SDK 仿真器的性能。
+
+Xamarin Ioc 其他框架
+https://github.com/RobGibbens/Xamarin.IoC/tree/master/UnityDemo
+
 
 ViewModel设计
 public class PersonViewModel : INotifyPropertyChanged
