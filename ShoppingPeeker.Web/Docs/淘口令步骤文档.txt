@@ -7,6 +7,17 @@ https://console.open.taobao.com/app/app.htm?appId=4690795#/?appId=4690795&_k=ijm
 已有的app权限：淘宝联盟 媒体管理->网站管理->查看权限
 http://my.open.taobao.com/app/router.htm?spm=a219t.7664554.1998457203.70.1d2035d91cUAal&app_id=4690795
 
+不加密的优惠券地址示范
+https://uland.taobao.com/coupon/edetail?activityId=&itemId=&pid=mm_31965263_6978544_109994745&src=toolla
+
+
+直接跳转的二级地址
+https://login.taobao.com/jump?target=https%3a%2f%2fdetail.tmall.com%2fitem.htm%3fid%3d568559025902%26ali_trackid%3d2%3amm_31965263_6978544_109994745%3a1526057014_249_481601407%26pvid%3d10_180.78.243.197_5680_1526056442872%26tbpm%3d1
+https://login.taobao.com/jump?target=https%3a%2f%2fdetail.tmall.com%2fitem.htm%3fid%3d568559025902%26ali_trackid%3d2%3amm_31965263_6978544_109994745
+
+下面是反编码的不可以跳转，使用编码的url 可以跳转
+https://login.taobao.com/jump?target=https://detail.tmall.com/item.htm?id=545257403093&ali_trackid=2:mm_31965263_6978544_109994745:1526055874_203_1394388761&pvid=10_180.78.243.197_823_1526052628394&tbpm=1
+
 
 安全：
 http://bigdata.taobao.com/docs/doc.htm?treeId=1&articleId=106210&docType=1
@@ -41,6 +52,8 @@ taobao.tbk.dg.item.coupon.get (好券清单API【导购】)
 https://oauth.taobao.com/authorize?response_type=token&client_id=23196777&state=1212&view=web
 淘口令解码：
 http://tool.chaozhi.hk/#/tklParse
+http://taoke.tool.la/
+
 html 编码解码
 http://web.chacuo.net/charsethtmlentry
 错误查询：
@@ -49,6 +62,148 @@ http://open.taobao.com/apitools/errorCodeSearch?spm=a219a.7395905.0.0.50eJmY
 
 高级权限：
 taobao.tbk.item.share.convert (淘宝客商品三方分成链接转换)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+批量生成淘宝客链接(根据淘宝商品id)
+2013-12-22 作者：小蜜锋举报
+[php]代码库
+<? php
+require_once (dirname (__FILE__).'/TopSdk.php'); //引用淘宝开放平台 API SDK  http://open.taobao.com/index.htm
+ 
+function object2Array ($d) {
+    if (is_object ($d) ) {
+        $d = get_object_vars ($d);
+    }
+ 
+    if (is_array ($d) ) {
+        return array_map (__FUNCTION__, $d);
+    } else {
+        return $d;
+    }
+}
+ 
+ 
+ 
+ 
+/*********************************************
+* 函数名：get_taobaoke_link ($num_iids)
+* 函数用途：通过淘宝商品 num_iids 获取其对应的淘宝客手机版链接
+* 创建时间：2012-02-14
+* 创建人：张宴 net@s135.com
+* 参数说明：
+*    $num_iids   淘宝商品ID（支持多个商品）数组，示例如下：
+*          $num_iids[] = "13583512568";
+*          $num_iids[] = "10809380078";
+*          $num_iids[] = "10809380079";
+* 返回值：
+*    下标为淘宝商品 num_iid ，值为淘宝客链接 click_url 的二维数组。如果无淘宝客链接，click_url 为空字符串，示例如下：
+*          array(3) {
+*            ["13583512568"]=>
+*            string(191) "http://auction1.wap.taobao.com/auction/item_detail-0db2-13583512568.jhtml?tks=jUTwPLMDtUUNEZhqfEuTZqkZhGw1LA7%2BzCJBXCj27NpurHxjZN70Amg0DVaFU61pfnHwW%2FI4MZGm%0Awgb69kbb1NL8uwtu%2BDnyAunBCVDP"
+*            ["10809380078"]=>
+*            string(187) "http://auction1.wap.taobao.com/auction/item_detail-0db2-10809380078.jhtml?tks=jUTwPLMDtUUNEGWhOOgVVuX%2BJKYt7fesyuZjEe7hvmpTJxYDfK8i1Wpvfl7lwI7nzD9W8M352v6E%0AyuUtsKun81AGltKzJWCYPiVDiOeC"
+*            ["10809380079"]=>
+*            string(0) ""
+*          }
+*********************************************/
+function get_taobaoke_link ($num_iids) {
+    $memcache = new Memcache;
+    $memcache->connect ('127.0.0.1', 11911); //Memcached 缓存服务器地址
+    $click_urls = $memcache->get ($num_iids);
+ 
+    foreach ($num_iids AS $num_iid) {
+        if (!isset ($click_urls[$num_iid]) ) {
+            $tbapi_num_iids_arr[] = $num_iid;
+        }
+    }
+ 
+    if (!empty ($tbapi_num_iids_arr) ) {
+        $numbers = count ($tbapi_num_iids_arr);
+        $numbers_max = 40; //淘宝 API 限制最大返回40条记录
+        if ($numbers > 0) {
+            $numbers_times = ceil ($numbers / $numbers_max); //第一层循环的循环次数
+            $numbers_start = 0;
+            $numbers_end = $numbers_max;
+            for ($numbers_i = 1; $numbers_i <= $numbers_times; $numbers_i++) {
+                for ($numbers_j = $numbers_start; $numbers_j < $numbers_end; $numbers_j++) {
+                    if ($numbers_j >= $numbers) {
+                        break;
+                    }
+                    $tbapi_num_iids_arr_sp[] = $tbapi_num_iids_arr[$numbers_j];
+                }
+ 
+                $numbers_start = $numbers_start + $numbers_max;
+                $numbers_end = $numbers_end + $numbers_max;
+ 
+                $tbapi_num_iids = implode (",", $tbapi_num_iids_arr_sp);
+                $c = new TopClient;
+                $c->appkey = 12498835; //淘宝开放平台 API 接口 App Key
+                $c->secretKey = "745db5f8e316f9f1aa8310a7568d6566"; //淘宝开放平台 API 接口 App Secret
+                $c->format = "json";
+                $req = new TaobaokeItemsConvertRequest;
+                $req->setFields ("num_iid,click_url");
+                $req->setNumIids ($tbapi_num_iids);
+                $req->setPid (29509662); //淘宝联盟（阿里妈妈）PID
+                $req->setIsMobile ("true"); //如果要生成手机页面的淘宝客链接，选择 true；网页版选择 false
+                $resp = $c->execute ($req);
+                $res = object2Array ($resp);
+ 
+                if (isset ($res["taobaoke_items"]["taobaoke_item"]) ) {
+                    $links = $res["taobaoke_items"]["taobaoke_item"];
+                    foreach ($links as $value) {
+                        $memcache->set ($value["num_iid"], $value["click_url"], MEMCACHE_COMPRESSED, 0);
+                        $click_urls[ (string) $value["num_iid"]] = $value["click_url"];
+                    }
+                }
+ 
+                unset ($tbapi_num_iids_arr_sp);
+                unset ($tbapi_num_iids);
+                unset ($resp);
+                unset ($res);
+                unset ($links);
+                unset ($value);
+            }
+        }
+    }
+ 
+    foreach ($num_iids AS $num_iid) {
+        if (!isset ($click_urls[$num_iid]) ) {
+            $memcache->set ($num_iid, "", MEMCACHE_COMPRESSED, 0);
+            $click_urls[ (string) $num_iid] = "";
+        }
+    }
+ 
+    $memcache->close();
+    return $click_urls;
+}
+ 
+//演示
+$num_iids[] = "13583512568";
+$num_iids[] = "10809380078";
+$num_iids[] = "10809380079";
+$click_urls = get_taobaoke_link ($num_iids);
+var_dump ($click_urls);
+? >
 
 
 
