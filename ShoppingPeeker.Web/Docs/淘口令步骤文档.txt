@@ -1,0 +1,56 @@
+联盟官方：
+http://pub.alimama.com/
+联盟官网api说明：
+http://open.alimama.com/api/doc.php?spm=a219t.7900221/1.1998910419.d8546b700.371a75a5jw52Ha
+淘宝官方开放平台：
+https://console.open.taobao.com/app/app.htm?appId=4690795#/?appId=4690795&_k=ijm6gi
+已有的app权限：淘宝联盟 媒体管理->网站管理->查看权限
+http://my.open.taobao.com/app/router.htm?spm=a219t.7664554.1998457203.70.1d2035d91cUAal&app_id=4690795
+
+
+安全：
+http://bigdata.taobao.com/docs/doc.htm?treeId=1&articleId=106210&docType=1
+
+概述说明：
+http://bigdata.taobao.com/docs/doc.htm?treeId=1&articleId=101163&docType=1
+
+
+内部券示范：https://taoquan.taobao.com/coupon/unify_apply.htm?sellerId=1730462367&activityId=801a5283b1454a3b91fbec8375ad16e1
+裙子淘宝：
+https://s.taobao.com/search?q=%E8%A3%99%E5%AD%90&imgfile=&commend=all&ssid=s5-e&search_type=item&sourceId=tb.index&spm=a21bo.2017.201856-taobao-item.1&ie=utf8&initiative_id=tbindexz_20170306
+
+竞品：
+http://tool.taokemiao.com/tkl
+http://www.qingtaoke.com/detail/568559025902
+360浏览器 轻淘客
+
+
+1 搜索商品：
+taobao.tbk.item.get (淘宝客商品查询)
+
+2 根据商品url或者关键词查询商品详细：taobao.tbk.dg.material.optional (通用物料搜索API（导购）) ----查询关键词使用链接：https://detail.tmall.com/item.htm?id=568559025902 可以查询具体的商品
+
+3 根据商品标题查询券的链接：
+taobao.tbk.dg.item.coupon.get (好券清单API【导购】)
+
+如果没有优惠券，那么生成Pid链接，自定义的pid链接
+4 生成口令：taobao.tbk.tpwd.create (淘宝客淘口令)
+
+
+获取淘宝oauth
+https://oauth.taobao.com/authorize?response_type=token&client_id=23196777&state=1212&view=web
+淘口令解码：
+http://tool.chaozhi.hk/#/tklParse
+html 编码解码
+http://web.chacuo.net/charsethtmlentry
+错误查询：
+http://open.taobao.com/apitools/errorCodeSearch?spm=a219a.7395905.0.0.50eJmY
+
+
+高级权限：
+taobao.tbk.item.share.convert (淘宝客商品三方分成链接转换)
+
+
+
+
+

@@ -1,5 +1,12 @@
 首先-第一期，先做一个全网商品比价的搜索页面？ 价格不一定要最低 ，但是多方位的对比
 
+
+口令生成器），可以将淘宝商品/优惠券链接/二合一链接转换为淘口令（支持二合一淘口令），买家可以复制
+http://tool.taokemiao.com/tkl
+
+淘宝oauth  token
+https://oauth.taobao.com/authorize?response_type=token&client_id=23196777&state=1212&view=web
+
 Xamarin.forms 官方例子
 https://github.com/xamarin
 https://developer.xamarin.com/samples/xamarin-forms/all/
