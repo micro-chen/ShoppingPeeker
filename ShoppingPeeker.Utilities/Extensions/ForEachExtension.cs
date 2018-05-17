@@ -10,16 +10,23 @@ namespace System
         //示范： this.GetControls<Button>(null).ForEach(b => b.Enabled = false);
         /// <summary>
         /// 变量枚举元素  并执行Action
+        /// foreach 操作进行的是顺序迭代，不会执行并行任务。
+        /// 并行请使用 ForAll<T>；
+        /// 参考：https://docs.microsoft.com/zh-cn/dotnet/standard/parallel-programming/introduction-to-plinq
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <param name="action"></param>
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
+
+            if (source is ParallelQuery<T>)
+            {
+                throw new Exception("ParallelQuery Not Support This Extentsion! Please Use ForAll<T>");
+            }
             foreach (var item in source)
                 action(item);
         }
-
 
 
 
