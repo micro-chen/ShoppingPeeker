@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
+
 using NTCPMessage.Client;
 
 using ShoppingPeeker.Utilities;
@@ -17,7 +19,6 @@ using ShoppingPeeker.Utilities.Ioc;
 using ShoppingPeeker.Utilities.Logging;
 using ShoppingPeeker.Utilities.Plugins;
 using ShoppingPeeker.Plugins;
-
 
 namespace ShoppingPeeker.Web
 {
@@ -41,6 +42,10 @@ namespace ShoppingPeeker.Web
             }
             //插件自动加载
             PluginManager.AutoDiscoverPlugins();
+
+
+            //设置mvc基础类型
+            ShoppingPeeker.Utilities.Contanst.MvcBasetype = typeof(Controller);
 
         }
 

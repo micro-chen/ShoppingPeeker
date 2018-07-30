@@ -38,7 +38,8 @@ namespace ShoppingPeeker.DbManage
                 {
                     Name = itemConnString.Name,
                     ConnString = itemConnString.ConnectionString,
-                    ProviderName = itemConnString.ProviderName
+                    ProviderName = itemConnString.ProviderName,
+                    SqlOutPut= itemConnString.SqlOutPut
 
                 };
 

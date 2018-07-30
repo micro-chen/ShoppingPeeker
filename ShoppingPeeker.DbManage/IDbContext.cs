@@ -118,7 +118,7 @@ namespace ShoppingPeeker.DbManage
         /// <param name="predicate"></param>
         /// <param name="specialColumn"></param>
         /// <returns></returns>
-        int Sum(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn);
+        decimal Sum(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn);
 
         /// <summary>
         ///【读】 统计 符合条件的行数
@@ -134,7 +134,7 @@ namespace ShoppingPeeker.DbManage
         /// <typeparam name="TResult"></typeparam>
         /// <param name="selector"></param>
         /// <returns></returns>
-        int Max(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn);
+        decimal Max(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn);
 
         /// <summary>
         ///符合条件的行的 指定列的最小值
@@ -143,7 +143,7 @@ namespace ShoppingPeeker.DbManage
         /// <param name="predicate"></param>
         /// <param name="specialColumn"></param>
         /// <returns></returns>
-        int Min(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn);
+        decimal Min(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn);
         #endregion
 
 

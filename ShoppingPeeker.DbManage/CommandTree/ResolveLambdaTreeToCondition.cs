@@ -19,8 +19,9 @@ namespace ShoppingPeeker.DbManage.CommandTree
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="func"></param>
+        /// <param name="wrapperChar">字段的包裹符号</param>
         /// <returns></returns>
-        public static string ConvertLambdaToCondition<T>(Expression<Func<T, bool>> func) where T : BaseEntity
+        public static string ConvertLambdaToCondition<T>(Expression<Func<T, bool>> func,string wrapperChar="") where T : BaseEntity
         {
             var whereStr = string.Empty;
             if (func.Body is BinaryExpression)
@@ -30,7 +31,7 @@ namespace ShoppingPeeker.DbManage.CommandTree
                 Expression originalRight = be.Right;
                 Expression afterProcessLeft = ProcessNoneValueBoolenExpression<T>(originalLeft);
                 Expression afterProcessRight = ProcessNoneValueBoolenExpression<T>(originalRight);
-                whereStr = BinarExpressionProvider(afterProcessLeft, afterProcessRight, be.NodeType);
+                whereStr = BinarExpressionProvider(afterProcessLeft, afterProcessRight, be.NodeType, wrapperChar);
 
                 //whereStr = BinarExpressionProvider(be.Left, be.Right, be.NodeType);
             }
@@ -107,16 +108,16 @@ namespace ShoppingPeeker.DbManage.CommandTree
         }
 
 
-        static string BinarExpressionProvider(Expression left, Expression right, ExpressionType type)
+        static string BinarExpressionProvider(Expression left, Expression right, ExpressionType type,string wrapperChar = "")
         {
             string sb = "(";
             //先处理左边
-            sb += ExpressionRouter(left);
+            sb += ExpressionRouter(left, wrapperChar);//左边的字段 传递包裹符号
 
             sb += ExpressionTypeCast(type);
 
             //再处理右边
-            string tmpStr = ExpressionRouter(right);
+            string tmpStr = ExpressionRouter(right, wrapperChar);//左边的字段 传递包裹符号
             if (tmpStr == "null")
             {
                 if (sb.EndsWith(" ="))
@@ -129,13 +130,13 @@ namespace ShoppingPeeker.DbManage.CommandTree
             return sb += ")";
         }
 
-        static string ExpressionRouter(Expression exp)
+        static string ExpressionRouter(Expression exp, string wrapperChar = "")
         {
             string sb = string.Empty;
             if (exp is BinaryExpression)
             {
                 BinaryExpression be = ((BinaryExpression)exp);
-                return BinarExpressionProvider(be.Left, be.Right, be.NodeType);
+                return BinarExpressionProvider(be.Left, be.Right, be.NodeType,wrapperChar);
             }
             else if (exp is MemberExpression)
             {
@@ -144,7 +145,7 @@ namespace ShoppingPeeker.DbManage.CommandTree
                 if (!exp.ToString().StartsWith("value("))
                 {
                     MemberExpression me = ((MemberExpression)exp);
-                    return me.Member.Name;
+                    return string.Concat(wrapperChar, me.Member.Name, wrapperChar);
                 }
                 else
                 {
@@ -156,10 +157,18 @@ namespace ShoppingPeeker.DbManage.CommandTree
 
                     if (result == null)
                         return "null";
-                    if (result is ValueType && !(result is Guid))//guid 虽然是值类型的 --长整型，但是在SQL操作的时候 是按照字符串处理的
+                    if (result is ValueType && !(result is Guid)&&!(result is DateTime))//guid 虽然是值类型的 --长整型，datetime 是struct  也是继承值类型 但是在SQL操作的时候 是按照字符串处理的
                         return result.ToString();
                     else if (result is string || result is DateTime || result is char || result is Guid)
+                    {
+                        if (result is DateTime)
+                        {
+                            //将时间进行统一 yyyy-MM-dd HH:mm:ss
+                            return string.Format("'{0}'", ((DateTime)result).ToOfenTimeString());
+                        }
                         return string.Format("'{0}'", result.ToString());
+                    }
+                     
                 }
 
 
@@ -179,26 +188,26 @@ namespace ShoppingPeeker.DbManage.CommandTree
             {
                 MethodCallExpression mce = (MethodCallExpression)exp;
                 if (mce.Method.Name == "Like")
-                    return string.Format("({0} like {1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]));
+                    return string.Format("({2}{0}{2} like {1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]), wrapperChar);
 
                 else if (mce.Method.Name == "Contains")
-                    return string.Format("({0} like {1})", ExpressionRouter(mce.Object), ExpressionRouter(mce.Arguments[0]));
+                    return string.Format("({2}{0}{2}  like {1})", ExpressionRouter(mce.Object), ExpressionRouter(mce.Arguments[0]), wrapperChar);
 
                 else if (mce.Method.Name == "NotLike")
-                    return string.Format("({0} Not like {1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]));
+                    return string.Format("({2}{0}{2}  Not like {1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]), wrapperChar);
                 else if (mce.Method.Name == "In")
-                    return string.Format("{0} In ({1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]));
+                    return string.Format("{{2}{0}{2}  In ({1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]), wrapperChar);
                 else if (mce.Method.Name == "NotIn")
-                    return string.Format("{0} Not In ({1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]));
+                    return string.Format("{2}{0}{2}  Not In ({1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]), wrapperChar);
                 else if (mce.Method.Name == "LenFuncInSql")
-                    return string.Format("len({0})", ExpressionRouter(mce.Arguments[0]));
+                    return string.Format("len({1}{0}{1})", ExpressionRouter(mce.Arguments[0]),wrapperChar);
                 else
                 {
                     //实例方法或者静态方法的调用解析
                     if (null!=mce.Object)
                     {
                         //如果不是自定义的内置sql函数方法 活着扩展， 那么只取属性;例如 x.Id.ToString() .那么仅仅返回id属性即可
-                        return string.Format("{0}", ExpressionRouter(mce.Object));
+                        return string.Format("{1}{0}{1}", ExpressionRouter(mce.Object), wrapperChar);
                     }
                     else
                     {

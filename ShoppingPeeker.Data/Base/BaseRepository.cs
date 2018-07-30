@@ -211,7 +211,7 @@ namespace ShoppingPeeker.Data
         /// <param name="predicate"></param>
         /// <param name="specialColumn"></param>
         /// <returns></returns>
-        public int Max(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
+        public decimal Max(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
         {
             return this.dbContext.Max(predicate, specialColumn);
         }
@@ -223,7 +223,7 @@ namespace ShoppingPeeker.Data
         /// <param name="specialColumn"></param>
         /// <returns></returns>
 
-        public int Min(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
+        public decimal Min(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
         {
             return this.dbContext.Min(predicate, specialColumn);
         }
@@ -235,7 +235,7 @@ namespace ShoppingPeeker.Data
         /// <param name="specialColumn"></param>
         /// <returns></returns>
 
-        public int Sum(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
+        public decimal Sum(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
         {
             return this.dbContext.Sum(predicate, specialColumn);
         }

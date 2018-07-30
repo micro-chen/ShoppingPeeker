@@ -92,6 +92,8 @@ namespace ShoppingPeeker.DbManage
             sb_Sql.Clear();
             sb_Sql = null;
 
+            this.SqlOutPutToLogAsync(sqlCmd, entity);
+
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
                 var result = conn.ExecuteScalar<int>(sqlCmd, entity, transaction);
@@ -128,6 +130,8 @@ namespace ShoppingPeeker.DbManage
 
             try
             {
+
+                this.SqlOutPutToLogAsync("InsertMulitiEntities", entities);
 
                 ///不含主键的属性
                 var noIdentityPropertys = propertys.Remove(x => x.Name == EntityIdentityFiledName);
@@ -258,6 +262,9 @@ namespace ShoppingPeeker.DbManage
             sb_FiledParaPairs = null;
             sb_Sql.Clear();
             sb_Sql = null;
+
+            this.SqlOutPutToLogAsync(sqlCmd, entity);
+
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
                 var result = conn.Execute(sqlCmd, entity,transaction);
@@ -327,6 +334,7 @@ namespace ShoppingPeeker.DbManage
             sb_Sql.Clear();
             sb_Sql = null;
 
+            this.SqlOutPutToLogAsync(sqlCmd, entity);
 
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
@@ -375,6 +383,7 @@ namespace ShoppingPeeker.DbManage
 
             try
             {
+                this.SqlOutPutToLogAsync(sqlCmd);
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
                     entity = conn.QueryFirstOrDefault<TElement>(sqlCmd);
@@ -433,6 +442,8 @@ namespace ShoppingPeeker.DbManage
             List<TElement> dataLst = null;
             try
             {
+                this.SqlOutPutToLogAsync(sqlCmd);
+
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
                     dataLst = conn.Query<TElement>(sqlCmd).AsList();
@@ -510,6 +521,8 @@ namespace ShoppingPeeker.DbManage
 
             try
             {
+                this.SqlOutPutToLogAsync(sqlCmd, sqlParas);
+
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
                     dataLst = conn.Query<TElement>(sqlCmd, sqlParas, commandType: CommandType.StoredProcedure).AsList();
@@ -582,6 +595,8 @@ namespace ShoppingPeeker.DbManage
 
             try
             {
+                this.SqlOutPutToLogAsync(sqlCmd, entity);
+
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
                     var result = conn.Execute(sqlCmd,transaction);
@@ -634,6 +649,8 @@ namespace ShoppingPeeker.DbManage
             var sqlCmd = sb_Sql.ToString();
             try
             {
+                this.SqlOutPutToLogAsync(sqlCmd);
+
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
                     var result = conn.Execute(sqlCmd, transaction);

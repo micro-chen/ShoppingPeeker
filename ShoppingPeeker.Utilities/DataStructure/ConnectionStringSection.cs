@@ -23,5 +23,7 @@ namespace ShoppingPeeker.Utilities.DataStructure
         public string Name { get; set; }
         public string ConnectionString { get; set; }
         public string ProviderName { get; set; }
+
+        public bool SqlOutPut { get; set; }
     }
 }

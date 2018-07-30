@@ -8,6 +8,13 @@ namespace ShoppingPeeker.Utilities
 {
     public class Contanst
     {
+
+        /// <summary>
+        /// mvc 控制器基础类型
+        /// </summary>
+        public static Type MvcBasetype { get; set; }
+
+
         /// <summary>
         /// 分页存储过程调用名称
         /// </summary>

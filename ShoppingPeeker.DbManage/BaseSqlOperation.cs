@@ -11,6 +11,7 @@ using Dapper.Contrib.Extensions;
 using System.Threading.Tasks;
 using ShoppingPeeker.DbManage.CommandTree;
 using ShoppingPeeker.DbManage.Utilities;
+using ShoppingPeeker.Utilities.Logging;
 
 namespace ShoppingPeeker.DbManage
 {
@@ -20,6 +21,23 @@ namespace ShoppingPeeker.DbManage
         /// 由于ADO.NET  最多可以传递2100参数 我们设置阈值略小于这个值
         /// </summary>
         protected const int MAX_SQL_PARAS_LIMIT = 2000;
+
+
+        /// <summary>
+        /// 字段包裹符号
+        /// 用来区分不同的数据库的字段 当有关键词的时候 ，需要包裹。比如mysql ： ` 
+        /// </summary>
+        private string _FieldWrapperChar = "";
+        public virtual string FieldWrapperChar {
+            get
+            {
+                return _FieldWrapperChar;
+            }
+            set
+            {
+                _FieldWrapperChar = value;
+            }
+        }
 
         private DbConnConfig _dbConfig;
         /// <summary>
@@ -50,8 +68,52 @@ namespace ShoppingPeeker.DbManage
         public const int Error_Opeation_Result = -1;
 
 
+        /// <summary>
+        /// 打出sql命令参数
+        /// </summary>
+        /// <param name="sqlCmd"></param>
+        /// <param name="sqlParas"></param>
+        public void SqlOutPutToLogAsync( string sqlCmd,object sqlParas=null)
+        {
+            if (this.DbConfig.SqlOutPut==true)
+            {
+                System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace();
+                System.Diagnostics.StackFrame[] frames = st.GetFrames();
 
+                StringBuilder sb_callFrame = new StringBuilder();
+                for (int u = 1; u < frames.Length; ++u)
+                {
+                    System.Reflection.MethodBase mb = frames[u].GetMethod();
+                    if (mb.DeclaringType==null)
+                    {
+                        continue;
+                    }
+                
+                    sb_callFrame.AppendLine(string.Format("[CALL STACK][{0}]: {1}.{2}", u, mb.DeclaringType.FullName, mb.Name));
 
+                    if (mb.DeclaringType.IsSubclassOf(ShoppingPeeker.Utilities.Contanst.MvcBasetype))
+                    {
+                        break;//跳过到mvc action 即可
+                    }
+                }
+
+                var sb = new StringBuilder();
+                sb.AppendFormat("------------------sql excute begin at : --------------------");
+                sb.AppendLine(sb_callFrame.ToString());
+                sb.AppendLine("sqlCmd : " + sqlCmd);
+                if (null!=sqlParas)
+                {
+                    sb.AppendLine("sqlParas : " + sqlParas.ToJson());
+
+                }
+                sb.AppendFormat("------------------sql excute end  --------------------");
+
+                Task.Factory.StartNew(() =>
+                {
+                    Logger.Info(sb.ToString());
+                });
+            }
+        }
 
         #region  聚合函数实现  SUM COUNT  MAX  MIN
 
@@ -61,7 +123,7 @@ namespace ShoppingPeeker.DbManage
         /// <param name="predicate"></param>
         /// <param name="specialColumn"></param>
         /// <returns></returns>
-        public int Sum(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
+        public decimal Sum(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
         {
             TElement entity = new TElement();
 
@@ -81,13 +143,13 @@ namespace ShoppingPeeker.DbManage
             string whereStr = "1=1";
             if (null != predicate)
             {
-                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
+                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate, FieldWrapperChar);
             }
 
 
 
             StringBuilder sb_Sql = new StringBuilder();
-            sb_Sql.AppendFormat("SELECT SUM({0}) FROM  {1} ", specialColumn.Container_Fileds.FirstOrDefault(), tableInDbName);
+            sb_Sql.AppendFormat("SELECT SUM({2}{0}{2}) FROM  {1} ", specialColumn.Container_Fileds.FirstOrDefault(), tableInDbName, FieldWrapperChar);
             if (!string.IsNullOrEmpty(whereStr))
             {
                 sb_Sql.AppendFormat("WHERE {0} ", whereStr);
@@ -95,16 +157,21 @@ namespace ShoppingPeeker.DbManage
 
 
             var sqlCmd = sb_Sql.ToString();
-
+            
             //清理字符串构建
             sb_Sql.Clear();
             sb_Sql = null;
+            DbDataReader reader = null;
             try
             {
-                var reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
+                 reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
                 if (reader.Read())
                 {
-                    var colValue = Convert.ToInt32(reader[0]);
+                    if (reader[0].ToString().IsEmpty())
+                    {
+                        return 0;
+                    }
+                    var colValue = reader.GetFieldValue<decimal>(0);
                     return colValue;
                 }
                 else
@@ -118,6 +185,13 @@ namespace ShoppingPeeker.DbManage
             {
 
                 throw ex;
+            }
+            finally
+            {
+                if (null!=reader)
+                {
+                    reader.Close();
+                }
             }
         }
 
@@ -146,7 +220,7 @@ namespace ShoppingPeeker.DbManage
             string whereStr = "1=1";
             if (null != predicate)
             {
-                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
+                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate, FieldWrapperChar);
             }
 
 
@@ -162,13 +236,14 @@ namespace ShoppingPeeker.DbManage
             //清理字符串构建
             sb_Sql.Clear();
             sb_Sql = null;
+            DbDataReader reader = null;
             try
             {
-                // return Convert.ToInt32(ExecuteScalar(sqlCmd, CommandType.Text));
-                var reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
+                
+                 reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
                 if (reader.Read())
                 {
-                    var colValue = Convert.ToInt32(reader[0]);
+                    var colValue = reader[0].ToString().ToInt();
                     return colValue;
                 }
                 else
@@ -180,6 +255,13 @@ namespace ShoppingPeeker.DbManage
             {
 
                 throw ex;
+            }
+            finally
+            {
+                if (null!=reader)
+                {
+                    reader.Close();
+                }
             }
         }
 
@@ -190,7 +272,7 @@ namespace ShoppingPeeker.DbManage
         /// <typeparam name="TResult"></typeparam>
         /// <param name="selector"></param>
         /// <returns></returns>
-        public int Max(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
+        public decimal Max(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
         {
             TElement entity = new TElement();
 
@@ -210,29 +292,36 @@ namespace ShoppingPeeker.DbManage
             string whereStr = "1=1";
             if (null != predicate)
             {
-                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
+                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate, FieldWrapperChar);
             }
 
 
             StringBuilder sb_Sql = new StringBuilder();
-            sb_Sql.AppendFormat("SELECT MAX({0}) FROM  {1} ", specialColumn.Container_Fileds.FirstOrDefault(), tableInDbName);
+            sb_Sql.AppendFormat("SELECT MAX({2}{0}{2}) FROM  {1} ", specialColumn.Container_Fileds.FirstOrDefault(), tableInDbName,FieldWrapperChar);
             if (!string.IsNullOrEmpty(whereStr))
             {
                 sb_Sql.AppendFormat("WHERE {0} ", whereStr);
             }
 
             var sqlCmd = sb_Sql.ToString();
+            
 
             //清理字符串构建
             sb_Sql.Clear();
             sb_Sql = null;
+
+            DbDataReader reader = null;
             try
             {
-                //return Convert.ToInt32(ExecuteScalar(sqlCmd, CommandType.Text));
-                var reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
+                 
+                 reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
                 if (reader.Read())
                 {
-                    var colValue = Convert.ToInt32(reader[0]);
+                    if (reader[0].ToString().IsEmpty())
+                    {
+                        return 0;
+                    }
+                    var colValue = reader.GetFieldValue<decimal>(0);
                     return colValue;
                 }
                 else
@@ -244,6 +333,13 @@ namespace ShoppingPeeker.DbManage
             {
 
                 throw ex;
+            }
+            finally
+            {
+                if (null!=reader)
+                {
+                    reader.Close();
+                }
             }
         }
 
@@ -254,7 +350,7 @@ namespace ShoppingPeeker.DbManage
         /// <param name="predicate"></param>
         /// <param name="specialColumn"></param>
         /// <returns></returns>
-        public int Min(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
+        public decimal Min(Expression<Func<TElement, bool>> predicate, Fields<TElement> specialColumn)
         {
             TElement entity = new TElement();
 
@@ -274,29 +370,35 @@ namespace ShoppingPeeker.DbManage
             string whereStr = "1=1";
             if (null != predicate)
             {
-                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
+                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate, FieldWrapperChar);
             }
 
 
             StringBuilder sb_Sql = new StringBuilder();
-            sb_Sql.AppendFormat("SELECT MIN({0}) FROM  {1} ", specialColumn.Container_Fileds.FirstOrDefault(), tableInDbName);
+            sb_Sql.AppendFormat("SELECT MIN({2}{0}{2}) FROM  {1} ", specialColumn.Container_Fileds.FirstOrDefault(), tableInDbName,FieldWrapperChar);
             if (!string.IsNullOrEmpty(whereStr))
             {
                 sb_Sql.AppendFormat("WHERE {0} ", whereStr);
             }
 
             var sqlCmd = sb_Sql.ToString();
+            
 
             //清理字符串构建
             sb_Sql.Clear();
             sb_Sql = null;
+            DbDataReader reader = null;
             try
             {
-                // return Convert.ToInt32(ExecuteScalar(sqlCmd, CommandType.Text));
-                var reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
+              
+                 reader = this.ExecuteReader(sqlCmd, null, CommandType.Text);
                 if (reader.Read())
                 {
-                    var colValue = Convert.ToInt32(reader[0]);
+                    if (reader[0].ToString().IsEmpty())
+                    {
+                        return 0;
+                    }
+                    var colValue = reader.GetFieldValue<decimal>(0);
                     return colValue;
                 }
                 else
@@ -308,6 +410,13 @@ namespace ShoppingPeeker.DbManage
             {
 
                 throw ex;
+            }
+            finally
+            {
+                if (null!=reader)
+                {
+                    reader.Close();
+                }
             }
         }
 
@@ -327,6 +436,8 @@ namespace ShoppingPeeker.DbManage
         {
 
             DataSet resultData = new DataSet();
+
+            this.SqlOutPutToLogAsync(cmdText, commandParameters);
 
             using (DbConnection conn = DatabaseFactory.GetDbConnection(this._dbConfig))
             {
@@ -368,6 +479,8 @@ namespace ShoppingPeeker.DbManage
         /// <returns></returns>
         public int ExecuteNonQuery(string cmdText, DbParameter[] commandParameters, CommandType cmdType = CommandType.Text)
         {
+            this.SqlOutPutToLogAsync(cmdText, commandParameters);
+
 
             using (DbConnection conn = DatabaseFactory.GetDbConnection(this._dbConfig))
             {
@@ -411,6 +524,8 @@ namespace ShoppingPeeker.DbManage
         public DbDataReader ExecuteReader(string cmdText, DbParameter[] commandParameters, CommandType cmdType = CommandType.Text)
         {
 
+            this.SqlOutPutToLogAsync(cmdText, commandParameters);
+
             try
             {
                 DbConnection conn = DatabaseFactory.GetDbConnection(this._dbConfig);
@@ -449,6 +564,8 @@ namespace ShoppingPeeker.DbManage
         public object ExecuteScalar(string cmdText, DbParameter[] commandParameters, CommandType cmdType = CommandType.Text)
         {
             object val = null;
+
+            this.SqlOutPutToLogAsync(cmdText, commandParameters);
 
             using (DbConnection conn = DatabaseFactory.GetDbConnection(this._dbConfig))
 
@@ -613,18 +730,20 @@ namespace ShoppingPeeker.DbManage
         /// </summary>
         /// <param name="commandText"></param>
         /// <param name="commandType"></param>
-        /// <param name="parameters"></param>
+        /// <param name="commandParameters"></param>
         /// <returns></returns>
-        public List<TElement> SqlQuery(string commandText, CommandType commandType, params DbParameter[] parameters)
+        public List<TElement> SqlQuery(string cmdText, CommandType commandType, params DbParameter[] commandParameters)
         {
 
             var dataLst = new List<TElement>();
+
+            this.SqlOutPutToLogAsync(cmdText, commandParameters);
 
             //获取返回的结果 作为DataTable  解析其中的Row 到特定的实体
             DbDataReader reader = null;
             try
             {
-                reader = this.ExecuteReader(commandText, parameters, commandType);
+                reader = this.ExecuteReader(cmdText, commandParameters, commandType);
                 if (null == reader)
                 {
                     return null;

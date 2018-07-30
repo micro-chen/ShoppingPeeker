@@ -33,13 +33,21 @@ namespace ShoppingPeeker.DbManage
         /// </summary>
         private string EntityIdentityFiledName = new TElement().GetIdentity().IdentityKeyName;
 
+        /// <summary>
+        /// 覆盖基类字段包裹
+        /// </summary>
+        public override string FieldWrapperChar { get; set; }
 
 
+        public MySqlDbContext()
+        {
+            this.FieldWrapperChar = "`";
+        }
         /// <summary>
         /// 数据上下文构造函数
         /// </summary>
         /// <param name="dbConfig"></param>
-        public MySqlDbContext(DbConnConfig dbConfig)
+        public MySqlDbContext(DbConnConfig dbConfig):this()
         {
             this.DbConfig = dbConfig;
         }
@@ -74,8 +82,9 @@ namespace ShoppingPeeker.DbManage
             var noIdentityFileds = filelds.Remove(x => x == EntityIdentityFiledName);
             var noIdentityParas = paras.Remove(x => x == string.Format("@{0}", EntityIdentityFiledName));
 
-            var fieldSplitString = String.Join(",", noIdentityFileds);//返回逗号分隔的字符串 例如：ProvinceCode,ProvinceName,Submmary
-            var parasSplitString = String.Join(",", noIdentityParas);//参数   数组 的逗号分隔
+            string splitor = string.Format("{0},{0}", this.FieldWrapperChar);
+            var fieldSplitString = string.Concat(this.FieldWrapperChar, string.Join(splitor, noIdentityFileds), this.FieldWrapperChar);//返回逗号分隔的字符串 例如：`ProvinceCode`,`ProvinceName`
+            var parasSplitString = string.Join(",", noIdentityParas);//参数   数组 的逗号分隔
 
 
             StringBuilder sb_Sql = new StringBuilder();
@@ -122,6 +131,7 @@ namespace ShoppingPeeker.DbManage
             ///清理掉字符串拼接构造器
             sb_Sql.Clear();
             sb_Sql = null;
+            this.SqlOutPutToLogAsync(sqlCmd, entity);
 
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
@@ -145,6 +155,8 @@ namespace ShoppingPeeker.DbManage
             string[] filelds;
             string[] paras;
             ResolveEntity(entities.First(), true, out tableInDbName, out propertys, out filelds, out paras);
+
+            this.SqlOutPutToLogAsync("InsertMulitiEntities", entities);
 
             using (var bcp = new MysqlBuckCopy<TElement>(this.DbConfig.ConnString))
             {
@@ -189,7 +201,7 @@ namespace ShoppingPeeker.DbManage
                 //var value = item.Value;
                 if (keyProperty != EntityIdentityFiledName)
                 {
-                    sb_FiledParaPairs.AppendFormat("{0}=@{0},", keyProperty);
+                    sb_FiledParaPairs.AppendFormat("{1}{0}{1}=@{0},", keyProperty,this.FieldWrapperChar);
                 }
             }
 
@@ -212,6 +224,7 @@ namespace ShoppingPeeker.DbManage
             sb_FiledParaPairs = null;
             sb_Sql.Clear();
             sb_Sql = null;
+            this.SqlOutPutToLogAsync(sqlCmd, entity);
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
                 var result = conn.Execute(sqlCmd, entity, transaction);
@@ -255,7 +268,7 @@ namespace ShoppingPeeker.DbManage
                 //var value = item.Value;
                 if (keyProperty != EntityIdentityFiledName)
                 {
-                    sb_FiledParaPairs.AppendFormat("{0}=@{0},", keyProperty);
+                    sb_FiledParaPairs.AppendFormat("{1}{0}{1}=@{0},", keyProperty,this.FieldWrapperChar);
                 }
             }
             //移除最后一个逗号
@@ -270,7 +283,7 @@ namespace ShoppingPeeker.DbManage
 
             if (null != predicate)
             {
-                string where = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
+                string where = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate, wrapperChar:this.FieldWrapperChar);
                 sb_Sql.Append(" where ");//解析条件
                 sb_Sql.Append(where);//条件中带有参数=值的  拼接字符串
             }
@@ -284,6 +297,7 @@ namespace ShoppingPeeker.DbManage
             sb_Sql.Clear();
             sb_Sql = null;
 
+            this.SqlOutPutToLogAsync(sqlCmd, entity);
 
             using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
             {
@@ -319,17 +333,21 @@ namespace ShoppingPeeker.DbManage
                 return null;
                 throw new Exception("未指定除主键后其他字段！");
             }
-            var fieldSplitString = String.Join(",", filelds);//返回逗号分隔的字符串 例如：ProvinceCode,ProvinceName,Submmary
+
+            string splitor = string.Format("{0},{0}", this.FieldWrapperChar);
+            var fieldSplitString = string.Concat(this.FieldWrapperChar, string.Join(splitor, filelds), this.FieldWrapperChar);//返回逗号分隔的字符串 例如：`ProvinceCode`,`ProvinceName`
 
             StringBuilder sb_Sql = new StringBuilder();
             sb_Sql.AppendFormat("select  {0} ", fieldSplitString);
             sb_Sql.AppendFormat(" from {0} ", tableInDbName);
-            sb_Sql.AppendFormat(" where {0}={1};", EntityIdentityFiledName,id);
+            sb_Sql.AppendFormat(" where {2}{0}{2}={1};", EntityIdentityFiledName,id,this.FieldWrapperChar);
 
             var sqlCmd = sb_Sql.ToString();
 
             sb_Sql.Clear();
             sb_Sql = null;
+
+            this.SqlOutPutToLogAsync(sqlCmd, entity);
 
             try
             {
@@ -377,12 +395,13 @@ namespace ShoppingPeeker.DbManage
                 throw new Exception("未指定除主键后其他字段！");
             }
             //获取字段
-            var fieldSplitString = String.Join(",", filelds);//返回逗号分隔的字符串 例如：ProvinceCode,ProvinceName,Submmary
+            string splitor = string.Format("{0},{0}", this.FieldWrapperChar);
+            var fieldSplitString = string.Concat(this.FieldWrapperChar, string.Join(splitor, filelds), this.FieldWrapperChar);//返回逗号分隔的字符串 例如：`ProvinceCode`,`ProvinceName`
             //解析查询条件
             string whereStr = "1=1";
             if (null != predicate)
             {
-                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
+                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate, wrapperChar: this.FieldWrapperChar);
             }
 
 
@@ -401,6 +420,8 @@ namespace ShoppingPeeker.DbManage
             List<TElement> dataLst = null;
             try
             {
+                this.SqlOutPutToLogAsync(sqlCmd);
+
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
                     dataLst = conn.Query<TElement>(sqlCmd).AsList();
@@ -447,12 +468,13 @@ namespace ShoppingPeeker.DbManage
                 throw new Exception("未指定除主键后其他字段！");
             }
             //获取字段
-            var fieldSplitString = String.Join(",", filelds);//返回逗号分隔的字符串 例如：ProvinceCode,ProvinceName,Submmary
+            string splitor = string.Format("{0},{0}", this.FieldWrapperChar);
+            var fieldSplitString = string.Concat(this.FieldWrapperChar, string.Join(splitor, filelds), this.FieldWrapperChar);//返回逗号分隔的字符串 例如：`ProvinceCode`,`ProvinceName`
             //解析查询条件
             var whereStr = "1=1";
             if (null != predicate)
             {
-                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
+                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate, wrapperChar: this.FieldWrapperChar);
             }
 
 
@@ -478,6 +500,8 @@ namespace ShoppingPeeker.DbManage
 
             try
             {
+                this.SqlOutPutToLogAsync(sqlCmd, sqlParas);
+
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
                     dataLst = conn.Query<TElement>(sqlCmd,sqlParas,commandType: CommandType.StoredProcedure).AsList();
@@ -549,8 +573,11 @@ namespace ShoppingPeeker.DbManage
             sb_Sql.Clear();
             sb_Sql = null;
 
+
             try
             {
+                this.SqlOutPutToLogAsync(sqlCmd, entity);
+
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
                     var result = conn.Execute(sqlCmd,null,transaction);
@@ -593,7 +620,7 @@ namespace ShoppingPeeker.DbManage
             var whereStr = "1=1";
             if (null != predicate)
             {
-                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate);
+                whereStr = ResolveLambdaTreeToCondition.ConvertLambdaToCondition<TElement>(predicate, wrapperChar: this.FieldWrapperChar);
             }
 
             StringBuilder sb_Sql = new StringBuilder();
@@ -606,6 +633,8 @@ namespace ShoppingPeeker.DbManage
             var sqlCmd = sb_Sql.ToString();
             try
             {
+                this.SqlOutPutToLogAsync(sqlCmd);
+
                 using (var conn = DatabaseFactory.GetDbConnection(this.DbConfig))
                 {
                     var result = conn.Execute(sqlCmd,null, transaction);

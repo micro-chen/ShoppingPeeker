@@ -64,7 +64,11 @@ namespace ShoppingPeeker.BusinessServices
             try
             {
                 var entityID = dal_<#= host.TableName #>.Insert(entity);
-                result = true;
+			    if (entityID>0)
+                {
+                    result = true;
+                }
+              
             }
             catch (Exception ex)
             {
@@ -149,7 +153,7 @@ namespace ShoppingPeeker.BusinessServices
         /// </summary>
         /// <param name="id">Identifier</param>
         /// <returns>Entity</returns>
-        public <#= host.TableName #>Model Get<#= host.TableName #>ElementById(Guid id)
+        public <#= host.TableName #>Model Get<#= host.TableName #>ElementById(int id)
         {
             <#= host.TableName #>Model result = null;
 
@@ -186,32 +190,7 @@ namespace ShoppingPeeker.BusinessServices
             return result;
         }
 
-         /// <summary>
-        /// 分页获取元素集合
-        /// </summary>
-        /// <param name="pageIndex">页索引</param>
-        /// <param name="pageSize">页大小</param>
-        /// <param name="totalRecords">总记录数</param>
-        /// <param name="totalPages">总页数</param>
-        /// <param name="predicate">条件</param>
-        /// <param name="sortField">排序字段（如果不指定排序字段 那么默认按照id 排序）</param>
-        /// <param name="rule">排序规则</param>
-        /// <returns></returns>
-        /// <returns></returns>
-        public List<<#= host.TableName #>Model> Get<#= host.TableName #>ElementsByPagerAndCondition(int pageIndex, int pageSize, out int totalRecords, out int totalPages, Expression<Func<<#= host.TableName #>Model, bool>> predicate, Fields<<#= host.TableName #>Model >sortField=null, OrderRule rule = OrderRule.ASC)
-        {
-            List<<#= host.TableName #>Model> result = null;
-
-            try
-            {
-                result = dal_<#= host.TableName #>.GetElementsByPagerAndCondition(pageIndex, pageSize, out totalRecords,out totalPages,predicate, sortField, rule);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+       
    /// <summary>
         /// 分页获取元素集合
         /// </summary>

@@ -47,7 +47,10 @@ namespace ShoppingPeeker.DbManage
         /// </summary>
         public int Order { get; set; }
 
-       
+        /// <summary>
+        /// 是否输出执行sql--调试用，线上慎用
+        /// </summary>
+        public bool SqlOutPut { get; set; }
 
         /// <summary>
         /// 数据库类型
